@@ -1,0 +1,27 @@
+name: captain_order_management
+description: Captain&#x27;s order and customer management
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^0.5.6
+  cupertino_icons: ^0.1.2
+
+# Dev dependencies
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# Flutter assets
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
