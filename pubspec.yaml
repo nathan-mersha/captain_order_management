@@ -1,4 +1,4 @@
-name: captain_order_management
+name: captain
 description: Captain&#x27;s order and customer management
 
 version: 1.0.0+1
@@ -9,8 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.6
-  cupertino_icons: ^0.1.2
 
 # Dev dependencies
 dev_dependencies:
