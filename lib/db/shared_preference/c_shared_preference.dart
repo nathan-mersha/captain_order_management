@@ -1,3 +1,4 @@
+import 'package:captain/rsr/theme/c_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CSharedPreference {
@@ -81,7 +82,7 @@ class CSharedPreference {
   bool get lockSystem => pref.getBool(LOCK_SYSTEM) ?? false;
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
   
-  String get currentTheme => pref.getString(CURRENT_THEME) ?? "weyne"; // todo : move default value to theme page reference
+  String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
   String get currentLanguage => pref.getString(CURRENT_LANGUAGE) ?? "en"; // todo : move default value to language page reference
   
   num get autoCrylPricePerLitter => pref.getDouble(AUTO_CRYL_PRICE_PER_LITTER) ?? 950;

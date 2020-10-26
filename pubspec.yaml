@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^0.5.12+2
+  permission_handler: ^3.2.0
+
 
 # Dev dependencies
 dev_dependencies:
