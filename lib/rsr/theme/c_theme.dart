@@ -25,10 +25,18 @@ class CTheme {
   static ThemeData getTheme() {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     String currentTheme = cSP.currentTheme;
+
+    Color primary = THEME_MAP[currentTheme][primaryColor];
+    Color primaryLight = THEME_MAP[currentTheme][primaryColorLight];
+    Color accent = THEME_MAP[currentTheme][accentColor];
     return ThemeData(
-      primaryColor: THEME_MAP[currentTheme][primaryColor],
-      primaryColorLight: THEME_MAP[currentTheme][primaryColorLight],
-      accentColor: THEME_MAP[currentTheme][accentColor],
+      primaryColor: primary,
+      primaryColorLight: primaryLight,
+      accentColor: accent,
+      backgroundColor: Color(0xfff2f2f2),
+      buttonColor: primary,
+      inputDecorationTheme: InputDecorationTheme(focusColor: primary),
+      buttonTheme: ButtonThemeData(buttonColor: primary,textTheme: ButtonTextTheme.primary,),
       fontFamily: "Nunito",
     );
   }

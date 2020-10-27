@@ -91,51 +91,6 @@ class CSharedPreference {
   bool get featureAdminOnlySettings => pref.getBool(FEATURE_ADMIN_ONLY_SETTINGS) ?? false;
 
 
-//  dynamic set(String key, dynamic value) async {
-//    SharedPreferences prefs = global.cSP;
-//
-//    if (value is num || value is double) {
-//      return prefs.setDouble(key, value);
-//    } else if (value is String) {
-//      return prefs.setString(key, value);
-//    } else if (value is bool) {
-//      return prefs.setBool(key, value);
-//    } else {
-//      return prefs.setString(key, value.toString());
-//    }
-//  }
-//
-//  dynamic get(String key) async {
-//    SharedPreferences prefs = global.cSP;
-//    dynamic value =  prefs.get(key);
-//    if(value == null){ // assigning default values here
-//      switch (key) {
-//        case MAIN_PASSWORD: return "main";
-//        case ADMIN_PASSWORD: return "admin";
-//        case MAIN_PASSWORD_ENABLED: return true;
-//        case LOCK_SYSTEM: return false;
-//        case SEND_NOTIFICATION_AUTOMATICALLY: return true;
-//        case CURRENT_THEME: return CTheme.WEYNE;
-//        case CURRENT_LANGUAGE: return CString.ENGLISH_LC;
-//        case AUTO_CRYL_PRICE_PER_LITTER: return 950;
-//        case METALIC_PRICE_PER_LITTER: return 800;
-//        case FEATURE_ADMIN_ONLY_ORDER: return false;
-//        case FEATURE_ADMIN_ONLY_PRODUCT: return false;
-//        case FEATURE_ADMIN_ONLY_EMPLOYEES: return false;
-//        case FEATURE_ADMIN_ONLY_CUSTOMERS: return false;
-//        case FEATURE_ADMIN_ONLY_RETURNED_ORDERS: return false;
-//        case FEATURE_ADMIN_ONLY_PUNCH: return false;
-//        case FEATURE_ADMIN_ONLY_ANALYSIS: return false;
-//        case FEATURE_ADMIN_ONLY_MESSAGES: return false;
-//        case FEATURE_ADMIN_ONLY_SPECIAL_ORDER: return true;
-//        case FEATURE_ADMIN_ONLY_SETTINGS: return false;
-//        default : return null;
-//      }
-//    }else{
-//      return value;
-//    }
-//  }
-
 }
 
 class GetCSPInstance {
