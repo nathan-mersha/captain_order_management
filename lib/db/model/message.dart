@@ -1,4 +1,4 @@
-/// Defines message model
+/// Defines message db.model
 class Message {
   static const String COLLECTION_NAME = "message";
 

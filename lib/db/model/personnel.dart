@@ -1,4 +1,4 @@
-/// Defines personnel model
+/// Defines personnel db.model
 class Personnel {
   static const String COLLECTION_NAME = "personnel";
 

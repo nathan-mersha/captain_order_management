@@ -1,4 +1,4 @@
-/// Defines product model
+/// Defines product db.model
 class Product {
   static const String COLLECTION_NAME = "product";
 

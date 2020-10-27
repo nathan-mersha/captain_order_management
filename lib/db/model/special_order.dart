@@ -1,7 +1,7 @@
-import 'package:captain/model/personnel.dart';
-import 'package:captain/model/product.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 
-/// Defines specialOrder model
+/// Defines specialOrder db.model
 class SpecialOrder {
   static const String COLLECTION_NAME = "specialOrder";
 

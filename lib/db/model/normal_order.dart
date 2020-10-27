@@ -1,7 +1,8 @@
-import 'package:captain/model/personnel.dart';
-import 'package:captain/model/product.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 
-/// Defines normalOrder model
+
+/// Defines normalOrder db.model
 class NormalOrder {
   static const String COLLECTION_NAME = "normalOrder";
 

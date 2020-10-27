@@ -1,7 +1,7 @@
-import 'package:captain/model/personnel.dart';
-import 'package:captain/model/product.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 
-/// Defines punch model
+/// Defines punch db.model
 class Punch {
   static const String COLLECTION_NAME = "punch";
 
