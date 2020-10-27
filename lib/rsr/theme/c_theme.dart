@@ -25,7 +25,6 @@ class CTheme {
   static ThemeData getTheme() {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     String currentTheme = cSP.currentTheme;
-
     return ThemeData(
       primaryColor: THEME_MAP[currentTheme][primaryColor],
       primaryColorLight: THEME_MAP[currentTheme][primaryColorLight],

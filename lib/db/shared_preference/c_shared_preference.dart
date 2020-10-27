@@ -1,5 +1,7 @@
+import 'package:captain/rsr/locale/c_string.dart';
 import 'package:captain/rsr/theme/c_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:captain/global.dart' as global;
 
 class CSharedPreference {
   // Passwords and password settings
@@ -31,19 +33,7 @@ class CSharedPreference {
   static const FEATURE_ADMIN_ONLY_SPECIAL_ORDER = "FEATURE_ADMIN_ONLY_SPECIAL_ORDER";
   static const FEATURE_ADMIN_ONLY_SETTINGS = "FEATURE_ADMIN_ONLY_SETTINGS";
 
-  SharedPreferences pref;
-  CSharedPreference() {
-    initializeSharedPreference();
-  }
-
-  void initializeSharedPreference() async {
-    pref = await SharedPreferences.getInstance();
-  }
-
-  dynamic get(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get(key);
-  }
+  SharedPreferences pref = global.cSP;
 
   // Passwords and password settings
   set mainPassword(String mainPassword) => pref.setString(MAIN_PASSWORD, mainPassword);
@@ -78,13 +68,14 @@ class CSharedPreference {
   String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
   bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? true;
-  
+
   bool get lockSystem => pref.getBool(LOCK_SYSTEM) ?? false;
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
-  
+
   String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
-  String get currentLanguage => pref.getString(CURRENT_LANGUAGE) ?? "en"; // todo : move default value to language page reference
-  
+
+  String get currentLanguage => pref.getString(CURRENT_LANGUAGE) ?? CString.ENGLISH_LC;
+
   num get autoCrylPricePerLitter => pref.getDouble(AUTO_CRYL_PRICE_PER_LITTER) ?? 950;
   num get metalicPricePerLitter => pref.getDouble(METALIC_PRICE_PER_LITTER) ?? 800;
 
@@ -98,6 +89,52 @@ class CSharedPreference {
   bool get featureAdminOnlyMessages => pref.getBool(FEATURE_ADMIN_ONLY_MESSAGES) ?? false;
   bool get featureAdminOnlySpecialOrder => pref.getBool(FEATURE_ADMIN_ONLY_SPECIAL_ORDER) ?? true;
   bool get featureAdminOnlySettings => pref.getBool(FEATURE_ADMIN_ONLY_SETTINGS) ?? false;
+
+
+//  dynamic set(String key, dynamic value) async {
+//    SharedPreferences prefs = global.cSP;
+//
+//    if (value is num || value is double) {
+//      return prefs.setDouble(key, value);
+//    } else if (value is String) {
+//      return prefs.setString(key, value);
+//    } else if (value is bool) {
+//      return prefs.setBool(key, value);
+//    } else {
+//      return prefs.setString(key, value.toString());
+//    }
+//  }
+//
+//  dynamic get(String key) async {
+//    SharedPreferences prefs = global.cSP;
+//    dynamic value =  prefs.get(key);
+//    if(value == null){ // assigning default values here
+//      switch (key) {
+//        case MAIN_PASSWORD: return "main";
+//        case ADMIN_PASSWORD: return "admin";
+//        case MAIN_PASSWORD_ENABLED: return true;
+//        case LOCK_SYSTEM: return false;
+//        case SEND_NOTIFICATION_AUTOMATICALLY: return true;
+//        case CURRENT_THEME: return CTheme.WEYNE;
+//        case CURRENT_LANGUAGE: return CString.ENGLISH_LC;
+//        case AUTO_CRYL_PRICE_PER_LITTER: return 950;
+//        case METALIC_PRICE_PER_LITTER: return 800;
+//        case FEATURE_ADMIN_ONLY_ORDER: return false;
+//        case FEATURE_ADMIN_ONLY_PRODUCT: return false;
+//        case FEATURE_ADMIN_ONLY_EMPLOYEES: return false;
+//        case FEATURE_ADMIN_ONLY_CUSTOMERS: return false;
+//        case FEATURE_ADMIN_ONLY_RETURNED_ORDERS: return false;
+//        case FEATURE_ADMIN_ONLY_PUNCH: return false;
+//        case FEATURE_ADMIN_ONLY_ANALYSIS: return false;
+//        case FEATURE_ADMIN_ONLY_MESSAGES: return false;
+//        case FEATURE_ADMIN_ONLY_SPECIAL_ORDER: return true;
+//        case FEATURE_ADMIN_ONLY_SETTINGS: return false;
+//        default : return null;
+//      }
+//    }else{
+//      return value;
+//    }
+//  }
 
 }
 
