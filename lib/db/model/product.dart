@@ -3,7 +3,7 @@ class Product {
   static const String COLLECTION_NAME = "product";
 
   /// Defines key values to extract from a map
-  static const String PRODUCT_ID = "productId";
+  static const String ID = "id";
   static const String NAME = "name";
   static const String TYPE = "type";
   static const String UNIT_OF_MEASUREMENT = "unitOfMeasurement";
@@ -19,7 +19,7 @@ class Product {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String productId;
+  int id;
   String name;
   String type; // paint, other
   String unitOfMeasurement;
@@ -36,7 +36,7 @@ class Product {
   DateTime lastModified;
 
   Product({
-    this.productId,
+    this.id,
     this.name,
     this.type,
     this.unitOfMeasurement,
@@ -54,8 +54,8 @@ class Product {
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Product product) {
-    return {
-      PRODUCT_ID: product.productId,
+    return product == null ? null : {
+      ID: product.id,
       NAME: product.name,
       TYPE: product.type,
       UNIT_OF_MEASUREMENT: product.unitOfMeasurement,
@@ -75,8 +75,8 @@ class Product {
 
   /// Converts Map to Model
   static Product toModel(dynamic map) {
-    return Product(
-        productId: map[PRODUCT_ID],
+    return map == null ? null : Product(
+        id: map[ID],
         name: map[NAME],
         type: map[TYPE],
         unitOfMeasurement: map[UNIT_OF_MEASUREMENT],
@@ -89,8 +89,9 @@ class Product {
         quantityInCart: map[QUANTITY_IN_CART],
         subTotal: map[SUB_TOTAL],
         delivered: map[DELIVERED],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model
@@ -105,6 +106,7 @@ class Product {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<Product> models) {
     List<Map<String, dynamic>> mapList = [];
+    models == null ? [] :
     models.forEach((Product model) {
       mapList.add(toMap(model));
     });

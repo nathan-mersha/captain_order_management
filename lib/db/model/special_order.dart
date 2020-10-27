@@ -6,7 +6,7 @@ class SpecialOrder {
   static const String COLLECTION_NAME = "specialOrder";
 
   /// Defines key values to extract from a map
-  static const String SPECIAL_ORDER_ID = "specialOrderId";
+  static const String ID = "id";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
   static const String PRODUCTS = "products";
@@ -18,7 +18,7 @@ class SpecialOrder {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String specialOrderId;
+  int id;
   Personnel employee;
   Personnel customer;
   List<Product> products;
@@ -31,7 +31,7 @@ class SpecialOrder {
   DateTime lastModified;
 
   SpecialOrder({
-    this.specialOrderId,
+    this.id,
     this.employee,
     this.customer,
     this.products,
@@ -46,8 +46,8 @@ class SpecialOrder {
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(SpecialOrder specialOrder) {
-    return {
-      SPECIAL_ORDER_ID: specialOrder.specialOrderId,
+    return specialOrder == null ? null : {
+      ID: specialOrder.id,
       EMPLOYEE: Personnel.toMap(specialOrder.employee),
       CUSTOMER: Personnel.toMap(specialOrder.customer),
       PRODUCTS: Product.toMapList(specialOrder.products),
@@ -63,8 +63,8 @@ class SpecialOrder {
 
   /// Converts Map to Model
   static SpecialOrder toModel(dynamic map) {
-    return SpecialOrder(
-        specialOrderId: map[SPECIAL_ORDER_ID],
+    return map == null ? null : SpecialOrder(
+        id: map[ID],
         employee: Personnel.toModel(map[EMPLOYEE]),
         customer: Personnel.toModel(map[CUSTOMER]),
         products: Product.toModelList(map[PRODUCTS]),
@@ -73,8 +73,9 @@ class SpecialOrder {
         remainingPayment: map[REMAINING_PAYMENT],
         paidInFull: map[PAID_IN_FULL],
         note: map[NOTE],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model

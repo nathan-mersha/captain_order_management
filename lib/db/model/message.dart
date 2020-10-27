@@ -3,24 +3,30 @@ class Message {
   static const String COLLECTION_NAME = "message";
 
   /// Defines key values to extract from a map
-  static const String MESSAGE_ID = "messageId";
+  static const String ID = "id";
   static const String RECIPIENT = "recipient";
   static const String BODY = "body";
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String messageId;
+  int id;
   String recipient;
   String body;
   DateTime firstModified;
   DateTime lastModified;
 
-  Message({this.messageId, this.recipient,this.body, this.firstModified, this.lastModified});
+  Message({
+    this.id,
+    this.recipient,
+    this.body,
+    this.firstModified,
+    this.lastModified
+  });
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Message message) {
-    return {
-      MESSAGE_ID: message.messageId,
+    return message == null ? null : {
+      ID: message.id,
       RECIPIENT : message.recipient,
       BODY : message.body,
       FIRST_MODIFIED: message.firstModified,
@@ -30,12 +36,13 @@ class Message {
 
   /// Converts Map to Model
   static Message toModel(dynamic map) {
-    return Message(
-        messageId: map[MESSAGE_ID],
+    return map == null ? null : Message(
+        id: map[ID],
         recipient: map[RECIPIENT],
         body: map[BODY],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model

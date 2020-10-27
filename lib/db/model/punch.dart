@@ -6,7 +6,7 @@ class Punch {
   static const String COLLECTION_NAME = "punch";
 
   /// Defines key values to extract from a map
-  static const String PUNCH_ID = "punchId";
+  static const String ID = "id";
   static const String EMPLOYEE = "employee";
   static const String PRODUCT = "product";
   static const String TYPE = "type";
@@ -15,7 +15,7 @@ class Punch {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String punchId;
+  int id;
   Personnel employee;
   Product product;
   String type; // in/out
@@ -25,7 +25,7 @@ class Punch {
   DateTime lastModified;
 
   Punch({
-    this.punchId,
+    this.id,
     this.employee,
     this.product,
     this.type,
@@ -37,8 +37,8 @@ class Punch {
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Punch punch) {
-    return {
-      PUNCH_ID: punch.punchId,
+    return punch == null ? null : {
+      ID: punch.id,
       EMPLOYEE: Personnel.toMap(punch.employee),
       PRODUCT: Product.toMap(punch.product),
       TYPE: punch.type,
@@ -51,15 +51,16 @@ class Punch {
 
   /// Converts Map to Model
   static Punch toModel(dynamic map) {
-    return Punch(
-        punchId: map[PUNCH_ID],
+    return map == null ? null : Punch(
+        id: map[ID],
         employee: Personnel.toModel(map[EMPLOYEE]),
         product: Product.toModel(map[PRODUCT]),
         type: map[TYPE],
         weight: map[WEIGHT],
         note: map[NOTE],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model

@@ -7,7 +7,7 @@ class NormalOrder {
   static const String COLLECTION_NAME = "normalOrder";
 
   /// Defines key values to extract from a map
-  static const String NORMAL_ORDER_ID = "normalOrderId";
+  static const String ID = "id";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
   static const String PAINT_ORDER = "paintOrder";
@@ -22,7 +22,7 @@ class NormalOrder {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String normalOrderId;
+  int id;
   Personnel employee;
   Personnel customer;
   Product paintOrder;
@@ -38,7 +38,7 @@ class NormalOrder {
   DateTime lastModified;
 
   NormalOrder({
-    this.normalOrderId,
+    this.id,
     this.employee,
     this.customer,
     this.paintOrder,
@@ -56,12 +56,12 @@ class NormalOrder {
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {
-    return {
-      NORMAL_ORDER_ID: normalOrder.normalOrderId,
-      EMPLOYEE: Personnel.toMap(normalOrder.employee),
-      CUSTOMER: Personnel.toMap(normalOrder.customer),
-      PAINT_ORDER: Product.toMap(normalOrder.paintOrder),
-      OTHER_PRODUCTS: Product.toMapList(normalOrder.otherProducts),
+    return normalOrder == null ? null : {
+      ID: normalOrder.id,
+      EMPLOYEE: normalOrder.employee == null ? null : Personnel.toMap(normalOrder.employee),
+      CUSTOMER: normalOrder.customer == null ? null : Personnel.toMap(normalOrder.customer),
+      PAINT_ORDER: normalOrder.paintOrder == null ? null : Product.toMap(normalOrder.paintOrder),
+      OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : Product.toMapList(normalOrder.otherProducts),
       VOLUME: normalOrder.volume,
       TOTAL_AMOUNT: normalOrder.totalAmount,
       ADVANCE_PAYMENT: normalOrder.advancePayment,
@@ -76,8 +76,8 @@ class NormalOrder {
 
   /// Converts Map to Model
   static NormalOrder toModel(dynamic map) {
-    return NormalOrder(
-        normalOrderId: map[NORMAL_ORDER_ID],
+    return map == null ? null: NormalOrder(
+        id: map[ID],
         employee: Personnel.toModel(map[EMPLOYEE]),
         customer: Personnel.toModel(map[CUSTOMER]),
         paintOrder: Product.toModel(map[PAINT_ORDER]),
@@ -89,8 +89,9 @@ class NormalOrder {
         paidInFull: map[PAID_IN_FULL],
         status: map[STATUS],
         userNotified: map[USER_NOTIFIED],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model

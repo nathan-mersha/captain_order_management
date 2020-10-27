@@ -2,8 +2,12 @@
 class Personnel {
   static const String COLLECTION_NAME = "personnel";
 
+  // Enum for type field
+  static const String EMPLOYEE = "employee";
+  static const String CUSTOMER = "customer";
+
   /// Defines key values to extract from a map
-  static const String PERSONNEL_ID = "personnelId";
+  static const String ID = "id";
   static const String NAME = "name";
   static const String PHONE_NUMBER = "phoneNumber";
   static const String EMAIL = "email";
@@ -15,7 +19,7 @@ class Personnel {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String personnelId;
+  int id;
   String name;
   String phoneNumber;
   String email;
@@ -28,7 +32,7 @@ class Personnel {
   DateTime lastModified;
 
   Personnel({
-    this.personnelId,
+    this.id,
     this.name,
     this.phoneNumber,
     this.email,
@@ -43,8 +47,8 @@ class Personnel {
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Personnel personnel) {
-    return {
-      PERSONNEL_ID: personnel.personnelId,
+    return personnel == null ? null : {
+      ID: personnel.id,
       NAME: personnel.name,
       PHONE_NUMBER: personnel.phoneNumber,
       EMAIL: personnel.email,
@@ -60,8 +64,8 @@ class Personnel {
 
   /// Converts Map to Model
   static Personnel toModel(dynamic map) {
-    return Personnel(
-        personnelId: map[PERSONNEL_ID],
+    return map == null ? null : Personnel(
+        id: map[ID],
         name: map[NAME],
         phoneNumber: map[PHONE_NUMBER],
         email: map[EMAIL],
@@ -70,8 +74,9 @@ class Personnel {
         type: map[TYPE],
         profileImage: map[PROFILE_IMAGE],
         note: map[NOTE],
-        firstModified: map[FIRST_MODIFIED],
-        lastModified: map[LAST_MODIFIED]);
+        firstModified: DateTime(map[FIRST_MODIFIED]),
+        lastModified: DateTime(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model
