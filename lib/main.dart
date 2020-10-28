@@ -23,6 +23,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     requestPermissions();
 
     return FutureBuilder(

@@ -33,6 +33,7 @@ class CTheme {
       primaryColor: primary,
       primaryColorLight: primaryLight,
       accentColor: accent,
+      selectedRowColor: primaryLight,
       backgroundColor: Color(0xfff2f2f2),
       buttonColor: primary,
       inputDecorationTheme: InputDecorationTheme(focusColor: primary),

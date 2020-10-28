@@ -67,7 +67,7 @@ class CSharedPreference {
 
   String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
-  bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? true;
+  bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false; // todo : change to true
 
   bool get lockSystem => pref.getBool(LOCK_SYSTEM) ?? false;
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
