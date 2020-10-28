@@ -1,3 +1,4 @@
+import 'package:captain/api/api_global_config.dart';
 import 'package:captain/db/model/punch.dart';
 import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/db/model/special_order.dart';
@@ -46,6 +47,8 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    ApiGlobalConfig.get();
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Row(

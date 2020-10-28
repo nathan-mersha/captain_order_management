@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "174856579323",
+    "firebase_url": "https://captain-a7e17.firebaseio.com",
+    "project_id": "captain-a7e17",
+    "storage_bucket": "captain-a7e17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174856579323:android:425ba714259e1f5335e85e",
+        "android_client_info": {
+          "package_name": "com.awramarket.captain_order_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174856579323-738rb2ee8qfmdj2j5ka6p5d8ivdforsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_LMwb3nVl1osT0lEBfazKgDiBjcAXnr8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174856579323-738rb2ee8qfmdj2j5ka6p5d8ivdforsv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
