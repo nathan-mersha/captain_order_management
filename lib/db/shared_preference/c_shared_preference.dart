@@ -10,7 +10,7 @@ class CSharedPreference {
   static const MAIN_PASSWORD_ENABLED = "MAIN_PASSWORD_ENABLED";
 
   // Lock system if deal is broken
-  static const LOCK_SYSTEM = "LOCK_SYSTEM";
+  static const SYSTEM_LOCKED = "SYSTEM_LOCKED";
   static const SEND_NOTIFICATION_AUTOMATICALLY = "SEND_NOTIFICATION_AUTOMATICALLY";
 
   // User locale
@@ -41,7 +41,7 @@ class CSharedPreference {
   set mainPasswordEnabled(bool mainPasswordEnabled) => pref.setBool(MAIN_PASSWORD_ENABLED, mainPasswordEnabled);
 
   // Lock system if deal is broken
-  set lockSystem(bool lockSystem) => pref.setBool(LOCK_SYSTEM, lockSystem);
+  set systemLocked(bool systemLocked) => pref.setBool(SYSTEM_LOCKED, systemLocked);
   set sendNotificationAutomatically(bool sendNotificationAutomatically) => pref.setBool(SEND_NOTIFICATION_AUTOMATICALLY, sendNotificationAutomatically);
 
   // User locale
@@ -69,7 +69,7 @@ class CSharedPreference {
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
   bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false; // todo : change to true
 
-  bool get lockSystem => pref.getBool(LOCK_SYSTEM) ?? false;
+  bool get systemLocked => pref.getBool(SYSTEM_LOCKED) ?? false;
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
 
   String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;

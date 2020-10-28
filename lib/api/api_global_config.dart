@@ -1,19 +1,23 @@
+import 'package:captain/db/model/global.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ApiGlobalConfig {
   static const String GLOBAL_KEY_ID = "9NA2lDXNcsU1TlfFDApv";
-  static const String GLOBAL_COLLECTION_NAME = "global";
   static get(){
-
-
     Firestore.instance
-        .collection(GLOBAL_COLLECTION_NAME)
+        .collection(Global.COLLECTION_NAME)
         .document(GLOBAL_KEY_ID)
         .snapshots()
         .listen((DocumentSnapshot globalConfigSnapShot) {
 
-          var globalConfig = globalConfigSnapShot.data;
-          print("global config : $globalConfig");
+          print("herree");
+          Global global = Global.toModel(globalConfigSnapShot.data);
+          CSharedPreference cSP = GetCSPInstance.cSharedPreference;
+
+          // Updating system locked status
+          cSP.systemLocked = global.lockSystem;
+          print("Is system locked : ${cSP.systemLocked}");
     });
   }
 }

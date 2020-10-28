@@ -1,6 +1,8 @@
+import 'package:captain/api/api_global_config.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/dashboard.dart';
 import 'package:captain/page/login.dart';
+import 'package:captain/page/system_locked.dart';
 import 'package:flutter/material.dart';
 
 class CRoutes {
@@ -10,11 +12,17 @@ class CRoutes {
 
   var routes;
   CRoutes() {
+    ApiGlobalConfig.get();
+
     routes = {
       ROOT: (BuildContext context) {
         CSharedPreference cSP = GetCSPInstance.cSharedPreference;
         bool mainPasswordEnabled = cSP.mainPasswordEnabled;
-        if (mainPasswordEnabled) {
+        bool systemLocked = cSP.systemLocked;
+
+        if(systemLocked){
+          return SystemLockedPage();
+        }else if (mainPasswordEnabled) {
           return LoginPage();
         } else {
           return DashboardPage();

@@ -47,7 +47,6 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    ApiGlobalConfig.get();
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
