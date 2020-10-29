@@ -23,8 +23,8 @@ class ProductDAL {
             "${Product.QUANTITY_IN_CART} INTEGER," +
             "${Product.SUB_TOTAL} REAL," +
             "${Product.DELIVERED} BLOB," +
-            "${Product.FIRST_MODIFIED} BLOB," +
-            "${Product.LAST_MODIFIED} BLOB" +
+            "${Product.FIRST_MODIFIED} TEXT," +
+            "${Product.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -73,8 +73,8 @@ class ProductDAL {
         quantityInCart: maps[i][Product.QUANTITY_IN_CART],
         subTotal: maps[i][Product.SUB_TOTAL],
         delivered: maps[i][Product.DELIVERED],
-        firstModified: maps[i][Product.FIRST_MODIFIED],
-        lastModified: maps[i][Product.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][Product.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][Product.LAST_MODIFIED]),
       );
     });
   }

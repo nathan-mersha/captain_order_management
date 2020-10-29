@@ -10,14 +10,14 @@ class ApiGlobalConfig {
         .document(GLOBAL_KEY_ID)
         .snapshots()
         .listen((DocumentSnapshot globalConfigSnapShot) {
-
-          print("herree");
           Global global = Global.toModel(globalConfigSnapShot.data);
           CSharedPreference cSP = GetCSPInstance.cSharedPreference;
 
-          // Updating system locked status
-          cSP.systemLocked = global.lockSystem;
-          print("Is system locked : ${cSP.systemLocked}");
+          if(global != null){
+            // Updating system locked status
+            cSP.systemLocked = global.lockSystem;
+          }
+
     });
   }
 }

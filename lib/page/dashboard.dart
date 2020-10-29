@@ -1,7 +1,3 @@
-import 'package:captain/api/api_global_config.dart';
-import 'package:captain/db/model/punch.dart';
-import 'package:captain/db/model/returned_order.dart';
-import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/analysis.dart';
 import 'package:captain/page/customers.dart';
 import 'package:captain/page/developer.dart';
@@ -25,7 +21,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardPageState extends State<DashboardPage> {
-  int selectedMenuIndex = 1; // over view page selected by default
+  int selectedMenuIndex = 7; // todo : change index to 1 over view page selected by default
   List menus = [
     {
       "name": "Captain",
@@ -50,6 +46,7 @@ class DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+      resizeToAvoidBottomInset: false,
       body: Row(
         children: <Widget>[
           Expanded(
@@ -131,9 +128,7 @@ class DashboardPageState extends State<DashboardPage> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: menus[selectedMenuIndex]["child"],
-                )
+                Container(child: menus[selectedMenuIndex]["child"],margin: EdgeInsets.all(8),)
               ],
             ),
           )

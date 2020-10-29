@@ -16,8 +16,8 @@ class ReturnedOrderDAL {
             "${ReturnedOrder.PRODUCT} BLOB," +
             "${ReturnedOrder.COUNT} INTEGER," +
             "${ReturnedOrder.NOTE} TEXT," +
-            "${ReturnedOrder.FIRST_MODIFIED} BLOB," +
-            "${ReturnedOrder.LAST_MODIFIED} BLOB" +
+            "${ReturnedOrder.FIRST_MODIFIED} TEXT," +
+            "${ReturnedOrder.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -59,8 +59,8 @@ class ReturnedOrderDAL {
         product: maps[i][ReturnedOrder.PRODUCT],
         count: maps[i][ReturnedOrder.COUNT],
         note: maps[i][ReturnedOrder.NOTE],
-        firstModified: maps[i][ReturnedOrder.FIRST_MODIFIED],
-        lastModified: maps[i][ReturnedOrder.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][ReturnedOrder.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][ReturnedOrder.LAST_MODIFIED]),
       );
     });
   }

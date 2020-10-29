@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// Defines personnel db.model
 class Personnel {
   static const String COLLECTION_NAME = "personnel";
@@ -26,7 +28,7 @@ class Personnel {
   String address;
   String addressDetail;
   String type;
-  List profileImage;
+  Uint8List profileImage;
   String note;
   DateTime firstModified;
   DateTime lastModified;
@@ -57,8 +59,8 @@ class Personnel {
       TYPE: personnel.type,
       PROFILE_IMAGE: personnel.profileImage,
       NOTE: personnel.note,
-      FIRST_MODIFIED: personnel.firstModified,
-      LAST_MODIFIED: personnel.lastModified
+      FIRST_MODIFIED: personnel.firstModified.toIso8601String(), // todo : change
+      LAST_MODIFIED: personnel.lastModified.toIso8601String() // todo : change
     };
   }
 

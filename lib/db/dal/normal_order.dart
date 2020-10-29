@@ -22,8 +22,8 @@ class NormalOrderDAL {
             "${NormalOrder.PAID_IN_FULL} BLOB," +
             "${NormalOrder.STATUS} TEXT," +
             "${NormalOrder.USER_NOTIFIED} BLOB," +
-            "${NormalOrder.FIRST_MODIFIED} BLOB," +
-            "${NormalOrder.LAST_MODIFIED} BLOB" +
+            "${NormalOrder.FIRST_MODIFIED} TEXT," +
+            "${NormalOrder.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -71,8 +71,8 @@ class NormalOrderDAL {
         paidInFull: maps[i][NormalOrder.PAID_IN_FULL],
         status: maps[i][NormalOrder.STATUS],
         userNotified: maps[i][NormalOrder.USER_NOTIFIED],
-        firstModified: maps[i][NormalOrder.FIRST_MODIFIED],
-        lastModified: maps[i][NormalOrder.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][NormalOrder.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][NormalOrder.LAST_MODIFIED]),
       );
     });
   }

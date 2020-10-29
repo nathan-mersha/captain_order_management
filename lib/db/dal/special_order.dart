@@ -19,8 +19,8 @@ class SpecialOrderDAL {
             "${SpecialOrder.REMAINING_PAYMENT} REAL," +
             "${SpecialOrder.PAID_IN_FULL} BLOB," +
             "${SpecialOrder.NOTE} TEXT," +
-            "${SpecialOrder.FIRST_MODIFIED} BLOB," +
-            "${SpecialOrder.LAST_MODIFIED} BLOB" +
+            "${SpecialOrder.FIRST_MODIFIED} TEXT," +
+            "${SpecialOrder.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -65,8 +65,8 @@ class SpecialOrderDAL {
         remainingPayment: maps[i][SpecialOrder.REMAINING_PAYMENT],
         paidInFull: maps[i][SpecialOrder.PAID_IN_FULL],
         note: maps[i][SpecialOrder.NOTE],
-        firstModified: maps[i][SpecialOrder.FIRST_MODIFIED],
-        lastModified: maps[i][SpecialOrder.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][SpecialOrder.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][SpecialOrder.LAST_MODIFIED]),
       );
     });
   }

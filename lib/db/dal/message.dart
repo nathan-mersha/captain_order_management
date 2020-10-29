@@ -13,8 +13,8 @@ class MessageDAL {
             "${Message.ID} TEXT PRIMARY KEY AUTOINCREMENT NOT NULL," +
             "${Message.RECIPIENT} TEXT," +
             "${Message.BODY} TEXT," +
-            "${Message.FIRST_MODIFIED} BLOB," +
-            "${Message.LAST_MODIFIED} BLOB" +
+            "${Message.FIRST_MODIFIED} TEXT," +
+            "${Message.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -53,8 +53,8 @@ class MessageDAL {
         id: maps[i][Message.ID],
         recipient: maps[i][Message.RECIPIENT],
         body: maps[i][Message.BODY],
-        firstModified: maps[i][Message.FIRST_MODIFIED],
-        lastModified: maps[i][Message.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][Message.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][Message.LAST_MODIFIED]),
       );
     });
   }

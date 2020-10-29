@@ -16,8 +16,8 @@ class PunchDAL {
             "${Punch.TYPE} TEXT," +
             "${Punch.WEIGHT} REAL," +
             "${Punch.NOTE} TEXT," +
-            "${Punch.FIRST_MODIFIED} BLOB," +
-            "${Punch.LAST_MODIFIED} BLOB" +
+            "${Punch.FIRST_MODIFIED} TEXT," +
+            "${Punch.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -59,8 +59,8 @@ class PunchDAL {
         type: maps[i][Punch.TYPE],
         weight: maps[i][Punch.WEIGHT],
         note: maps[i][Punch.NOTE],
-        firstModified: maps[i][Punch.FIRST_MODIFIED],
-        lastModified: maps[i][Punch.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][Punch.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][Punch.LAST_MODIFIED]),
       );
     });
   }

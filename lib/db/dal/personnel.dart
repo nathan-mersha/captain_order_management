@@ -1,4 +1,3 @@
-import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,10 +17,10 @@ class PersonnelDAL {
             "${Personnel.ADDRESS} TEXT," +
             "${Personnel.ADDRESS_DETAIL} TEXT," +
             "${Personnel.TYPE} TEXT," +
-            "${Personnel.PROFILE_IMAGE} REAL," +
+            "${Personnel.PROFILE_IMAGE} BLOG," +
             "${Personnel.NOTE} TEXT," +
-            "${Personnel.FIRST_MODIFIED} BLOB," +
-            "${Personnel.LAST_MODIFIED} BLOB" +
+            "${Personnel.FIRST_MODIFIED} TEXT," +
+            "${Personnel.LAST_MODIFIED} TEXT" +
             ")";
 
     final database = openDatabase(
@@ -35,14 +34,14 @@ class PersonnelDAL {
     return database;
   }
 
-  static Future<void> create(Personnel normalOrder) async {
+  static Future<void> create(Personnel personnel) async {
     // updating first and last modified stamps.
-    normalOrder.firstModified = DateTime.now();
-    normalOrder.lastModified = DateTime.now();
+    personnel.firstModified = DateTime.now();
+    personnel.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, Personnel.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(TABLE_NAME, Personnel.toMap(personnel), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   /// where : "id = ?"
@@ -66,18 +65,18 @@ class PersonnelDAL {
         type: maps[i][Personnel.TYPE],
         profileImage: maps[i][Personnel.PROFILE_IMAGE],
         note: maps[i][Personnel.NOTE],
-        firstModified: maps[i][Personnel.FIRST_MODIFIED],
-        lastModified: maps[i][Personnel.LAST_MODIFIED],
+        firstModified: DateTime.parse(maps[i][Personnel.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(maps[i][Personnel.LAST_MODIFIED]),
       );
     });
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Personnel normalOrder}) async {
-    normalOrder.lastModified = DateTime.now();
+  static Future<void> update({String where, dynamic whereArgs, Personnel personnel}) async {
+    personnel.lastModified = DateTime.now();
     final Database db = await getDatabase();
-    await db.update(TABLE_NAME, Personnel.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await db.update(TABLE_NAME, Personnel.toMap(personnel), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"
