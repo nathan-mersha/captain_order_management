@@ -10,6 +10,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class EmployeesPage extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
   bool _absorbInputProfileImg = false;
   bool _doingCRUD = false;
   Personnel employee = Personnel(type: Personnel.EMPLOYEE);
+  List<Personnel> employees;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
         AbsorbPointer(
           absorbing: _doingCRUD,
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
                 flex: 1,
@@ -227,6 +230,7 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
                   child: Container(
                     padding: EdgeInsets.only(bottom: 23),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
                           width: double.infinity,
@@ -236,14 +240,72 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    "Employees",
-                                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
-                                  ),
-                                ],
+                              child: Text(
+                                "Employees",
+                                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                               ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 495,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: FutureBuilder(
+                              future: getListOfEmployees(),
+                              builder: (BuildContext context, AsyncSnapshot<List<Personnel>> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none) {
+                                  return Text("Waiting connection");
+                                } else if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.hasData) {
+                                    employees = snapshot.data;
+//
+//                              setState(() {
+//                              });
+
+                                    print("employees data : ${snapshot.data}");
+                                    return Container(
+//                                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20),
+                                        child: employees == null
+                                            ? Text("No employees found")
+                                            : DataTable(
+                                                columns: [
+                                                  DataColumn(label: Text("Name")),
+                                                  DataColumn(label: Text("Phone number")),
+                                                  DataColumn(label: Text("Address")),
+                                                  DataColumn(label: Text("Date")),
+                                                  DataColumn(label: Text("")),
+                                                ],
+                                                rows: employees.map((Personnel employee) {
+                                                  return DataRow(cells: [
+                                                    DataCell(Text(employee.name ?? '-')),
+                                                    DataCell(Text(employee.phoneNumber ?? '-')),
+                                                    DataCell(Text(employee.address ?? '-')),
+                                                    DataCell(Text(DateFormat.yMMMd().format(employee.firstModified))),
+                                                    DataCell(IconButton(
+                                                      icon: Icon(
+                                                        Icons.delete_outline,
+                                                        color: Theme.of(context).accentColor,
+                                                        size: 15,
+                                                      ),
+                                                      onPressed: () {
+                                                        // todo : delete cell here.
+                                                        print("deleting ${employee.name}");
+                                                      },
+                                                    ))
+                                                  ]);
+                                                }).toList(),
+                                              ));
+                                  } else if (snapshot.hasError) {
+                                    // Error returned
+                                    return Text(snapshot.error.toString());
+                                  } else {
+                                    return Text("Waiting");
+                                  }
+                                } else {
+                                  return Text("Waiting");
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -251,12 +313,17 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         )
       ],
     ));
+  }
+
+  Future<List<Personnel>> getListOfEmployees() {
+    // todo : query employees only and not all personnel.
+    return PersonnelDAL.find();
   }
 
   void _pickImage() async {
