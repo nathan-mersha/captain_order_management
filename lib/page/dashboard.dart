@@ -1,15 +1,15 @@
-import 'package:captain/page/analysis.dart';
-import 'package:captain/page/customers.dart';
-import 'package:captain/page/developer.dart';
-import 'package:captain/page/employees.dart';
-import 'package:captain/page/messages.dart';
-import 'package:captain/page/orders.dart';
-import 'package:captain/page/overview.dart';
-import 'package:captain/page/products.dart';
-import 'package:captain/page/punch.dart';
-import 'package:captain/page/returned_orders.dart';
-import 'package:captain/page/settings.dart';
-import 'package:captain/page/special_orders.dart';
+import 'package:captain/page/analysis/analysis.dart';
+import 'package:captain/page/customer/customers.dart';
+import 'package:captain/page/developer/developer.dart';
+import 'package:captain/page/employee/employees.dart';
+import 'package:captain/page/message/messages.dart';
+import 'package:captain/page/order/orders.dart';
+import 'package:captain/page/overview/overview.dart';
+import 'package:captain/page/product/products.dart';
+import 'package:captain/page/punch/punch.dart';
+import 'package:captain/page/returned_order/returned_orders.dart';
+import 'package:captain/page/setting/settings.dart';
+import 'package:captain/page/special_order/special_orders.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
