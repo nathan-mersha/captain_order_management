@@ -43,8 +43,9 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
+    return SafeArea(
+      top: true,
+        child: Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       resizeToAvoidBottomInset: false,
       body: Row(
@@ -52,24 +53,26 @@ class DashboardPageState extends State<DashboardPage> {
           Expanded(
               flex: 2,
               child: Drawer(
+
                   child: Container(
+                    padding: EdgeInsets.only(top: 12),
                 color: Theme.of(context).primaryColor,
                 child: ListView.builder(
                   itemCount: menus.length,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Container(
-                        padding: EdgeInsets.only(left: 10, bottom: 14, top: 6, right: 0),
+                        padding: EdgeInsets.only(left: 20, bottom: 14, top: 6, right: 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Image.asset(
                               "assets/images/captain_icon.png",
-                              scale: 10,
+                              scale: 9,
                             ),
                             SizedBox(
-                              width: 30,
+                              width: 20,
                             ),
                             Text(
                               "Captain",
@@ -82,20 +85,20 @@ class DashboardPageState extends State<DashboardPage> {
                       return Container(
                         color: selectedMenuIndex == index ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColor,
                         child: ListTile(
-                          leading: Icon(
+                          leading: Container(padding: EdgeInsets.only(left: 10),child: Icon(
                             menus[index]["iconData"],
                             color: Colors.white,
                             size: selectedMenuIndex == index ? 20 : 16,
-                          ),
+                          ),),
                           title: Text(
                             menus[index]["name"],
                             style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                           ),
-                          trailing: Icon(
+                          trailing:Container(padding: EdgeInsets.only(right: 10),child:  Icon(
                             Icons.navigate_next,
-                            color: Colors.white,
+                            color: Colors.white60,
                             size: selectedMenuIndex == index ? 16 : 13,
-                          ),
+                          ),),
                           onTap: () {
                             setState(() {
                               selectedMenuIndex = index;
@@ -128,12 +131,12 @@ class DashboardPageState extends State<DashboardPage> {
                     ],
                   ),
                 ),
-                Container(child: menus[selectedMenuIndex]["child"],margin: EdgeInsets.all(8),)
+                Container(child: menus[selectedMenuIndex]["child"], padding: EdgeInsets.all(8))
               ],
             ),
           )
         ],
       ),
-    );
+    ));
   }
 }

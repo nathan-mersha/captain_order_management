@@ -11,7 +11,7 @@ class Statistics {
 
   Statistics({
     this.title = "statistics",
-    this.iconData = Icons.multiline_chart,
+    this.iconData = Icons.show_chart,
     this.stat = "-",
     this.subTitle = "unknown"
   });

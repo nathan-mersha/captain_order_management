@@ -17,8 +17,9 @@ dependencies:
   random_color: ^1.0.5
   image_picker: ^0.6.7+12
   contacts_service: ^0.4.6
-  dropdown_search: ^0.4.5
   intl: ^0.16.1
+  find_dropdown: ^0.2.2
+  autocomplete_textfield: ^1.7.3
 
 # Dev dependencies
 dev_dependencies:
