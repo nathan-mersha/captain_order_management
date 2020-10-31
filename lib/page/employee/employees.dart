@@ -19,10 +19,10 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
         Row(
           children: <Widget>[
             StatisticsCard(Statistics(stat: "1234")),
-            StatisticsCard(Statistics(stat: "1234")),
-            StatisticsCard(Statistics(stat: "1234")),
-            StatisticsCard(Statistics(stat: "1234")),
-            StatisticsCard(Statistics(stat: "1234")),
+            StatisticsCard(Statistics(stat: "44")),
+            StatisticsCard(Statistics(stat: "342")),
+            StatisticsCard(Statistics(stat: "12")),
+            StatisticsCard(Statistics(stat: "0")),
           ],
         ),
 
@@ -32,14 +32,14 @@ class _EmployeesPageState extends State<EmployeesPage> with SingleTickerProvider
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: CreateEmployeeView(),
               ),
               SizedBox(
                 width: 5,
               ),
               Expanded(
-                flex: 2,
+                flex: 7,
                 child: EmployeeTable(),
               ),
             ],
