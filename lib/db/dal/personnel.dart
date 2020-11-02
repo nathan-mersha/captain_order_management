@@ -82,7 +82,7 @@ class PersonnelDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> delete(String where, dynamic whereArgs) async {
+  static Future<void> delete({String where, dynamic whereArgs}) async {
     final Database db = await getDatabase();
     await db.delete(
       TABLE_NAME,

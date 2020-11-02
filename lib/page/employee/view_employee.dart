@@ -2,6 +2,7 @@ import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/employee/create_employee.dart';
 import 'package:captain/page/employee/statistics_employee.dart';
+import 'package:captain/widget/c_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -52,12 +53,21 @@ class EmployeeTableState extends State<EmployeeTable> {
             FutureBuilder(
               future: getListOfEmployees(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+                print("is state null : ---- ${widget.createEmployeeKey.currentState == null}");
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<Personnel> employees = snapshot.data as List<Personnel>;
-                  _EmployeeDataSource _employeeDataSourceVal = _EmployeeDataSource(context, employees);
+                  _EmployeeDataSource _employeeDataSourceVal = _EmployeeDataSource(context, employees, () {
+                    setState(() {
+                      // updating table here.
+                    });
+                  }, widget.createEmployeeKey);
                   _employeeDataSource = _employeeDataSourceVal;
                 } else {
-                  _employeeDataSource = _EmployeeDataSource(context, []);
+                  _employeeDataSource = _EmployeeDataSource(context, [], () {
+                    setState(() {
+                      // updating table here.
+                    });
+                  }, widget.createEmployeeKey);
                 }
 
                 _rowsPerPage = 7;
@@ -116,7 +126,9 @@ class EmployeeTableState extends State<EmployeeTable> {
 class _EmployeeDataSource extends DataTableSource {
   final BuildContext context;
   final List<Personnel> employees;
-  _EmployeeDataSource(this.context, this.employees);
+  final Function updateTable;
+  final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
+  _EmployeeDataSource(this.context, this.employees, this.updateTable, this.createEmployeeKey);
 
   void _sort<T>(Comparable<T> Function(Personnel d) getField, bool ascending) {
     employees.sort((a, b) {
@@ -137,20 +149,24 @@ class _EmployeeDataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(employee.profileImage == null
-            ? Icon(
-                Icons.person,
-                color: Colors.black12,
-              )
-            : ClipOval(
-                child: Image.memory(
-                  employee.profileImage,
-                  fit: BoxFit.cover,
-                  height: 30,
-                  width: 30,
+        DataCell(
+          employee.profileImage == null
+              ? Icon(
+                  Icons.person,
+                  color: Colors.black12,
+                )
+              : ClipOval(
+                  child: Image.memory(
+                    employee.profileImage,
+                    fit: BoxFit.cover,
+                    height: 30,
+                    width: 30,
+                  ),
                 ),
-              )),
-        DataCell(Text(employee.name ?? '-')),
+        ),
+        DataCell(Text(employee.name ?? '-'), onTap: () {
+          createEmployeeKey.currentState.passForUpdate(employees[index]);
+        }, showEditIcon: true),
         DataCell(Text(employee.phoneNumber ?? '-')),
         DataCell(Text(employee.address ?? '-')),
         DataCell(Text(DateFormat.yMMMd().format(employee.firstModified))),
@@ -161,11 +177,52 @@ class _EmployeeDataSource extends DataTableSource {
             size: 15,
           ),
           onPressed: () {
-            // todo : delete cell here.
+            // deleting employee here.
+            deleteEmployee(employees[index]).then((value) => updateTable());
           },
         ))
       ],
     );
+  }
+
+  Future<void> deleteEmployee(Personnel personnel) async {
+    return await showDialog<String>(
+        context: context,
+        builder: (context) => CDialog(
+              widgetYes: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.done,
+                    size: 50,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ],
+              ),
+              widgetNo: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                ],
+              ),
+              message: "Are you sure you want to delete employee\n${personnel.name}",
+              onYes: () async {
+                // Delete employee here.
+
+                String where = "${Personnel.ID} = ?";
+                List<int> whereArgs = [personnel.id]; // Querying only employees
+
+                await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
+                Navigator.pop(context);
+                return null;
+              },
+              onNo: () {
+                Navigator.pop(
+                  context,
+                );
+                return null;
+              },
+            ));
   }
 
   @override

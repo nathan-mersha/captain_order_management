@@ -44,99 +44,104 @@ class DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      top: true,
+        top: true,
         child: Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      resizeToAvoidBottomInset: false,
-      body: Row(
-        children: <Widget>[
-          Expanded(
-              flex: 2,
-              child: Drawer(
-
-                  child: Container(
+          backgroundColor: Theme.of(context).backgroundColor,
+          resizeToAvoidBottomInset: false,
+          body: Row(
+            children: <Widget>[
+              Expanded(
+                  flex: 2,
+                  child: Drawer(
+                      child: Container(
                     padding: EdgeInsets.only(top: 12),
-                color: Theme.of(context).primaryColor,
-                child: ListView.builder(
-                  itemCount: menus.length,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Container(
-                        padding: EdgeInsets.only(left: 20, bottom: 14, top: 6, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/images/captain_icon.png",
-                              scale: 9,
+                    color: Theme.of(context).primaryColor,
+                    child: ListView.builder(
+                      itemCount: menus.length,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return Container(
+                            padding: EdgeInsets.only(left: 20, bottom: 14, top: 6, right: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  "assets/images/captain_icon.png",
+                                  scale: 9,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Captain",
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              width: 20,
+                          );
+                        } else {
+                          return Container(
+                            color: selectedMenuIndex == index ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColor,
+                            child: ListTile(
+                              leading: Container(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  menus[index]["iconData"],
+                                  color: Colors.white,
+                                  size: selectedMenuIndex == index ? 20 : 16,
+                                ),
+                              ),
+                              title: Text(
+                                menus[index]["name"],
+                                style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                              ),
+                              trailing: Container(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.navigate_next,
+                                  color: Colors.white60,
+                                  size: selectedMenuIndex == index ? 16 : 13,
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  selectedMenuIndex = index;
+                                });
+                              },
                             ),
-                            Text(
-                              "Captain",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
-                            )
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Container(
-                        color: selectedMenuIndex == index ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColor,
-                        child: ListTile(
-                          leading: Container(padding: EdgeInsets.only(left: 10),child: Icon(
-                            menus[index]["iconData"],
-                            color: Colors.white,
-                            size: selectedMenuIndex == index ? 20 : 16,
-                          ),),
-                          title: Text(
-                            menus[index]["name"],
-                            style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                          );
+                        }
+                      },
+                    ),
+                  ))),
+              Expanded(
+                flex: 8,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 22, horizontal: 18),
+                      color: Colors.black12.withOpacity(0.1),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            menus[selectedMenuIndex]["name"],
+                            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
                           ),
-                          trailing:Container(padding: EdgeInsets.only(right: 10),child:  Icon(
-                            Icons.navigate_next,
-                            color: Colors.white60,
-                            size: selectedMenuIndex == index ? 16 : 13,
-                          ),),
-                          onTap: () {
-                            setState(() {
-                              selectedMenuIndex = index;
-                            });
-                          },
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ))),
-          Expanded(
-            flex: 7,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 22, horizontal: 18),
-                  color: Colors.black12.withOpacity(0.1),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        menus[selectedMenuIndex]["name"],
-                        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+                          Text(
+                            "Captain order and customer management",
+                            style: TextStyle(color: Colors.black54, fontSize: 11),
+                          )
+                        ],
                       ),
-                      Text(
-                        "Captain order and customer management",
-                        style: TextStyle(color: Colors.black54, fontSize: 11),
-                      )
-                    ],
-                  ),
+                    ),
+                    Container(child: menus[selectedMenuIndex]["child"], padding: EdgeInsets.all(8))
+                  ],
                 ),
-                Container(child: menus[selectedMenuIndex]["child"], padding: EdgeInsets.all(8))
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+              )
+            ],
+          ),
+        ));
   }
 }

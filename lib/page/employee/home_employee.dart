@@ -1,6 +1,7 @@
 import 'package:captain/page/employee/create_employee.dart';
 import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:captain/page/employee/view_employee.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomeEmployeePage extends StatefulWidget {
@@ -9,24 +10,24 @@ class HomeEmployeePage extends StatefulWidget {
 }
 
 class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerProviderStateMixin {
-
   // Global keys for views
   GlobalKey<EmployeeTableState> employeeTableKey = GlobalKey();
   GlobalKey<CreateEmployeeViewState> createEmployeeKey = GlobalKey();
   GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey = GlobalKey();
 
-
-  void doSomethingFromParent(){
-
-  }
+  void doSomethingFromParent() {}
   @override
   Widget build(BuildContext context) {
-
     return Container(
         child: Column(
       children: <Widget>[
         // Statistics view
-        StatisticsEmployeeView(),
+        StatisticsEmployeeView(
+          employeeTableKey: employeeTableKey,
+          createEmployeeKey: createEmployeeKey,
+          statisticsEmployeeKey: statisticsEmployeeKey,
+
+        ),
         Container(
           margin: EdgeInsets.only(top: 10),
           child: Row(
@@ -34,14 +35,22 @@ class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerPro
             children: <Widget>[
               Expanded(
                 flex: 3,
-                child: CreateEmployeeView(employeeTableKey: employeeTableKey,statisticsEmployeeKey: statisticsEmployeeKey,), // Create employee view
+                child: CreateEmployeeView(
+                  employeeTableKey: employeeTableKey,
+                  createEmployeeKey: createEmployeeKey,
+                  statisticsEmployeeKey: statisticsEmployeeKey,
+                ), // Create employee view
               ),
               SizedBox(
                 width: 5,
               ),
               Expanded(
                 flex: 7,
-                child: EmployeeTable(employeeTableKey: employeeTableKey,createEmployeeKey: createEmployeeKey,statisticsEmployeeKey: statisticsEmployeeKey,), // View employees page
+                child: EmployeeTable(
+                  employeeTableKey: employeeTableKey,
+                  createEmployeeKey: createEmployeeKey,
+                  statisticsEmployeeKey: statisticsEmployeeKey,
+                ), // View employees page
               ),
             ],
           ),
@@ -49,6 +58,4 @@ class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerPro
       ],
     ));
   }
-  
 }
-

@@ -16,9 +16,6 @@ class StatisticsEmployeeView extends StatefulWidget {
 }
 
 class StatisticsEmployeeViewState extends State<StatisticsEmployeeView> {
-  void doSomething() {
-    print("doing something");
-  }
 
   @override
   Widget build(BuildContext context) {

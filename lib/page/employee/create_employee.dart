@@ -33,6 +33,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _addressDetailController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
 
   bool _addressError = false;
@@ -127,8 +128,9 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         ),
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
-                          decoration: InputDecoration(labelText: "Address"),
                           clearOnSubmit: false,
+                          decoration: InputDecoration(labelText: "Address"),
+                          controller: _addressController,
                           textSubmitted: (String addressValue) {
                             employee.address = addressValue;
                             setState(() {
@@ -231,16 +233,64 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           });
 
                           // Clearing data
-                          employee = new Personnel(type: Personnel.EMPLOYEE);
+                          employee = Personnel(type: Personnel.EMPLOYEE);
                           clearInputs();
 
                           // Notify corresponding widgets.
                           widget.employeeTableKey.currentState.setState(() {});
                           widget.statisticsEmployeeKey.currentState.setState(() {});
+
                         });
+                      } else {
+                        
+                        String where = "${Personnel.ID} = ?";
+                        List<int> whereArgs = [employee.id]; // Querying only employees
+
+                        PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: employee).then((value) {
+                          // Updating employee contact here.
+                          Contact contact = Contact(
+                            androidAccountName: employee.name,
+                            givenName: employee.name,
+                            displayName: employee.name,
+                            phones: [Item(value: employee.phoneNumber)],
+                            emails: [Item(value: employee.email)],
+                            jobTitle: "Captain Employee",
+                            avatar: employee.profileImage,
+                          );
+                          ContactsService.updateContact(contact);
+
+                          // Updating from fire store
+                          dynamic employeeMap = Personnel.toMap(employee);
+                          employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
+                          print("is employee empty : ${employee.id}");
+                          // Saving to fire store.
+                          Firestore.instance.collection(Personnel.EMPLOYEE).where(Personnel.ID, isEqualTo: employee.id).getDocuments().then((QuerySnapshot snapShot) {
+
+                            print("Query snapshot length : ${snapShot.documents.length}");
+                            snapShot.documents.forEach((DocumentSnapshot document) {
+                              print("Document updating ---- ${document.data}");
+                              document.reference.updateData(Personnel.toMap(employee));
+                            });
+                          });
+                        });
+
+                        // Showing notification
+                        CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
+
+                        setState(() {
+                          _doingCRUD = false;
+                        });
+
+                        // Clearing data
+                        employee = Personnel(type: Personnel.EMPLOYEE);
+                        clearInputs();
+
+                        // Notify corresponding widgets.
+                        widget.employeeTableKey.currentState.setState(() {});
+                        widget.statisticsEmployeeKey.currentState.setState(() {});
+
+
                       }
-                      // todo Update employee
-                      else {}
                     }
                   }
                 },
@@ -334,7 +384,20 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     _nameController.clear();
     _phoneNumberController.clear();
     _emailController.clear();
+    _addressController.clear();
     _addressDetailController.clear();
     _noteController.clear();
+  }
+
+  void passForUpdate(Personnel employeeUpdateData) {
+    setState(() {
+      employee = employeeUpdateData;
+      _nameController.text = employee.name;
+      _phoneNumberController.text = employee.phoneNumber;
+      _emailController.text = employee.email;
+      _addressController.text = employee.address;
+      _addressDetailController.text = employee.addressDetail;
+      _noteController.text = employee.note;
+    });
   }
 }
