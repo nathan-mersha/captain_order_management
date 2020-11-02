@@ -11,8 +11,8 @@ class HomeEmployeePage extends StatefulWidget {
 class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerProviderStateMixin {
 
   // Global keys for views
+  GlobalKey<EmployeeTableState> employeeTableKey = GlobalKey();
   GlobalKey<CreateEmployeeViewState> createEmployeeKey = GlobalKey();
-  GlobalKey<EmployeeTableState> viewEmployeeKey = GlobalKey();
   GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey = GlobalKey();
 
 
@@ -34,14 +34,14 @@ class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerPro
             children: <Widget>[
               Expanded(
                 flex: 3,
-                child: CreateEmployeeView(viewEmployeeKey: viewEmployeeKey,statisticsEmployeeKey: statisticsEmployeeKey,), // Create employee view
+                child: CreateEmployeeView(employeeTableKey: employeeTableKey,statisticsEmployeeKey: statisticsEmployeeKey,), // Create employee view
               ),
               SizedBox(
                 width: 5,
               ),
               Expanded(
                 flex: 7,
-                child: EmployeeTable(createEmployeeKey: createEmployeeKey,statisticsEmployeeKey: statisticsEmployeeKey,), // View employees page
+                child: EmployeeTable(employeeTableKey: employeeTableKey,createEmployeeKey: createEmployeeKey,statisticsEmployeeKey: statisticsEmployeeKey,), // View employees page
               ),
             ],
           ),

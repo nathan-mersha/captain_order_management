@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 class EmployeeTable extends StatefulWidget {
   final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
   final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
+  final GlobalKey<EmployeeTableState> employeeTableKey;
 
-  const EmployeeTable({this.createEmployeeKey, this.statisticsEmployeeKey});
+  const EmployeeTable({this.employeeTableKey, this.createEmployeeKey, this.statisticsEmployeeKey}) : super(key: employeeTableKey);
 
   @override
   EmployeeTableState createState() => EmployeeTableState();
@@ -51,57 +52,58 @@ class EmployeeTableState extends State<EmployeeTable> {
             FutureBuilder(
               future: getListOfEmployees(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.none || snapshot.connectionState == ConnectionState.waiting) {
-                  return Container();
-                } else {
+                if (snapshot.connectionState == ConnectionState.done) {
                   List<Personnel> employees = snapshot.data as List<Personnel>;
                   _EmployeeDataSource _employeeDataSourceVal = _EmployeeDataSource(context, employees);
                   _employeeDataSource = _employeeDataSourceVal;
-                  _rowsPerPage = 7;
-
-                  return PaginatedDataTable(
-                      headingRowHeight: 70,
-                      header: Text(
-                        "List of employees",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      rowsPerPage: _rowsPerPage,
-                      availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
-                      onRowsPerPageChanged: (value) {
-                        setState(() {
-                          _rowsPerPage = value;
-                        });
-                      },
-                      sortColumnIndex: _sortColumnIndex,
-                      sortAscending: _sortAscending,
-                      columns: [
-                        DataColumn(
-                          label: Text("Img"),
-                        ),
-                        DataColumn(
-                          label: Text("Name"),
-                          onSort: (columnIndex, ascending) {
-                            return _sort<String>((d) => d.name, columnIndex, ascending);
-                          },
-                        ),
-                        DataColumn(
-                          label: Text("Phone number"),
-                          onSort: (columnIndex, ascending) => _sort<String>((d) => d.phoneNumber, columnIndex, ascending),
-                        ),
-                        DataColumn(
-                          label: Text("Address"),
-                          onSort: (columnIndex, ascending) => _sort<String>((d) => d.address, columnIndex, ascending),
-                        ),
-                        DataColumn(
-                          label: Text("Date"),
-                          onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
-                        ),
-                        DataColumn(
-                          label: Text(""),
-                        ),
-                      ],
-                      source: _employeeDataSource);
+                } else {
+                  _employeeDataSource = _EmployeeDataSource(context, []);
                 }
+
+                _rowsPerPage = 7;
+
+                return PaginatedDataTable(
+                    headingRowHeight: 70,
+                    header: Text(
+                      "List of employees",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    rowsPerPage: _rowsPerPage,
+                    availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                    onRowsPerPageChanged: (value) {
+                      setState(() {
+                        _rowsPerPage = value;
+                      });
+                    },
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    columns: [
+                      DataColumn(
+                        label: Text("Img"),
+                      ),
+                      DataColumn(
+                        label: Text("Name"),
+                        onSort: (columnIndex, ascending) {
+                          return _sort<String>((d) => d.name, columnIndex, ascending);
+                        },
+                      ),
+                      DataColumn(
+                        label: Text("Phone number"),
+                        onSort: (columnIndex, ascending) => _sort<String>((d) => d.phoneNumber, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: Text("Address"),
+                        onSort: (columnIndex, ascending) => _sort<String>((d) => d.address, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: Text("Date"),
+                        onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: Text(""),
+                      ),
+                    ],
+                    source: _employeeDataSource);
               },
             )
           ],
@@ -120,8 +122,6 @@ class _EmployeeDataSource extends DataTableSource {
     employees.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      print("a value : $aValue");
-      print("b value : $bValue");
       return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
     });
     notifyListeners();

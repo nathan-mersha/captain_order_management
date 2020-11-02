@@ -1,6 +1,8 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/page/employee/statistics_employee.dart';
+import 'package:captain/page/employee/view_employee.dart';
 import 'package:captain/rsr/kapci/regions.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
@@ -10,10 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateEmployeeView extends StatefulWidget {
-  final GlobalKey viewEmployeeKey;
-  final GlobalKey statisticsEmployeeKey;
+  final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
+  final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
+  final GlobalKey<EmployeeTableState> employeeTableKey;
 
-  CreateEmployeeView({this.viewEmployeeKey, this.statisticsEmployeeKey});
+  const CreateEmployeeView({this.employeeTableKey, this.createEmployeeKey, this.statisticsEmployeeKey}) : super(key: createEmployeeKey);
 
   @override
   CreateEmployeeViewState createState() => CreateEmployeeViewState();
@@ -35,10 +38,8 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   bool _addressError = false;
   bool _doingCRUD = false;
 
-
   @override
   Widget build(BuildContext context) {
-
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
@@ -134,19 +135,22 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                               _addressError = false;
                             });
                           },
-
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Visibility(
                               visible: _addressError,
-                              child: Column(children: [
-                                SizedBox(height: 2,),
-                                Text(
-                                  "Address must not be empty",
-                                  style: TextStyle(color: Colors.red.shade800, fontSize: 12),
-                                )
-                              ],)),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    "Address must not be empty",
+                                    style: TextStyle(color: Colors.red.shade800, fontSize: 12),
+                                  )
+                                ],
+                              )),
                         ),
                         TextFormField(
                           onChanged: (addressDetailValue) {
@@ -190,7 +194,6 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     if (employee.address == null) {
-                      print("Herr address empty");
                       setState(() {
                         _addressError = true;
                       });
@@ -227,10 +230,13 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                             _doingCRUD = false;
                           });
 
+                          // Clearing data
                           employee = new Personnel(type: Personnel.EMPLOYEE);
                           clearInputs();
 
-                          // Clearing data
+                          // Notify corresponding widgets.
+                          widget.employeeTableKey.currentState.setState(() {});
+                          widget.statisticsEmployeeKey.currentState.setState(() {});
                         });
                       }
                       // todo Update employee

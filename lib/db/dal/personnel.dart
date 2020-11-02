@@ -54,6 +54,7 @@ class PersonnelDAL {
     )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
+
     return List.generate(maps.length, (i) {
       return Personnel(
         id: maps[i][Personnel.ID],
