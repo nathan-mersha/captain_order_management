@@ -10,11 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateEmployeeView extends StatefulWidget {
+  final GlobalKey viewEmployeeKey;
+  final GlobalKey statisticsEmployeeKey;
+
+  CreateEmployeeView({this.viewEmployeeKey, this.statisticsEmployeeKey});
+
   @override
-  _CreateEmployeeViewState createState() => _CreateEmployeeViewState();
+  CreateEmployeeViewState createState() => CreateEmployeeViewState();
 }
 
-class _CreateEmployeeViewState extends State<CreateEmployeeView> {
+class CreateEmployeeViewState extends State<CreateEmployeeView> {
   final picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   bool _absorbInputProfileImg = false;
@@ -30,8 +35,10 @@ class _CreateEmployeeViewState extends State<CreateEmployeeView> {
   bool _addressError = false;
   bool _doingCRUD = false;
 
+
   @override
   Widget build(BuildContext context) {
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(

@@ -1,20 +1,24 @@
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/page/employee/create_employee.dart';
+import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EmployeeTable extends StatefulWidget {
-  const EmployeeTable();
+  final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
+  final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
+
+  const EmployeeTable({this.createEmployeeKey, this.statisticsEmployeeKey});
 
   @override
-  _EmployeeTableState createState() => _EmployeeTableState();
+  EmployeeTableState createState() => EmployeeTableState();
 }
 
-class _EmployeeTableState extends State<EmployeeTable> {
+class EmployeeTableState extends State<EmployeeTable> {
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
-  bool _searching = false;
   _EmployeeDataSource _employeeDataSource;
 
   void _sort<T>(
@@ -57,7 +61,6 @@ class _EmployeeTableState extends State<EmployeeTable> {
 
                   return PaginatedDataTable(
                       headingRowHeight: 70,
-
                       header: Text(
                         "List of employees",
                         style: TextStyle(fontSize: 13),
@@ -76,7 +79,6 @@ class _EmployeeTableState extends State<EmployeeTable> {
                           label: Text("Img"),
                         ),
                         DataColumn(
-
                           label: Text("Name"),
                           onSort: (columnIndex, ascending) {
                             return _sort<String>((d) => d.name, columnIndex, ascending);
