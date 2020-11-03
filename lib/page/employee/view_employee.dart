@@ -53,7 +53,6 @@ class EmployeeTableState extends State<EmployeeTable> {
             FutureBuilder(
               future: getListOfEmployees(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                print("is state null : ---- ${widget.createEmployeeKey.currentState == null}");
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<Personnel> employees = snapshot.data as List<Personnel>;
                   _EmployeeDataSource _employeeDataSourceVal = _EmployeeDataSource(context, employees, () {
@@ -210,7 +209,7 @@ class _EmployeeDataSource extends DataTableSource {
                 // Delete employee here.
 
                 String where = "${Personnel.ID} = ?";
-                List<int> whereArgs = [personnel.id]; // Querying only employees
+                List<String> whereArgs = [personnel.id]; // Querying only employees
 
                 await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
                 Navigator.pop(context);

@@ -7,6 +7,7 @@ class ReturnedOrder {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
   static const String PRODUCT = "product";
@@ -16,6 +17,7 @@ class ReturnedOrder {
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   Personnel employee;
   Personnel customer;
   Product product;
@@ -26,6 +28,7 @@ class ReturnedOrder {
 
   ReturnedOrder({
     this.id,
+    this.idFS,
     this.employee,
     this.customer,
     this.product,
@@ -39,13 +42,14 @@ class ReturnedOrder {
   static Map<String, dynamic> toMap(ReturnedOrder returnedOrder) {
     return returnedOrder == null ? null : {
       ID: returnedOrder.id,
+      ID_FS: returnedOrder.idFS,
       EMPLOYEE: Personnel.toMap(returnedOrder.employee),
       CUSTOMER: Personnel.toMap(returnedOrder.customer),
       PRODUCT: Product.toMap(returnedOrder.product),
       COUNT: returnedOrder.count,
       NOTE: returnedOrder.note,
-      FIRST_MODIFIED: returnedOrder.firstModified,
-      LAST_MODIFIED: returnedOrder.lastModified
+      FIRST_MODIFIED: returnedOrder.firstModified.toIso8601String(),
+      LAST_MODIFIED: returnedOrder.lastModified.toIso8601String()
     };
   }
 
@@ -53,6 +57,7 @@ class ReturnedOrder {
   static ReturnedOrder toModel(dynamic map) {
     return map == null ? null : ReturnedOrder(
         id: map[ID],
+        idFS: map[ID_FS],
         employee: Personnel.toModel(map[EMPLOYEE]),
         customer: Personnel.toModel(map[CUSTOMER]),
         product: Product.toModel(map[PRODUCT]),

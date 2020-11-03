@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.16.1
   find_dropdown: ^0.2.2
   autocomplete_textfield: ^1.7.3
+  uuid: ^2.2.2
 
 # Dev dependencies
 dev_dependencies:

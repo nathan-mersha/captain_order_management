@@ -7,6 +7,7 @@ class Punch {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String PRODUCT = "product";
   static const String TYPE = "type";
@@ -16,6 +17,7 @@ class Punch {
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   Personnel employee;
   Product product;
   String type; // in/out
@@ -26,6 +28,7 @@ class Punch {
 
   Punch({
     this.id,
+    this.idFS,
     this.employee,
     this.product,
     this.type,
@@ -39,13 +42,14 @@ class Punch {
   static Map<String, dynamic> toMap(Punch punch) {
     return punch == null ? null : {
       ID: punch.id,
+      ID_FS: punch.idFS,
       EMPLOYEE: Personnel.toMap(punch.employee),
       PRODUCT: Product.toMap(punch.product),
       TYPE: punch.type,
       WEIGHT: punch.weight,
       NOTE: punch.note,
-      FIRST_MODIFIED: punch.firstModified,
-      LAST_MODIFIED: punch.lastModified
+      FIRST_MODIFIED: punch.firstModified.toIso8601String(),
+      LAST_MODIFIED: punch.lastModified.toIso8601String()
     };
   }
 
@@ -53,6 +57,7 @@ class Punch {
   static Punch toModel(dynamic map) {
     return map == null ? null : Punch(
         id: map[ID],
+        idFS: map[ID_FS],
         employee: Personnel.toModel(map[EMPLOYEE]),
         product: Product.toModel(map[PRODUCT]),
         type: map[TYPE],

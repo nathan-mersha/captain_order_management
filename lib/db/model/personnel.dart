@@ -10,6 +10,7 @@ class Personnel {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String NAME = "name";
   static const String PHONE_NUMBER = "phoneNumber";
   static const String EMAIL = "email";
@@ -21,7 +22,8 @@ class Personnel {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  int id;
+  String id; // todo change for all
+  String idFS;
   String name;
   String phoneNumber;
   String email;
@@ -35,6 +37,7 @@ class Personnel {
 
   Personnel({
     this.id,
+    this.idFS,
     this.name,
     this.phoneNumber,
     this.email,
@@ -51,6 +54,7 @@ class Personnel {
   static Map<String, dynamic> toMap(Personnel personnel) {
     return personnel == null ? null : {
       ID: personnel.id,
+      ID_FS: personnel.idFS,
       NAME: personnel.name,
       PHONE_NUMBER: personnel.phoneNumber,
       EMAIL: personnel.email,
@@ -59,8 +63,8 @@ class Personnel {
       TYPE: personnel.type,
       PROFILE_IMAGE: personnel.profileImage,
       NOTE: personnel.note,
-      FIRST_MODIFIED: personnel.firstModified.toIso8601String(), // todo : change
-      LAST_MODIFIED: personnel.lastModified.toIso8601String() // todo : change
+      FIRST_MODIFIED: personnel.firstModified.toIso8601String(),
+      LAST_MODIFIED: personnel.lastModified.toIso8601String()
     };
   }
 
@@ -68,6 +72,7 @@ class Personnel {
   static Personnel toModel(dynamic map) {
     return map == null ? null : Personnel(
         id: map[ID],
+        idFS: map[ID_FS],
         name: map[NAME],
         phoneNumber: map[PHONE_NUMBER],
         email: map[EMAIL],
@@ -76,8 +81,8 @@ class Personnel {
         type: map[TYPE],
         profileImage: map[PROFILE_IMAGE],
         note: map[NOTE],
-        firstModified: DateTime(map[FIRST_MODIFIED]),
-        lastModified: DateTime(map[LAST_MODIFIED])
+        firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+        lastModified: DateTime.parse(map[LAST_MODIFIED])
     );
   }
 

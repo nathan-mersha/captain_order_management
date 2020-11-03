@@ -11,6 +11,7 @@ class NormalOrderDAL {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
             "${NormalOrder.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${NormalOrder.ID_FS} TEXT," +
             "${NormalOrder.EMPLOYEE} BLOB," +
             "${NormalOrder.CUSTOMER} BLOB," +
             "${NormalOrder.PAINT_ORDER} BLOB," +
@@ -60,6 +61,7 @@ class NormalOrderDAL {
     return List.generate(maps.length, (i) {
       return NormalOrder(
         id: maps[i][NormalOrder.ID],
+        idFS: maps[i][NormalOrder.ID_FS],
         employee: maps[i][NormalOrder.EMPLOYEE],
         customer: maps[i][NormalOrder.CUSTOMER],
         paintOrder: maps[i][NormalOrder.PAINT_ORDER],

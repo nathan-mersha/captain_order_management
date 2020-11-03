@@ -4,12 +4,14 @@ class Message {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String RECIPIENT = "recipient";
   static const String BODY = "body";
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   String recipient;
   String body;
   DateTime firstModified;
@@ -17,6 +19,7 @@ class Message {
 
   Message({
     this.id,
+    this.idFS,
     this.recipient,
     this.body,
     this.firstModified,
@@ -27,10 +30,11 @@ class Message {
   static Map<String, dynamic> toMap(Message message) {
     return message == null ? null : {
       ID: message.id,
+      ID_FS: message.idFS,
       RECIPIENT : message.recipient,
       BODY : message.body,
-      FIRST_MODIFIED: message.firstModified,
-      LAST_MODIFIED: message.lastModified
+      FIRST_MODIFIED: message.firstModified.toIso8601String(),
+      LAST_MODIFIED: message.lastModified.toIso8601String()
     };
   }
 
@@ -38,6 +42,7 @@ class Message {
   static Message toModel(dynamic map) {
     return map == null ? null : Message(
         id: map[ID],
+        idFS: map[ID_FS],
         recipient: map[RECIPIENT],
         body: map[BODY],
         firstModified: DateTime(map[FIRST_MODIFIED]),

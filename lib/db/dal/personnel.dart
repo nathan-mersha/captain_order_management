@@ -2,6 +2,7 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class PersonnelDAL {
   static const String TABLE_NAME = Personnel.COLLECTION_NAME;
@@ -10,7 +11,8 @@ class PersonnelDAL {
   static Future<Database> getDatabase() async {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
-            "${Personnel.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Personnel.ID} TEXT," + // TODO : change for all
+            "${Personnel.ID_FS} TEXT," +
             "${Personnel.NAME} TEXT," +
             "${Personnel.PHONE_NUMBER} TEXT," +
             "${Personnel.EMAIL} TEXT," +
@@ -34,14 +36,18 @@ class PersonnelDAL {
     return database;
   }
 
-  static Future<void> create(Personnel personnel) async {
+  static Future<Personnel> create(Personnel personnel) async { // todo : chanbe for all
     // updating first and last modified stamps.
+    var uuid = Uuid(); // todo : change for all
+    personnel.id = uuid.v4(); // todo : change for all
     personnel.firstModified = DateTime.now();
     personnel.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
+
     await db.insert(TABLE_NAME, Personnel.toMap(personnel), conflictAlgorithm: ConflictAlgorithm.replace);
+    return personnel; // todo : change for all
   }
 
   /// where : "id = ?"
@@ -58,6 +64,7 @@ class PersonnelDAL {
     return List.generate(maps.length, (i) {
       return Personnel(
         id: maps[i][Personnel.ID],
+        idFS: maps[i][Personnel.ID_FS],
         name: maps[i][Personnel.NAME],
         phoneNumber: maps[i][Personnel.PHONE_NUMBER],
         email: maps[i][Personnel.EMAIL],
@@ -66,8 +73,8 @@ class PersonnelDAL {
         type: maps[i][Personnel.TYPE],
         profileImage: maps[i][Personnel.PROFILE_IMAGE],
         note: maps[i][Personnel.NOTE],
-        firstModified: DateTime.parse(maps[i][Personnel.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(maps[i][Personnel.LAST_MODIFIED]),
+        firstModified: DateTime.parse(maps[i][Personnel.FIRST_MODIFIED]), // todo : change for all
+        lastModified: DateTime.parse(maps[i][Personnel.LAST_MODIFIED]), // todo : change for all
       );
     });
   }

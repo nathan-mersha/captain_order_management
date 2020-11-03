@@ -7,6 +7,7 @@ class SpecialOrder {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
   static const String PRODUCTS = "products";
@@ -19,6 +20,7 @@ class SpecialOrder {
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   Personnel employee;
   Personnel customer;
   List<Product> products;
@@ -32,6 +34,7 @@ class SpecialOrder {
 
   SpecialOrder({
     this.id,
+    this.idFS,
     this.employee,
     this.customer,
     this.products,
@@ -48,6 +51,7 @@ class SpecialOrder {
   static Map<String, dynamic> toMap(SpecialOrder specialOrder) {
     return specialOrder == null ? null : {
       ID: specialOrder.id,
+      ID_FS: specialOrder.idFS,
       EMPLOYEE: Personnel.toMap(specialOrder.employee),
       CUSTOMER: Personnel.toMap(specialOrder.customer),
       PRODUCTS: Product.toMapList(specialOrder.products),
@@ -65,6 +69,7 @@ class SpecialOrder {
   static SpecialOrder toModel(dynamic map) {
     return map == null ? null : SpecialOrder(
         id: map[ID],
+        idFS: map[ID_FS],
         employee: Personnel.toModel(map[EMPLOYEE]),
         customer: Personnel.toModel(map[CUSTOMER]),
         products: Product.toModelList(map[PRODUCTS]),

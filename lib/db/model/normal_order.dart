@@ -8,6 +8,7 @@ class NormalOrder {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
   static const String PAINT_ORDER = "paintOrder";
@@ -23,6 +24,7 @@ class NormalOrder {
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   Personnel employee;
   Personnel customer;
   Product paintOrder;
@@ -39,6 +41,7 @@ class NormalOrder {
 
   NormalOrder({
     this.id,
+    this.idFS,
     this.employee,
     this.customer,
     this.paintOrder,
@@ -58,6 +61,7 @@ class NormalOrder {
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {
     return normalOrder == null ? null : {
       ID: normalOrder.id,
+      ID_FS: normalOrder.idFS,
       EMPLOYEE: normalOrder.employee == null ? null : Personnel.toMap(normalOrder.employee),
       CUSTOMER: normalOrder.customer == null ? null : Personnel.toMap(normalOrder.customer),
       PAINT_ORDER: normalOrder.paintOrder == null ? null : Product.toMap(normalOrder.paintOrder),
@@ -69,8 +73,8 @@ class NormalOrder {
       PAID_IN_FULL: normalOrder.paidInFull,
       STATUS: normalOrder.status,
       USER_NOTIFIED: normalOrder.userNotified,
-      FIRST_MODIFIED: normalOrder.firstModified,
-      LAST_MODIFIED: normalOrder.lastModified
+      FIRST_MODIFIED: normalOrder.firstModified.toIso8601String(),
+      LAST_MODIFIED: normalOrder.lastModified.toIso8601String()
     };
   }
 
@@ -78,6 +82,7 @@ class NormalOrder {
   static NormalOrder toModel(dynamic map) {
     return map == null ? null: NormalOrder(
         id: map[ID],
+        idFS: map[ID_FS],
         employee: Personnel.toModel(map[EMPLOYEE]),
         customer: Personnel.toModel(map[CUSTOMER]),
         paintOrder: Product.toModel(map[PAINT_ORDER]),

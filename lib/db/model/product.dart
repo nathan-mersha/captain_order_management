@@ -4,6 +4,7 @@ class Product {
 
   /// Defines key values to extract from a map
   static const String ID = "id";
+  static const String ID_FS = "idFs";
   static const String NAME = "name";
   static const String TYPE = "type";
   static const String UNIT_OF_MEASUREMENT = "unitOfMeasurement";
@@ -20,6 +21,7 @@ class Product {
   static const String LAST_MODIFIED = "lastModified";
 
   int id;
+  String idFS;
   String name;
   String type; // paint, other
   String unitOfMeasurement;
@@ -37,6 +39,7 @@ class Product {
 
   Product({
     this.id,
+    this.idFS,
     this.name,
     this.type,
     this.unitOfMeasurement,
@@ -56,6 +59,7 @@ class Product {
   static Map<String, dynamic> toMap(Product product) {
     return product == null ? null : {
       ID: product.id,
+      ID_FS: product.idFS,
       NAME: product.name,
       TYPE: product.type,
       UNIT_OF_MEASUREMENT: product.unitOfMeasurement,
@@ -77,6 +81,7 @@ class Product {
   static Product toModel(dynamic map) {
     return map == null ? null : Product(
         id: map[ID],
+        idFS: map[ID_FS],
         name: map[NAME],
         type: map[TYPE],
         unitOfMeasurement: map[UNIT_OF_MEASUREMENT],

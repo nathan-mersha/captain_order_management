@@ -11,6 +11,7 @@ class ReturnedOrderDAL {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
             "${ReturnedOrder.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${ReturnedOrder.ID_FS} TEXT," +
             "${ReturnedOrder.EMPLOYEE} BLOB," +
             "${ReturnedOrder.CUSTOMER} BLOB," +
             "${ReturnedOrder.PRODUCT} BLOB," +
@@ -54,6 +55,7 @@ class ReturnedOrderDAL {
     return List.generate(maps.length, (i) {
       return ReturnedOrder(
         id: maps[i][ReturnedOrder.ID],
+        idFS: maps[i][ReturnedOrder.ID_FS],
         employee: maps[i][ReturnedOrder.EMPLOYEE],
         customer: maps[i][ReturnedOrder.CUSTOMER],
         product: maps[i][ReturnedOrder.PRODUCT],

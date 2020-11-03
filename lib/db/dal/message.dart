@@ -11,6 +11,7 @@ class MessageDAL {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
             "${Message.ID} TEXT PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Message.ID_FS} TEXT," +
             "${Message.RECIPIENT} TEXT," +
             "${Message.BODY} TEXT," +
             "${Message.FIRST_MODIFIED} TEXT," +
@@ -51,6 +52,7 @@ class MessageDAL {
     return List.generate(maps.length, (i) {
       return Message(
         id: maps[i][Message.ID],
+        idFS: maps[i][Message.ID_FS],
         recipient: maps[i][Message.RECIPIENT],
         body: maps[i][Message.BODY],
         firstModified: DateTime.parse(maps[i][Message.FIRST_MODIFIED]),

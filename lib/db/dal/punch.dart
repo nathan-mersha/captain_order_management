@@ -11,6 +11,7 @@ class PunchDAL {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
             "${Punch.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Punch.ID_FS} TEXT," +
             "${Punch.EMPLOYEE} BLOB," +
             "${Punch.PRODUCT} BLOB," +
             "${Punch.TYPE} TEXT," +
@@ -54,6 +55,7 @@ class PunchDAL {
     return List.generate(maps.length, (i) {
       return Punch(
         id: maps[i][Punch.ID],
+        idFS: maps[i][Punch.ID_FS],
         employee: maps[i][Punch.EMPLOYEE],
         product: maps[i][Punch.PRODUCT],
         type: maps[i][Punch.TYPE],

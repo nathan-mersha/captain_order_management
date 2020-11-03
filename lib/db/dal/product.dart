@@ -11,6 +11,7 @@ class ProductDAL {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
             "${Product.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Product.ID_FS} TEXT," +
             "${Product.NAME} TEXT," +
             "${Product.TYPE} TEXT," +
             "${Product.UNIT_OF_MEASUREMENT} TEXT," +
@@ -61,6 +62,7 @@ class ProductDAL {
     return List.generate(maps.length, (i) {
       return Product(
         id: maps[i][Product.ID],
+        idFS: maps[i][Product.ID_FS],
         name: maps[i][Product.NAME],
         type: maps[i][Product.TYPE],
         unitOfMeasurement: maps[i][Product.UNIT_OF_MEASUREMENT],

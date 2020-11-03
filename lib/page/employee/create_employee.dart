@@ -52,7 +52,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
               width: double.infinity,
               child: Card(
                 margin: EdgeInsets.all(0),
-                color: Theme.of(context).primaryColor,
+                color: employee.id == null ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
@@ -180,6 +180,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                 )),
             Container(
               child: RaisedButton(
+                color: employee.id == null ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
                 child: _doingCRUD == true
                     ? Container(
                         height: 20,
@@ -191,7 +192,11 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                       )
                     : Text(
                         employee.id == null ? "Create" : "Update",
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
                       ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
@@ -206,7 +211,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                       });
                       // Create Employee to DB
                       if (employee.id == null) {
-                        PersonnelDAL.create(employee).whenComplete(() {
+                        PersonnelDAL.create(employee).then((Personnel createdEmployee) {
                           // Creating contact here.
                           Contact contact = Contact(
                             androidAccountName: employee.name,
@@ -220,10 +225,16 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           ContactsService.addContact(contact);
 
                           // Creating data to fire store
-                          dynamic employeeMap = Personnel.toMap(employee);
+                          dynamic employeeMap = Personnel.toMap(createdEmployee);
                           employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
                           // Saving to fire store.
-                          Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap).then((value) {});
+                          Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap).then((DocumentReference docRef) {
+                            // updating local db with fs id
+                            createdEmployee.idFS = docRef.documentID;
+                            String where = "${Personnel.ID} = ?";
+                            List<String> whereArgs = [createdEmployee.id]; // Querying only employees
+                            PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: createdEmployee);
+                          });
 
                           // Showing notification
                           CNotifications.showSnackBar(context, "Successfuly created : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
@@ -239,57 +250,57 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           // Notify corresponding widgets.
                           widget.employeeTableKey.currentState.setState(() {});
                           widget.statisticsEmployeeKey.currentState.setState(() {});
-
                         });
-                      } else {
-                        
+                      }
+
+                      // Update Employee here.
+                      else {
                         String where = "${Personnel.ID} = ?";
-                        List<int> whereArgs = [employee.id]; // Querying only employees
+                        List<String> whereArgs = [employee.id]; // Querying only employees
 
                         PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: employee).then((value) {
-                          // Updating employee contact here.
-                          Contact contact = Contact(
-                            androidAccountName: employee.name,
-                            givenName: employee.name,
-                            displayName: employee.name,
-                            phones: [Item(value: employee.phoneNumber)],
-                            emails: [Item(value: employee.email)],
-                            jobTitle: "Captain Employee",
-                            avatar: employee.profileImage,
-                          );
-                          ContactsService.updateContact(contact);
+                          try{
+                            // Updating employee contact here.
+                            Contact contact = Contact(
+                              androidAccountName: employee.name,
+                              givenName: employee.name,
+                              displayName: employee.name,
+                              phones: [Item(value: employee.phoneNumber)],
+                              emails: [Item(value: employee.email)],
+                              jobTitle: "Captain Employee",
+                              avatar: employee.profileImage,
+                            );
+//                            ContactsService.updateContact(contact);
+                          }catch(e){
+                            print("error : $e");
+                          }
+
 
                           // Updating from fire store
                           dynamic employeeMap = Personnel.toMap(employee);
                           employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-                          print("is employee empty : ${employee.id}");
-                          // Saving to fire store.
-                          Firestore.instance.collection(Personnel.EMPLOYEE).where(Personnel.ID, isEqualTo: employee.id).getDocuments().then((QuerySnapshot snapShot) {
 
-                            print("Query snapshot length : ${snapShot.documents.length}");
-                            snapShot.documents.forEach((DocumentSnapshot document) {
-                              print("Document updating ---- ${document.data}");
-                              document.reference.updateData(Personnel.toMap(employee));
-                            });
-                          });
+                          // Updating to fire store if fire store generated id is present in doc.
+                          if (employee.idFS != null) {
+                            Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
+                          }
                         });
 
                         // Showing notification
-                        CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
+                        CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
 
                         setState(() {
                           _doingCRUD = false;
+                          // Clearing data
+                          employee = Personnel(type: Personnel.EMPLOYEE);
+                          clearInputs();
                         });
 
-                        // Clearing data
-                        employee = Personnel(type: Personnel.EMPLOYEE);
-                        clearInputs();
+
 
                         // Notify corresponding widgets.
                         widget.employeeTableKey.currentState.setState(() {});
                         widget.statisticsEmployeeKey.currentState.setState(() {});
-
-
                       }
                     }
                   }
