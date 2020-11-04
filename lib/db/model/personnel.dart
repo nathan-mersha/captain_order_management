@@ -11,6 +11,7 @@ class Personnel {
   /// Defines key values to extract from a map
   static const String ID = "id";
   static const String ID_FS = "idFs";
+  static const String CONTACT_IDENTIFIER = "contactIdentifer";
   static const String NAME = "name";
   static const String PHONE_NUMBER = "phoneNumber";
   static const String EMAIL = "email";
@@ -24,6 +25,7 @@ class Personnel {
 
   String id; // todo change for all
   String idFS;
+  String contactIdentifier;
   String name;
   String phoneNumber;
   String email;
@@ -38,6 +40,7 @@ class Personnel {
   Personnel({
     this.id,
     this.idFS,
+    this.contactIdentifier,
     this.name,
     this.phoneNumber,
     this.email,
@@ -55,6 +58,7 @@ class Personnel {
     return personnel == null ? null : {
       ID: personnel.id,
       ID_FS: personnel.idFS,
+      CONTACT_IDENTIFIER: personnel.contactIdentifier,
       NAME: personnel.name,
       PHONE_NUMBER: personnel.phoneNumber,
       EMAIL: personnel.email,
@@ -73,6 +77,7 @@ class Personnel {
     return map == null ? null : Personnel(
         id: map[ID],
         idFS: map[ID_FS],
+        contactIdentifier: map[CONTACT_IDENTIFIER],
         name: map[NAME],
         phoneNumber: map[PHONE_NUMBER],
         email: map[EMAIL],

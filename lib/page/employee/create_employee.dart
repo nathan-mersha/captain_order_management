@@ -7,7 +7,6 @@ import 'package:captain/rsr/kapci/regions.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/contacts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -199,9 +198,10 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           color: Colors.white,
                         ),
                       ),
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     if (employee.address == null) {
+                      // Validating if address exists.
                       setState(() {
                         _addressError = true;
                       });
@@ -210,108 +210,20 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         _doingCRUD = true;
                         _addressError = false;
                       });
-                      // Create Employee to DB
-                      if (employee.id == null) {
-                        PersonnelDAL.create(employee).then((Personnel createdEmployee) {
-                          // Creating contact here.
-                          Contact contact = Contact(
-//                            androidAccountName: employee.name,
-                            givenName: employee.name,
-                            displayName: employee.name,
-                            phones: [Item(value: employee.phoneNumber)],
-                            emails: [Item(value: employee.email)],
-                            jobTitle: "Captain Employee",
-                            avatar: employee.profileImage,
-//                            androidAccountType: AndroidAccountType.other,
-                          );
-                          print("contact identifier before setup : ${contact.identifier}");
 
-                          contact.identifier = employee.id;
-                          Contacts.addContact(contact);
-//                          ContactsService.addContact(contact).then((val){
-//                            print("Add contact val : --------------------- ");
-//                            print(val);
-//                          });
-//                          print("Contact identifieer : ${contact.identifier}");
+                      employee.id == null ? await createEmployee(context) : await updateEmployee(context);
 
-                          // Creating data to fire store
-                          dynamic employeeMap = Personnel.toMap(createdEmployee);
-                          employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-                          // Saving to fire store.
-                          Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap).then((DocumentReference docRef) {
-                            // updating local db with fs id
-                            createdEmployee.idFS = docRef.documentID;
-                            String where = "${Personnel.ID} = ?";
-                            List<String> whereArgs = [createdEmployee.id]; // Querying only employees
-                            PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: createdEmployee);
-                          });
+                      setState(() {
+                        _doingCRUD = false;
+                      });
 
-                          // Showing notification
-                          CNotifications.showSnackBar(context, "Successfuly created : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
+                      /// Clearing data
+                      employee = Personnel(type: Personnel.EMPLOYEE);
+                      clearInputs();
 
-                          setState(() {
-                            _doingCRUD = false;
-                          });
-
-                          // Clearing data
-                          employee = Personnel(type: Personnel.EMPLOYEE);
-                          clearInputs();
-
-                          // Notify corresponding widgets.
-                          widget.employeeTableKey.currentState.setState(() {});
-                          widget.statisticsEmployeeKey.currentState.setState(() {});
-                        });
-                      }
-
-                      // Update Employee here.
-                      else {
-                        String where = "${Personnel.ID} = ?";
-                        List<String> whereArgs = [employee.id]; // Querying only employees
-
-                        PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: employee).then((value) {
-                          try {
-                            // Updating employee contact here.
-                            Contact contact = Contact(
-//                              androidAccountName: employee.name,
-                              givenName: employee.name,
-                              displayName: employee.name,
-                              phones: [Item(value: employee.phoneNumber)],
-                              emails: [Item(value: employee.email)],
-                              jobTitle: "Captain Employee",
-                              avatar: employee.profileImage,
-
-                            );
-                            contact.identifier = employee.id;
-                            Contacts.updateContact(contact);
-                          } catch (e) {
-                            print("error : $e");
-                          }
-
-                          // Updating from fire store
-                          dynamic employeeMap = Personnel.toMap(employee);
-                          employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-
-                          // Updating to fire store if fire store generated id is present in doc.
-                          if (employee.idFS != null) {
-                            print("Employee map : $employeeMap");
-                            Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
-                          }
-
-                          // Showing notification
-                          CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
-
-                          setState(() {
-                            _doingCRUD = false;
-                            // Clearing data
-                          employee = Personnel(type: Personnel.EMPLOYEE);
-                            clearInputs();
-                          });
-
-                          // Notify corresponding widgets.
-                          widget.employeeTableKey.currentState.setState(() {});
-                          widget.statisticsEmployeeKey.currentState.setState(() {});
-                        });
-                      }
+                      /// Notify corresponding widgets.
+                      widget.employeeTableKey.currentState.setState(() {});
+                      widget.statisticsEmployeeKey.currentState.setState(() {});
                     }
                   }
                 },
@@ -321,6 +233,71 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
         ),
       ),
     );
+  }
+
+  Future createEmployee(BuildContext context) async {
+    Contact contact = Contact(
+      givenName: employee.name,
+      displayName: employee.name,
+      phones: [Item(value: employee.phoneNumber)],
+      emails: [Item(value: employee.email)],
+      jobTitle: "Captain Employee",
+      avatar: employee.profileImage,
+      note: employee.note,
+    );
+
+    Contact createdContact = await Contacts.addContact(contact);
+
+    /// Create Personnel Employee data to local db
+    employee.contactIdentifier = createdContact.identifier;
+    Personnel createdEmployee = await PersonnelDAL.create(employee);
+
+    /// Creating data to fire store
+    dynamic employeeMap = Personnel.toMap(createdEmployee);
+    employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
+    // Saving to fire store.
+    Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap).then((DocumentReference docRef) {
+      // updating local db with fs id
+      createdEmployee.idFS = docRef.documentID;
+      String where = "${Personnel.ID} = ?";
+      List<String> whereArgs = [createdEmployee.id]; // Querying only employees
+      // On successful create to fs update local data with the retrieved id
+      PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: createdEmployee);
+    });
+
+    /// Showing notification
+    CNotifications.showSnackBar(context, "Successfuly created : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
+  }
+
+  Future updateEmployee(BuildContext context) async {
+    /// Query and update user
+    String where = "${Personnel.ID} = ?";
+    List<String> whereArgs = [employee.id];
+    await PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: employee);
+
+    /// Updating contacts
+    Contact contact = Contact(
+        givenName: employee.name,
+        displayName: employee.name,
+        phones: [Item(value: employee.phoneNumber)],
+        emails: [Item(value: employee.email)],
+        jobTitle: "Captain Employee",
+        avatar: employee.profileImage,
+        note: employee.note,
+        identifier: employee.contactIdentifier);
+
+    Contacts.updateContact(contact);
+
+    /// Updating from fire store
+    dynamic employeeMap = Personnel.toMap(employee);
+    employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
+    // Updating to fire store if fire store generated id is present in doc.
+    if (employee.idFS != null) {
+      Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
+    }
+
+    // Showing notification
+    CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   void _pickImage() async {

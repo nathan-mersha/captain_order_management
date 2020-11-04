@@ -13,6 +13,7 @@ class PersonnelDAL {
         "CREATE TABLE $TABLE_NAME (" +
             "${Personnel.ID} TEXT," + // TODO : change for all
             "${Personnel.ID_FS} TEXT," +
+            "${Personnel.CONTACT_IDENTIFIER} TEXT," +
             "${Personnel.NAME} TEXT," +
             "${Personnel.PHONE_NUMBER} TEXT," +
             "${Personnel.EMAIL} TEXT," +
@@ -65,6 +66,7 @@ class PersonnelDAL {
       return Personnel(
         id: maps[i][Personnel.ID],
         idFS: maps[i][Personnel.ID_FS],
+        contactIdentifier: maps[i][Personnel.CONTACT_IDENTIFIER],
         name: maps[i][Personnel.NAME],
         phoneNumber: maps[i][Personnel.PHONE_NUMBER],
         email: maps[i][Personnel.EMAIL],
