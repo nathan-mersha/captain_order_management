@@ -39,7 +39,7 @@ class PersonnelDAL {
   static Future<Personnel> create(Personnel personnel) async { // todo : chanbe for all
     // updating first and last modified stamps.
     var uuid = Uuid(); // todo : change for all
-    personnel.id = uuid.v4(); // todo : change for all
+    personnel.id = uuid.hashCode.toString(); // todo : change for all
     personnel.firstModified = DateTime.now();
     personnel.lastModified = DateTime.now();
 
