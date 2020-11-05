@@ -1,4 +1,3 @@
-import 'package:captain/api/api_global_config.dart';
 import 'package:captain/app_builder.dart';
 import 'package:captain/route.dart';
 import 'package:captain/rsr/theme/c_theme.dart';

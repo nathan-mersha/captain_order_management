@@ -74,10 +74,13 @@ class EmployeeTableState extends State<EmployeeTable> {
                 _rowsPerPage = 7;
 
                 return PaginatedDataTable(
+                  actions: [IconButton(icon: Icon(Icons.refresh,color: Theme.of(context).accentColor,), onPressed: (){
+                    setState((){});
+                  })],
                     headingRowHeight: 70,
                     header: snapshot.connectionState == ConnectionState.done ? Text(
                       "List of employees",
-                      style: TextStyle(fontSize: 13),
+                      style: TextStyle(fontSize: 13,),
                     ) : Row(children: [
                       SizedBox(height: 20,width: 20,child: CircularProgressIndicator(strokeWidth: 2,),),
                       SizedBox(width: 15,),

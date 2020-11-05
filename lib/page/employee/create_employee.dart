@@ -52,7 +52,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
               width: double.infinity,
               child: Card(
                 margin: EdgeInsets.all(0),
-                color: employee.id == null ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
@@ -101,6 +101,8 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           validator: (phoneNumberValue) {
                             if (phoneNumberValue.isEmpty) {
                               return "Phone number must not be empty";
+                            } else if (phoneNumberValue.length != 10 && phoneNumberValue.length != 12) {
+                              return "valid 0911234567 or 251911234567";
                             } else {
                               return null;
                             }
@@ -179,60 +181,100 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                   ),
                 )),
             Container(
-              child: RaisedButton(
-                color: employee.id == null ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
-                child: _doingCRUD == true
-                    ? Container(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          backgroundColor: Colors.white,
+              child: employee.id == null
+                  ? RaisedButton(
+                      color: Theme.of(context).primaryColor,
+                      child: _doingCRUD == true
+                          ? Container(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1,
+                                backgroundColor: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              "Create",
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                              ),
+                            ),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          if (employee.address == null) {
+                            // Validating if address exists.
+                            setState(() {
+                              _addressError = true;
+                            });
+                          } else {
+                            setState(() {
+                              _doingCRUD = true;
+                              _addressError = false;
+                            });
+
+                            await createEmployee(context);
+                            cleanFields();
+                          }
+                        }
+                      },
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RaisedButton(
+                            child: Text(
+                              "Update",
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                if (employee.address == null) {
+                                  // Validating if address exists.
+                                  setState(() {
+                                    _addressError = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    _doingCRUD = true;
+                                    _addressError = false;
+                                  });
+
+                                  await updateEmployee(context);
+                                  cleanFields();
+                                }
+                              }
+                            }),
+                        OutlineButton(
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            cleanFields();
+                          },
                         ),
-                      )
-                    : Text(
-                        employee.id == null ? "Create" : "Update",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    if (employee.address == null) {
-                      // Validating if address exists.
-                      setState(() {
-                        _addressError = true;
-                      });
-                    } else {
-                      setState(() {
-                        _doingCRUD = true;
-                        _addressError = false;
-                      });
-
-                      employee.id == null ? await createEmployee(context) : await updateEmployee(context);
-
-                      setState(() {
-                        _doingCRUD = false;
-                      });
-
-                      /// Clearing data
-                      employee = Personnel(type: Personnel.EMPLOYEE);
-                      clearInputs();
-
-                      /// Notify corresponding widgets.
-                      widget.employeeTableKey.currentState.setState(() {});
-                      widget.statisticsEmployeeKey.currentState.setState(() {});
-                    }
-                  }
-                },
-              ),
+                      ],
+                    ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void cleanFields() {
+    setState(() {
+      /// Clearing data
+      _doingCRUD = false;
+      employee = Personnel(type: Personnel.EMPLOYEE);
+      clearInputs();
+    });
+
+    /// Notify corresponding widgets.
+    widget.employeeTableKey.currentState.setState(() {});
+    widget.statisticsEmployeeKey.currentState.setState(() {});
   }
 
   Future createEmployee(BuildContext context) async {
@@ -241,7 +283,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
       displayName: employee.name,
       phones: [Item(value: employee.phoneNumber)],
       emails: [Item(value: employee.email)],
-      jobTitle: "Captain Employee",
+      jobTitle: Personnel.EMPLOYEE,
       avatar: employee.profileImage,
       note: employee.note,
     );
@@ -261,7 +303,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   Future createInFSAndUpdateLocally(Personnel employee) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [employee.id]; // Querying only employees
-    PersonnelDAL.find(where: where, whereArgs: whereArgs).then((List<Personnel> personnel) async{
+    PersonnelDAL.find(where: where, whereArgs: whereArgs).then((List<Personnel> personnel) async {
       Personnel queriedEmployee = personnel.first;
 
       /// Creating data to fire store
@@ -273,7 +315,6 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [queriedEmployee.id]; // Querying only employees
       PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: queriedEmployee);
-
     });
   }
 
@@ -289,7 +330,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
         displayName: employee.name,
         phones: [Item(value: employee.phoneNumber)],
         emails: [Item(value: employee.email)],
-        jobTitle: "Captain Employee",
+        jobTitle: Personnel.EMPLOYEE,
         avatar: employee.profileImage,
         note: employee.note,
         identifier: employee.contactIdentifier);
@@ -365,7 +406,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
       return Container(
         margin: padding,
         child: Icon(
-          Icons.camera,
+          Icons.person_outline_rounded,
           color: Theme.of(context).primaryColorLight,
           size: iconSize,
         ),
@@ -396,11 +437,10 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     _noteController.clear();
   }
 
-  void passForUpdate(Personnel employeeUpdateData) async{
-
+  void passForUpdate(Personnel employeeUpdateData) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [employeeUpdateData.id]; // Querying only employees
-    List<Personnel> personnel= await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+    List<Personnel> personnel = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       employee = personnel.first;
