@@ -84,9 +84,20 @@ class PersonnelDAL {
   /// where : "id = ?"
   /// whereArgs : [2]
   static Future<void> update({String where, dynamic whereArgs, Personnel personnel}) async {
+    print("----------------------------------");
+    print("Updating personnel");
+    print("Where : $where");
+    print("Where args : $whereArgs");
+    print("personnel update data: ${Personnel.toMap(personnel)}");
+
     personnel.lastModified = DateTime.now();
     final Database db = await getDatabase();
-    await db.update(TABLE_NAME, Personnel.toMap(personnel), where: where, whereArgs: whereArgs);
+    await db.update(TABLE_NAME, Personnel.toMap(personnel), where: where, whereArgs: whereArgs).then((value){
+
+      print("value : $value");
+    }, onError: (e){
+      print("error : e");
+    });
   }
 
   /// where : "id = ?"

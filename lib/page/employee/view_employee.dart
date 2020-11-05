@@ -3,7 +3,9 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/employee/create_employee.dart';
 import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:captain/widget/c_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contact/contacts.dart';
 import 'package:intl/intl.dart';
 
 class EmployeeTable extends StatefulWidget {
@@ -211,7 +213,16 @@ class _EmployeeDataSource extends DataTableSource {
                 String where = "${Personnel.ID} = ?";
                 List<String> whereArgs = [personnel.id]; // Querying only employees
 
+                List<Personnel> deletePersonnelList = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+
                 await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
+                await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
+
+                Personnel deletePersonnel = deletePersonnelList.first;
+                if(deletePersonnel.idFS != null){
+                  Firestore.instance.collection(Personnel.EMPLOYEE).document(deletePersonnel.idFS).delete();
+                }
+
                 Navigator.pop(context);
                 return null;
               },

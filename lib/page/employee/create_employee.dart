@@ -252,21 +252,29 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     employee.contactIdentifier = createdContact.identifier;
     Personnel createdEmployee = await PersonnelDAL.create(employee);
 
-    /// Creating data to fire store
-    dynamic employeeMap = Personnel.toMap(createdEmployee);
-    employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-    // Saving to fire store.
-    Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap).then((DocumentReference docRef) {
-      // updating local db with fs id
-      createdEmployee.idFS = docRef.documentID;
-      String where = "${Personnel.ID} = ?";
-      List<String> whereArgs = [createdEmployee.id]; // Querying only employees
-      // On successful create to fs update local data with the retrieved id
-      PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: createdEmployee);
-    });
-
     /// Showing notification
     CNotifications.showSnackBar(context, "Successfuly created : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
+
+    createInFSAndUpdateLocally(createdEmployee);
+  }
+
+  Future createInFSAndUpdateLocally(Personnel employee) async {
+    String where = "${Personnel.ID} = ?";
+    List<String> whereArgs = [employee.id]; // Querying only employees
+    PersonnelDAL.find(where: where, whereArgs: whereArgs).then((List<Personnel> personnel) async{
+      Personnel queriedEmployee = personnel.first;
+
+      /// Creating data to fire store
+      dynamic employeeMap = Personnel.toMap(queriedEmployee);
+      employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
+      DocumentReference docRef = await Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap);
+      queriedEmployee.idFS = docRef.documentID;
+
+      String where = "${Personnel.ID} = ?";
+      List<String> whereArgs = [queriedEmployee.id]; // Querying only employees
+      PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: queriedEmployee);
+
+    });
   }
 
   Future updateEmployee(BuildContext context) async {
@@ -291,6 +299,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     /// Updating from fire store
     dynamic employeeMap = Personnel.toMap(employee);
     employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
+
     // Updating to fire store if fire store generated id is present in doc.
     if (employee.idFS != null) {
       Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
@@ -387,9 +396,14 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     _noteController.clear();
   }
 
-  void passForUpdate(Personnel employeeUpdateData) {
+  void passForUpdate(Personnel employeeUpdateData) async{
+
+    String where = "${Personnel.ID} = ?";
+    List<String> whereArgs = [employeeUpdateData.id]; // Querying only employees
+    List<Personnel> personnel= await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+
     setState(() {
-      employee = employeeUpdateData;
+      employee = personnel.first;
       _nameController.text = employee.name;
       _phoneNumberController.text = employee.phoneNumber;
       _emailController.text = employee.email;
