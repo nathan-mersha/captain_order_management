@@ -21,7 +21,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardPageState extends State<DashboardPage> {
-  int selectedMenuIndex = 7; // todo : change index to 1 over view page selected by default
+  int selectedMenuIndex = 12; // todo : change index to 1 over view page selected by default
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
     {
@@ -128,7 +128,7 @@ class DashboardPageState extends State<DashboardPage> {
                         children: <Widget>[
                           Text(
                             menus[selectedMenuIndex]["name"],
-                            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800),
                           ),
                           Text(
                             "Captain order and customer management",
