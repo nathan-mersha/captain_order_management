@@ -1,5 +1,5 @@
 import 'package:captain/page/analysis/analysis.dart';
-import 'package:captain/page/customer/customers.dart';
+import 'package:captain/page/customer/home_customer.dart';
 import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/employee/home_employee.dart';
 import 'package:captain/page/message/messages.dart';
@@ -31,7 +31,7 @@ class DashboardPageState extends State<DashboardPage> {
     {"name": "Orders", "iconData": Icons.palette, "child": OrdersPage()},
     {"name": "Special Order", "iconData": Icons.star, "child": SpecialOrdersPage()},
     {"name": "Products", "iconData": Icons.business_center, "child": ProductsPage()},
-    {"name": "Customers", "iconData": Icons.supervisor_account, "child": CustomersPage()},
+    {"name": "Customers", "iconData": Icons.supervisor_account, "child": HomeCustomerPage()},
     {"name": "Returned Orders", "iconData": Icons.assignment_return, "child": ReturnedOrdersPage()},
     {"name": "Employees", "iconData": Icons.person, "child": HomeEmployeePage()},
     {"name": "Punch", "iconData": Icons.call_split, "child": PunchPage()},
