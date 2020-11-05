@@ -2,24 +2,23 @@ import 'package:captain/db/model/returned_order.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class ReturnedOrderDAL {
   static const String TABLE_NAME = ReturnedOrder.COLLECTION_NAME;
 
-
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${ReturnedOrder.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            "${ReturnedOrder.ID_FS} TEXT," +
-            "${ReturnedOrder.EMPLOYEE} BLOB," +
-            "${ReturnedOrder.CUSTOMER} BLOB," +
-            "${ReturnedOrder.PRODUCT} BLOB," +
-            "${ReturnedOrder.COUNT} INTEGER," +
-            "${ReturnedOrder.NOTE} TEXT," +
-            "${ReturnedOrder.FIRST_MODIFIED} TEXT," +
-            "${ReturnedOrder.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${ReturnedOrder.ID} TEXT," +
+        "${ReturnedOrder.ID_FS} TEXT," +
+        "${ReturnedOrder.EMPLOYEE} BLOB," +
+        "${ReturnedOrder.CUSTOMER} BLOB," +
+        "${ReturnedOrder.PRODUCT} BLOB," +
+        "${ReturnedOrder.COUNT} INTEGER," +
+        "${ReturnedOrder.NOTE} TEXT," +
+        "${ReturnedOrder.FIRST_MODIFIED} TEXT," +
+        "${ReturnedOrder.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -32,14 +31,17 @@ class ReturnedOrderDAL {
     return database;
   }
 
-  static Future<void> create(ReturnedOrder normalOrder) async {
+  static Future<ReturnedOrder> create(ReturnedOrder returnedOrder) async {
     // updating first and last modified stamps.
-    normalOrder.firstModified = DateTime.now();
-    normalOrder.lastModified = DateTime.now();
+    var uuid = Uuid();
+    returnedOrder.id = uuid.hashCode.toString();
+    returnedOrder.firstModified = DateTime.now();
+    returnedOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, ReturnedOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await db.insert(TABLE_NAME, ReturnedOrder.toMap(returnedOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    return val == 1 ? returnedOrder : null;
   }
 
   /// where : "id = ?"
@@ -48,8 +50,8 @@ class ReturnedOrderDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {
@@ -69,10 +71,10 @@ class ReturnedOrderDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, ReturnedOrder normalOrder}) async {
-    normalOrder.lastModified = DateTime.now();
+  static Future<void> update({String where, dynamic whereArgs, ReturnedOrder returnedOrder}) async {
+    returnedOrder.lastModified = DateTime.now();
     final Database db = await getDatabase();
-    await db.update(TABLE_NAME, ReturnedOrder.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await db.update(TABLE_NAME, ReturnedOrder.toMap(returnedOrder), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

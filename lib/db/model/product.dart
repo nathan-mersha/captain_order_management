@@ -20,7 +20,7 @@ class Product {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  int id;
+  String id;
   String idFS;
   String name;
   String type; // paint, other

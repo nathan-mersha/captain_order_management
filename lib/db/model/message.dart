@@ -10,7 +10,7 @@ class Message {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  int id;
+  String id;
   String idFS;
   String recipient;
   String body;

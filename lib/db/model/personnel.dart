@@ -23,7 +23,7 @@ class Personnel {
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
-  String id; // todo change for all
+  String id;
   String idFS;
   String contactIdentifier;
   String name;

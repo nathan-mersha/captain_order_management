@@ -2,27 +2,26 @@ import 'package:captain/db/model/special_order.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class SpecialOrderDAL {
   static const String TABLE_NAME = SpecialOrder.COLLECTION_NAME;
 
-
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${SpecialOrder.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            "${SpecialOrder.ID_FS} TEXT," +
-            "${SpecialOrder.EMPLOYEE} BLOB," +
-            "${SpecialOrder.CUSTOMER} BLOB," +
-            "${SpecialOrder.PRODUCTS} BLOB," +
-            "${SpecialOrder.TOTAL_AMOUNT} REAL," +
-            "${SpecialOrder.ADVANCE_PAYMENT} REAL," +
-            "${SpecialOrder.REMAINING_PAYMENT} REAL," +
-            "${SpecialOrder.PAID_IN_FULL} BLOB," +
-            "${SpecialOrder.NOTE} TEXT," +
-            "${SpecialOrder.FIRST_MODIFIED} TEXT," +
-            "${SpecialOrder.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${SpecialOrder.ID} TEXT," +
+        "${SpecialOrder.ID_FS} TEXT," +
+        "${SpecialOrder.EMPLOYEE} BLOB," +
+        "${SpecialOrder.CUSTOMER} BLOB," +
+        "${SpecialOrder.PRODUCTS} BLOB," +
+        "${SpecialOrder.TOTAL_AMOUNT} REAL," +
+        "${SpecialOrder.ADVANCE_PAYMENT} REAL," +
+        "${SpecialOrder.REMAINING_PAYMENT} REAL," +
+        "${SpecialOrder.PAID_IN_FULL} BLOB," +
+        "${SpecialOrder.NOTE} TEXT," +
+        "${SpecialOrder.FIRST_MODIFIED} TEXT," +
+        "${SpecialOrder.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -35,14 +34,17 @@ class SpecialOrderDAL {
     return database;
   }
 
-  static Future<void> create(SpecialOrder normalOrder) async {
+  static Future<SpecialOrder> create(SpecialOrder specialOrder) async {
     // updating first and last modified stamps.
-    normalOrder.firstModified = DateTime.now();
-    normalOrder.lastModified = DateTime.now();
+    var uuid = Uuid();
+    specialOrder.id = uuid.hashCode.toString();
+    specialOrder.firstModified = DateTime.now();
+    specialOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, SpecialOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await db.insert(TABLE_NAME, SpecialOrder.toMap(specialOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    return val == 1 ? specialOrder : null;
   }
 
   /// where : "id = ?"
@@ -51,8 +53,8 @@ class SpecialOrderDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {
@@ -75,10 +77,10 @@ class SpecialOrderDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, SpecialOrder normalOrder}) async {
-    normalOrder.lastModified = DateTime.now();
+  static Future<void> update({String where, dynamic whereArgs, SpecialOrder specialOrder}) async {
+    specialOrder.lastModified = DateTime.now();
     final Database db = await getDatabase();
-    await db.update(TABLE_NAME, SpecialOrder.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await db.update(TABLE_NAME, SpecialOrder.toMap(specialOrder), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

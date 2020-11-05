@@ -2,6 +2,7 @@ import 'package:captain/db/model/product.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class ProductDAL {
   static const String TABLE_NAME = Product.COLLECTION_NAME;
@@ -10,7 +11,7 @@ class ProductDAL {
   static Future<Database> getDatabase() async {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
-            "${Product.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Product.ID} TEXT," +
             "${Product.ID_FS} TEXT," +
             "${Product.NAME} TEXT," +
             "${Product.TYPE} TEXT," +
@@ -39,14 +40,17 @@ class ProductDAL {
     return database;
   }
 
-  static Future<void> create(Product normalOrder) async {
+  static Future<Product> create(Product product) async {
     // updating first and last modified stamps.
-    normalOrder.firstModified = DateTime.now();
-    normalOrder.lastModified = DateTime.now();
+    var uuid = Uuid();
+    product.id = uuid.hashCode.toString();
+    product.firstModified = DateTime.now();
+    product.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, Product.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await db.insert(TABLE_NAME, Product.toMap(product), conflictAlgorithm: ConflictAlgorithm.replace);
+    return val == 1 ? product : null;
   }
 
   /// where : "id = ?"
@@ -83,10 +87,10 @@ class ProductDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Product normalOrder}) async {
-    normalOrder.lastModified = DateTime.now();
+  static Future<void> update({String where, dynamic whereArgs, Product product}) async {
+    product.lastModified = DateTime.now();
     final Database db = await getDatabase();
-    await db.update(TABLE_NAME, Product.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await db.update(TABLE_NAME, Product.toMap(product), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

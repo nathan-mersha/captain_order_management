@@ -2,6 +2,7 @@ import 'package:captain/db/model/normal_order.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class NormalOrderDAL {
   static const String TABLE_NAME = NormalOrder.COLLECTION_NAME;
@@ -10,7 +11,7 @@ class NormalOrderDAL {
   static Future<Database> getDatabase() async {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
-            "${NormalOrder.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${NormalOrder.ID} TEXT," +
             "${NormalOrder.ID_FS} TEXT," +
             "${NormalOrder.EMPLOYEE} BLOB," +
             "${NormalOrder.CUSTOMER} BLOB," +
@@ -38,14 +39,17 @@ class NormalOrderDAL {
     return database;
   }
 
-  static Future<void> create(NormalOrder normalOrder) async {
+  static Future<NormalOrder> create(NormalOrder normalOrder) async {
     // updating first and last modified stamps.
+    var uuid = Uuid();
+    normalOrder.id = uuid.hashCode.toString();
     normalOrder.firstModified = DateTime.now();
     normalOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    return val == 1 ? normalOrder : null;
   }
 
   /// where : "id = ?"

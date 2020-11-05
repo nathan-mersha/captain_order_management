@@ -1,7 +1,9 @@
+import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/punch.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+import 'package:uuid/uuid.dart';
 
 class PunchDAL {
   static const String TABLE_NAME = Punch.COLLECTION_NAME;
@@ -10,7 +12,7 @@ class PunchDAL {
   static Future<Database> getDatabase() async {
     String createTable =
         "CREATE TABLE $TABLE_NAME (" +
-            "${Punch.ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            "${Punch.ID} TEXT," +
             "${Punch.ID_FS} TEXT," +
             "${Punch.EMPLOYEE} BLOB," +
             "${Punch.PRODUCT} BLOB," +
@@ -32,14 +34,17 @@ class PunchDAL {
     return database;
   }
 
-  static Future<void> create(Punch normalOrder) async {
+  static Future<Punch> create(Punch punch) async {
     // updating first and last modified stamps.
-    normalOrder.firstModified = DateTime.now();
-    normalOrder.lastModified = DateTime.now();
+    var uuid = Uuid();
+    punch.id = uuid.hashCode.toString();
+    punch.firstModified = DateTime.now();
+    punch.lastModified = DateTime.now();
 
     // Get a reference to the database.
     final Database db = await getDatabase();
-    await db.insert(TABLE_NAME, Punch.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await db.insert(TABLE_NAME, Punch.toMap(punch), conflictAlgorithm: ConflictAlgorithm.replace);
+    return val == 1 ? punch : null;
   }
 
   /// where : "id = ?"
