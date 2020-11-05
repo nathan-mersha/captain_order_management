@@ -1,5 +1,4 @@
 class KapciConstants {
-
   static const List<String> MANUFACTURER = [
     "ACURA",
     "AIXAM-MEGA",

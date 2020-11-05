@@ -25,12 +25,9 @@ class CString {
     String val = _localizedValues[localeVal][key];
 
     if (firstCap) {
-      return val == null || val == ""
-          ? '${_localizedValues[ENGLISH_LC][key][0].toUpperCase()}${_localizedValues[ENGLISH_LC][key].substring(1)}'
-          : '${val[0].toUpperCase()}${val.substring(1)}';
+      return val == null || val == "" ? '${_localizedValues[ENGLISH_LC][key][0].toUpperCase()}${_localizedValues[ENGLISH_LC][key].substring(1)}' : '${val[0].toUpperCase()}${val.substring(1)}';
     } else {
       return val == null || val == "" ? _localizedValues[ENGLISH_LC][key] : val;
     }
   }
-
 }

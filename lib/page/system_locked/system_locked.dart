@@ -103,11 +103,14 @@ class SystemLockedPageState extends State<SystemLockedPage> {
             "page is displayed if something is wrong",
             style: TextStyle(color: Colors.black38),
           ),
-          FlatButton(child: Text("contact developer"),onPressed: (){
-            setState(() {
-              currentPage = CONTACT_DEVELOPER;
-            });
-          },)
+          FlatButton(
+            child: Text("contact developer"),
+            onPressed: () {
+              setState(() {
+                currentPage = CONTACT_DEVELOPER;
+              });
+            },
+          )
         ],
       ),
     );

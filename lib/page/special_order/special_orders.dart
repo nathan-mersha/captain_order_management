@@ -8,6 +8,9 @@ class SpecialOrdersPage extends StatefulWidget {
 class _SpecialOrdersPageState extends State<SpecialOrdersPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child : Center(child: Text("Special Orders"),));
+    return Container(
+        child: Center(
+      child: Text("Special Orders"),
+    ));
   }
 }

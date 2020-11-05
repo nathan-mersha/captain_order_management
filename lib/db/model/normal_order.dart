@@ -1,7 +1,6 @@
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 
-
 /// Defines normalOrder db.model
 class NormalOrder {
   static const String COLLECTION_NAME = "normalOrder";
@@ -39,64 +38,66 @@ class NormalOrder {
   DateTime firstModified;
   DateTime lastModified;
 
-  NormalOrder({
-    this.id,
-    this.idFS,
-    this.employee,
-    this.customer,
-    this.paintOrder,
-    this.otherProducts,
-    this.volume,
-    this.totalAmount,
-    this.advancePayment,
-    this.remainingPayment,
-    this.paidInFull,
-    this.status,
-    this.userNotified,
-    this.firstModified, 
-    this.lastModified
-  });
+  NormalOrder(
+      {this.id,
+      this.idFS,
+      this.employee,
+      this.customer,
+      this.paintOrder,
+      this.otherProducts,
+      this.volume,
+      this.totalAmount,
+      this.advancePayment,
+      this.remainingPayment,
+      this.paidInFull,
+      this.status,
+      this.userNotified,
+      this.firstModified,
+      this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {
-    return normalOrder == null ? null : {
-      ID: normalOrder.id,
-      ID_FS: normalOrder.idFS,
-      EMPLOYEE: normalOrder.employee == null ? null : Personnel.toMap(normalOrder.employee),
-      CUSTOMER: normalOrder.customer == null ? null : Personnel.toMap(normalOrder.customer),
-      PAINT_ORDER: normalOrder.paintOrder == null ? null : Product.toMap(normalOrder.paintOrder),
-      OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : Product.toMapList(normalOrder.otherProducts),
-      VOLUME: normalOrder.volume,
-      TOTAL_AMOUNT: normalOrder.totalAmount,
-      ADVANCE_PAYMENT: normalOrder.advancePayment,
-      REMAINING_PAYMENT: normalOrder.remainingPayment,
-      PAID_IN_FULL: normalOrder.paidInFull,
-      STATUS: normalOrder.status,
-      USER_NOTIFIED: normalOrder.userNotified,
-      FIRST_MODIFIED: normalOrder.firstModified.toIso8601String(),
-      LAST_MODIFIED: normalOrder.lastModified.toIso8601String()
-    };
+    return normalOrder == null
+        ? null
+        : {
+            ID: normalOrder.id,
+            ID_FS: normalOrder.idFS,
+            EMPLOYEE: normalOrder.employee == null ? null : Personnel.toMap(normalOrder.employee),
+            CUSTOMER: normalOrder.customer == null ? null : Personnel.toMap(normalOrder.customer),
+            PAINT_ORDER: normalOrder.paintOrder == null ? null : Product.toMap(normalOrder.paintOrder),
+            OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : Product.toMapList(normalOrder.otherProducts),
+            VOLUME: normalOrder.volume,
+            TOTAL_AMOUNT: normalOrder.totalAmount,
+            ADVANCE_PAYMENT: normalOrder.advancePayment,
+            REMAINING_PAYMENT: normalOrder.remainingPayment,
+            PAID_IN_FULL: normalOrder.paidInFull,
+            STATUS: normalOrder.status,
+            USER_NOTIFIED: normalOrder.userNotified,
+            FIRST_MODIFIED: normalOrder.firstModified.toIso8601String(),
+            LAST_MODIFIED: normalOrder.lastModified.toIso8601String()
+          };
   }
 
   /// Converts Map to Model
   static NormalOrder toModel(dynamic map) {
-    return map == null ? null: NormalOrder(
-        id: map[ID],
-        idFS: map[ID_FS],
-        employee: Personnel.toModel(map[EMPLOYEE]),
-        customer: Personnel.toModel(map[CUSTOMER]),
-        paintOrder: Product.toModel(map[PAINT_ORDER]),
-        otherProducts: Product.toModelList(map[OTHER_PRODUCTS]),
-        volume: map[VOLUME],
-        totalAmount: map[TOTAL_AMOUNT],
-        advancePayment: map[ADVANCE_PAYMENT],
-        remainingPayment: map[REMAINING_PAYMENT],
-        paidInFull: map[PAID_IN_FULL],
-        status: map[STATUS],
-        userNotified: map[USER_NOTIFIED],
-        firstModified: DateTime(map[FIRST_MODIFIED]),
-        lastModified: DateTime(map[LAST_MODIFIED])
-    );
+    return map == null
+        ? null
+        : NormalOrder(
+            id: map[ID],
+            idFS: map[ID_FS],
+            employee: Personnel.toModel(map[EMPLOYEE]),
+            customer: Personnel.toModel(map[CUSTOMER]),
+            paintOrder: Product.toModel(map[PAINT_ORDER]),
+            otherProducts: Product.toModelList(map[OTHER_PRODUCTS]),
+            volume: map[VOLUME],
+            totalAmount: map[TOTAL_AMOUNT],
+            advancePayment: map[ADVANCE_PAYMENT],
+            remainingPayment: map[REMAINING_PAYMENT],
+            paidInFull: map[PAID_IN_FULL],
+            status: map[STATUS],
+            userNotified: map[USER_NOTIFIED],
+            firstModified: DateTime(map[FIRST_MODIFIED]),
+            lastModified: DateTime(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

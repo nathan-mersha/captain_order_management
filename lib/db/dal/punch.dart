@@ -1,4 +1,3 @@
-import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/punch.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -8,20 +7,18 @@ import 'package:uuid/uuid.dart';
 class PunchDAL {
   static const String TABLE_NAME = Punch.COLLECTION_NAME;
 
-
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${Punch.ID} TEXT," +
-            "${Punch.ID_FS} TEXT," +
-            "${Punch.EMPLOYEE} BLOB," +
-            "${Punch.PRODUCT} BLOB," +
-            "${Punch.TYPE} TEXT," +
-            "${Punch.WEIGHT} REAL," +
-            "${Punch.NOTE} TEXT," +
-            "${Punch.FIRST_MODIFIED} TEXT," +
-            "${Punch.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${Punch.ID} TEXT," +
+        "${Punch.ID_FS} TEXT," +
+        "${Punch.EMPLOYEE} BLOB," +
+        "${Punch.PRODUCT} BLOB," +
+        "${Punch.TYPE} TEXT," +
+        "${Punch.WEIGHT} REAL," +
+        "${Punch.NOTE} TEXT," +
+        "${Punch.FIRST_MODIFIED} TEXT," +
+        "${Punch.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -53,8 +50,8 @@ class PunchDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {

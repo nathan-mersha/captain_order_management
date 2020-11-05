@@ -8,6 +8,9 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child : Center(child: Text("Messages"),));
+    return Container(
+        child: Center(
+      child: Text("Messages"),
+    ));
   }
 }

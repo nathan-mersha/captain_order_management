@@ -8,6 +8,9 @@ class AnalysisPage extends StatefulWidget {
 class _AnalysisPageState extends State<AnalysisPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child : Center(child: Text("Analysis"),));
+    return Container(
+        child: Center(
+      child: Text("Analysis"),
+    ));
   }
 }

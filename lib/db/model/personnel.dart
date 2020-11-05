@@ -37,58 +37,60 @@ class Personnel {
   DateTime firstModified;
   DateTime lastModified;
 
-  Personnel({
-    this.id,
-    this.idFS,
-    this.contactIdentifier,
-    this.name,
-    this.phoneNumber,
-    this.email,
-    this.address,
-    this.addressDetail,
-    this.type,
-    this.profileImage,
-    this.note,
-    this.firstModified,
-    this.lastModified
-  });
+  Personnel(
+      {this.id,
+      this.idFS,
+      this.contactIdentifier,
+      this.name,
+      this.phoneNumber,
+      this.email,
+      this.address,
+      this.addressDetail,
+      this.type,
+      this.profileImage,
+      this.note,
+      this.firstModified,
+      this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Personnel personnel) {
-    return personnel == null ? null : {
-      ID: personnel.id,
-      ID_FS: personnel.idFS,
-      CONTACT_IDENTIFIER: personnel.contactIdentifier,
-      NAME: personnel.name,
-      PHONE_NUMBER: personnel.phoneNumber,
-      EMAIL: personnel.email,
-      ADDRESS: personnel.address,
-      ADDRESS_DETAIL: personnel.addressDetail,
-      TYPE: personnel.type,
-      PROFILE_IMAGE: personnel.profileImage,
-      NOTE: personnel.note,
-      FIRST_MODIFIED: personnel.firstModified.toIso8601String(),
-      LAST_MODIFIED: personnel.lastModified.toIso8601String()
-    };
+    return personnel == null
+        ? null
+        : {
+            ID: personnel.id,
+            ID_FS: personnel.idFS,
+            CONTACT_IDENTIFIER: personnel.contactIdentifier,
+            NAME: personnel.name,
+            PHONE_NUMBER: personnel.phoneNumber,
+            EMAIL: personnel.email,
+            ADDRESS: personnel.address,
+            ADDRESS_DETAIL: personnel.addressDetail,
+            TYPE: personnel.type,
+            PROFILE_IMAGE: personnel.profileImage,
+            NOTE: personnel.note,
+            FIRST_MODIFIED: personnel.firstModified.toIso8601String(),
+            LAST_MODIFIED: personnel.lastModified.toIso8601String()
+          };
   }
 
   /// Converts Map to Model
   static Personnel toModel(dynamic map) {
-    return map == null ? null : Personnel(
-        id: map[ID],
-        idFS: map[ID_FS],
-        contactIdentifier: map[CONTACT_IDENTIFIER],
-        name: map[NAME],
-        phoneNumber: map[PHONE_NUMBER],
-        email: map[EMAIL],
-        address: map[ADDRESS],
-        addressDetail: map[ADDRESS_DETAIL],
-        type: map[TYPE],
-        profileImage: map[PROFILE_IMAGE],
-        note: map[NOTE],
-        firstModified: DateTime.parse(map[FIRST_MODIFIED]),
-        lastModified: DateTime.parse(map[LAST_MODIFIED])
-    );
+    return map == null
+        ? null
+        : Personnel(
+            id: map[ID],
+            idFS: map[ID_FS],
+            contactIdentifier: map[CONTACT_IDENTIFIER],
+            name: map[NAME],
+            phoneNumber: map[PHONE_NUMBER],
+            email: map[EMAIL],
+            address: map[ADDRESS],
+            addressDetail: map[ADDRESS_DETAIL],
+            type: map[TYPE],
+            profileImage: map[PROFILE_IMAGE],
+            note: map[NOTE],
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

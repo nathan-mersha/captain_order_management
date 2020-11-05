@@ -7,17 +7,15 @@ import 'package:uuid/uuid.dart';
 class MessageDAL {
   static const String TABLE_NAME = Message.COLLECTION_NAME;
 
-  
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${Message.ID} TEXT," +
-            "${Message.ID_FS} TEXT," +
-            "${Message.RECIPIENT} TEXT," +
-            "${Message.BODY} TEXT," +
-            "${Message.FIRST_MODIFIED} TEXT," +
-            "${Message.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${Message.ID} TEXT," +
+        "${Message.ID_FS} TEXT," +
+        "${Message.RECIPIENT} TEXT," +
+        "${Message.BODY} TEXT," +
+        "${Message.FIRST_MODIFIED} TEXT," +
+        "${Message.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -49,8 +47,8 @@ class MessageDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {

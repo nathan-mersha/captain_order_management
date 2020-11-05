@@ -7,27 +7,25 @@ import 'package:uuid/uuid.dart';
 class ProductDAL {
   static const String TABLE_NAME = Product.COLLECTION_NAME;
 
-
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${Product.ID} TEXT," +
-            "${Product.ID_FS} TEXT," +
-            "${Product.NAME} TEXT," +
-            "${Product.TYPE} TEXT," +
-            "${Product.UNIT_OF_MEASUREMENT} TEXT," +
-            "${Product.UNIT_PRICE} REAL," +
-            "${Product.COLOR_VALUE} TEXT," +
-            "${Product.PAINT_TYPE} TEXT," +
-            "${Product.MANUFACTURER} TEXT," +
-            "${Product.IS_GALLON_BASED} BLOB," +
-            "${Product.NOTE} TEXT," +
-            "${Product.QUANTITY_IN_CART} INTEGER," +
-            "${Product.SUB_TOTAL} REAL," +
-            "${Product.DELIVERED} BLOB," +
-            "${Product.FIRST_MODIFIED} TEXT," +
-            "${Product.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${Product.ID} TEXT," +
+        "${Product.ID_FS} TEXT," +
+        "${Product.NAME} TEXT," +
+        "${Product.TYPE} TEXT," +
+        "${Product.UNIT_OF_MEASUREMENT} TEXT," +
+        "${Product.UNIT_PRICE} REAL," +
+        "${Product.COLOR_VALUE} TEXT," +
+        "${Product.PAINT_TYPE} TEXT," +
+        "${Product.MANUFACTURER} TEXT," +
+        "${Product.IS_GALLON_BASED} BLOB," +
+        "${Product.NOTE} TEXT," +
+        "${Product.QUANTITY_IN_CART} INTEGER," +
+        "${Product.SUB_TOTAL} REAL," +
+        "${Product.DELIVERED} BLOB," +
+        "${Product.FIRST_MODIFIED} TEXT," +
+        "${Product.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -59,8 +57,8 @@ class ProductDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {

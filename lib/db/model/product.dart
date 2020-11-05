@@ -37,66 +37,69 @@ class Product {
   DateTime firstModified;
   DateTime lastModified;
 
-  Product({
-    this.id,
-    this.idFS,
-    this.name,
-    this.type,
-    this.unitOfMeasurement,
-    this.unitPrice,
-    this.colorValue,
-    this.paintType,
-    this.manufacturer,
-    this.isGallonBased,
-    this.note,
-    this.quantityInCart,
-    this.subTotal,
-    this.delivered,
-    this.firstModified,
-    this.lastModified});
+  Product(
+      {this.id,
+      this.idFS,
+      this.name,
+      this.type,
+      this.unitOfMeasurement,
+      this.unitPrice,
+      this.colorValue,
+      this.paintType,
+      this.manufacturer,
+      this.isGallonBased,
+      this.note,
+      this.quantityInCart,
+      this.subTotal,
+      this.delivered,
+      this.firstModified,
+      this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Product product) {
-    return product == null ? null : {
-      ID: product.id,
-      ID_FS: product.idFS,
-      NAME: product.name,
-      TYPE: product.type,
-      UNIT_OF_MEASUREMENT: product.unitOfMeasurement,
-      UNIT_PRICE: product.unitPrice,
-      COLOR_VALUE: product.colorValue,
-      PAINT_TYPE: product.paintType,
-      MANUFACTURER: product.manufacturer,
-      IS_GALLON_BASED: product.isGallonBased,
-      NOTE: product.note,
-      QUANTITY_IN_CART: product.quantityInCart,
-      SUB_TOTAL: product.subTotal,
-      DELIVERED: product.delivered,
-      FIRST_MODIFIED: product.firstModified,
-      LAST_MODIFIED: product.lastModified
-    };
+    return product == null
+        ? null
+        : {
+            ID: product.id,
+            ID_FS: product.idFS,
+            NAME: product.name,
+            TYPE: product.type,
+            UNIT_OF_MEASUREMENT: product.unitOfMeasurement,
+            UNIT_PRICE: product.unitPrice,
+            COLOR_VALUE: product.colorValue,
+            PAINT_TYPE: product.paintType,
+            MANUFACTURER: product.manufacturer,
+            IS_GALLON_BASED: product.isGallonBased,
+            NOTE: product.note,
+            QUANTITY_IN_CART: product.quantityInCart,
+            SUB_TOTAL: product.subTotal,
+            DELIVERED: product.delivered,
+            FIRST_MODIFIED: product.firstModified,
+            LAST_MODIFIED: product.lastModified
+          };
   }
 
   /// Converts Map to Model
   static Product toModel(dynamic map) {
-    return map == null ? null : Product(
-        id: map[ID],
-        idFS: map[ID_FS],
-        name: map[NAME],
-        type: map[TYPE],
-        unitOfMeasurement: map[UNIT_OF_MEASUREMENT],
-        unitPrice: map[UNIT_PRICE],
-        colorValue: map[COLOR_VALUE],
-        paintType: map[PAINT_TYPE],
-        manufacturer: map[MANUFACTURER],
-        isGallonBased: map[IS_GALLON_BASED],
-        note: map[NOTE],
-        quantityInCart: map[QUANTITY_IN_CART],
-        subTotal: map[SUB_TOTAL],
-        delivered: map[DELIVERED],
-        firstModified: DateTime(map[FIRST_MODIFIED]),
-        lastModified: DateTime(map[LAST_MODIFIED])
-    );
+    return map == null
+        ? null
+        : Product(
+            id: map[ID],
+            idFS: map[ID_FS],
+            name: map[NAME],
+            type: map[TYPE],
+            unitOfMeasurement: map[UNIT_OF_MEASUREMENT],
+            unitPrice: map[UNIT_PRICE],
+            colorValue: map[COLOR_VALUE],
+            paintType: map[PAINT_TYPE],
+            manufacturer: map[MANUFACTURER],
+            isGallonBased: map[IS_GALLON_BASED],
+            note: map[NOTE],
+            quantityInCart: map[QUANTITY_IN_CART],
+            subTotal: map[SUB_TOTAL],
+            delivered: map[DELIVERED],
+            firstModified: DateTime(map[FIRST_MODIFIED]),
+            lastModified: DateTime(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model
@@ -111,10 +114,11 @@ class Product {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<Product> models) {
     List<Map<String, dynamic>> mapList = [];
-    models == null ? [] :
-    models.forEach((Product model) {
-      mapList.add(toMap(model));
-    });
+    models == null
+        ? []
+        : models.forEach((Product model) {
+            mapList.add(toMap(model));
+          });
     return mapList;
   }
 }

@@ -64,7 +64,6 @@ class CSharedPreference {
   set featureAdminOnlySpecialOrder(bool featureAdminOnlySpecialOrder) => pref.setBool(FEATURE_ADMIN_ONLY_SPECIAL_ORDER, featureAdminOnlySpecialOrder);
   set featureAdminOnlySettings(bool featureAdminOnlySettings) => pref.setBool(FEATURE_ADMIN_ONLY_SETTINGS, featureAdminOnlySettings);
 
-
   String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
   bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false; // todo : change to true
@@ -89,8 +88,6 @@ class CSharedPreference {
   bool get featureAdminOnlyMessages => pref.getBool(FEATURE_ADMIN_ONLY_MESSAGES) ?? false;
   bool get featureAdminOnlySpecialOrder => pref.getBool(FEATURE_ADMIN_ONLY_SPECIAL_ORDER) ?? true;
   bool get featureAdminOnlySettings => pref.getBool(FEATURE_ADMIN_ONLY_SETTINGS) ?? false;
-
-
 }
 
 class GetCSPInstance {

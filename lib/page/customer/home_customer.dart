@@ -26,7 +26,6 @@ class HomeCustomerPageState extends State<HomeCustomerPage> with SingleTickerPro
           customerTableKey: customerTableKey,
           createCustomerKey: createCustomerKey,
           statisticsCustomerKey: statisticsCustomerKey,
-
         ),
         Container(
           margin: EdgeInsets.only(top: 10),

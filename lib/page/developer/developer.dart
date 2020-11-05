@@ -8,6 +8,9 @@ class DeveloperPage extends StatefulWidget {
 class _DeveloperPageState extends State<DeveloperPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child : Center(child: Text("Developer"),));
+    return Container(
+        child: Center(
+      child: Text("Developer"),
+    ));
   }
 }

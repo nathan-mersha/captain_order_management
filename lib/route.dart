@@ -20,9 +20,9 @@ class CRoutes {
         bool mainPasswordEnabled = cSP.mainPasswordEnabled;
         bool systemLocked = cSP.systemLocked;
 
-        if(systemLocked){
+        if (systemLocked) {
           return SystemLockedPage();
-        }else if (mainPasswordEnabled) {
+        } else if (mainPasswordEnabled) {
           return LoginPage();
         } else {
           return DashboardPage();

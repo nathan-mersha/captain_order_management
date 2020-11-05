@@ -7,26 +7,24 @@ import 'package:uuid/uuid.dart';
 class NormalOrderDAL {
   static const String TABLE_NAME = NormalOrder.COLLECTION_NAME;
 
-
   static Future<Database> getDatabase() async {
-    String createTable =
-        "CREATE TABLE $TABLE_NAME (" +
-            "${NormalOrder.ID} TEXT," +
-            "${NormalOrder.ID_FS} TEXT," +
-            "${NormalOrder.EMPLOYEE} BLOB," +
-            "${NormalOrder.CUSTOMER} BLOB," +
-            "${NormalOrder.PAINT_ORDER} BLOB," +
-            "${NormalOrder.OTHER_PRODUCTS} BLOB," +
-            "${NormalOrder.VOLUME} REAL," +
-            "${NormalOrder.TOTAL_AMOUNT} REAL," +
-            "${NormalOrder.ADVANCE_PAYMENT} REAL," +
-            "${NormalOrder.REMAINING_PAYMENT} REAL," +
-            "${NormalOrder.PAID_IN_FULL} BLOB," +
-            "${NormalOrder.STATUS} TEXT," +
-            "${NormalOrder.USER_NOTIFIED} BLOB," +
-            "${NormalOrder.FIRST_MODIFIED} TEXT," +
-            "${NormalOrder.LAST_MODIFIED} TEXT" +
-            ")";
+    String createTable = "CREATE TABLE $TABLE_NAME (" +
+        "${NormalOrder.ID} TEXT," +
+        "${NormalOrder.ID_FS} TEXT," +
+        "${NormalOrder.EMPLOYEE} BLOB," +
+        "${NormalOrder.CUSTOMER} BLOB," +
+        "${NormalOrder.PAINT_ORDER} BLOB," +
+        "${NormalOrder.OTHER_PRODUCTS} BLOB," +
+        "${NormalOrder.VOLUME} REAL," +
+        "${NormalOrder.TOTAL_AMOUNT} REAL," +
+        "${NormalOrder.ADVANCE_PAYMENT} REAL," +
+        "${NormalOrder.REMAINING_PAYMENT} REAL," +
+        "${NormalOrder.PAID_IN_FULL} BLOB," +
+        "${NormalOrder.STATUS} TEXT," +
+        "${NormalOrder.USER_NOTIFIED} BLOB," +
+        "${NormalOrder.FIRST_MODIFIED} TEXT," +
+        "${NormalOrder.LAST_MODIFIED} TEXT" +
+        ")";
 
     final database = openDatabase(
       join(await getDatabasesPath(), global.DB_NAME),
@@ -58,8 +56,8 @@ class NormalOrderDAL {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
         ? await db.query(
-      TABLE_NAME,
-    )
+            TABLE_NAME,
+          )
         : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
 
     return List.generate(maps.length, (i) {

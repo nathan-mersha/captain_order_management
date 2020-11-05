@@ -31,10 +31,8 @@ class CustomerTableState extends State<CustomerTable> {
     bool ascending,
   ) {
     _customerDataSource._sort<T>(getField, ascending);
-    setState(() {
-      _sortColumnIndex = columnIndex;
-      _sortAscending = ascending;
-    });
+    _sortColumnIndex = columnIndex;
+    _sortAscending = ascending;
   }
 
   Future<List<Personnel>> getListOfCustomers() async {
@@ -74,18 +72,42 @@ class CustomerTableState extends State<CustomerTable> {
                 _rowsPerPage = 7;
 
                 return PaginatedDataTable(
-                  actions: [IconButton(icon: Icon(Icons.refresh,color: Theme.of(context).accentColor,), onPressed: (){
-                    setState((){});
-                  })],
+                    actions: [
+                      IconButton(
+                          icon: Icon(
+                            Icons.refresh,
+                            color: Theme.of(context).accentColor,
+                          ),
+                          onPressed: () {
+                            setState(() {});
+                          })
+                    ],
                     headingRowHeight: 70,
-                    header: snapshot.connectionState == ConnectionState.done ? Text(
-                      "List of customers",
-                      style: TextStyle(fontSize: 13,),
-                    ) : Row(children: [
-                      SizedBox(height: 20,width: 20,child: CircularProgressIndicator(strokeWidth: 2,),),
-                      SizedBox(width: 15,),
-                      Text("Loading customers", style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),)
-                    ],),
+                    header: snapshot.connectionState == ConnectionState.done
+                        ? Text(
+                            "List of customers",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                "Loading customers",
+                                style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                              )
+                            ],
+                          ),
                     rowsPerPage: _rowsPerPage,
                     availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
                     onRowsPerPageChanged: (value) {
@@ -226,7 +248,7 @@ class _CustomerDataSource extends DataTableSource {
                 await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
 
                 Personnel deletePersonnel = deletePersonnelList.first;
-                if(deletePersonnel.idFS != null){
+                if (deletePersonnel.idFS != null) {
                   Firestore.instance.collection(Personnel.CUSTOMER).document(deletePersonnel.idFS).delete();
                 }
 

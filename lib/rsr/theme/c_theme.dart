@@ -36,9 +36,16 @@ class CTheme {
       selectedRowColor: primaryLight,
       backgroundColor: Color(0xfff2f2f2),
       buttonColor: primary,
-      inputDecorationTheme: InputDecorationTheme(focusColor: primary, labelStyle: TextStyle(fontSize: 11,), hintStyle: TextStyle(fontSize: 11)),
-
-      buttonTheme: ButtonThemeData(buttonColor: primary,textTheme: ButtonTextTheme.primary,),
+      inputDecorationTheme: InputDecorationTheme(
+          focusColor: primary,
+          labelStyle: TextStyle(
+            fontSize: 11,
+          ),
+          hintStyle: TextStyle(fontSize: 11)),
+      buttonTheme: ButtonThemeData(
+        buttonColor: primary,
+        textTheme: ButtonTextTheme.primary,
+      ),
       fontFamily: "Nunito",
     );
   }

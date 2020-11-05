@@ -8,7 +8,6 @@ class CNotifications {
         duration: Duration(seconds: seconds),
         action: SnackBarAction(
           label: actionLabel,
-
           textColor: Colors.white,
           onPressed: action,
         )));

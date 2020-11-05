@@ -8,6 +8,9 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child : Center(child: Text("Orders"),));
+    return Container(
+        child: Center(
+      child: Text("Orders"),
+    ));
   }
 }

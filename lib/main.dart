@@ -33,7 +33,7 @@ class MyAppState extends State<MyApp> {
           } else {
             if (projectSnap.data == true) {
               return AppBuilder(builder: (context) {
-                return MaterialApp(title: "Captain", theme : CTheme.getTheme(), routes: CRoutes().routes);
+                return MaterialApp(title: "Captain", theme: CTheme.getTheme(), routes: CRoutes().routes);
               });
             } else {
               return LoadingApp();
@@ -47,7 +47,7 @@ class MyAppState extends State<MyApp> {
     await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage]);
   }
 
-  Future initializeSharedPreference() async{
+  Future initializeSharedPreference() async {
     global.cSP = await SharedPreferences.getInstance();
     return true;
   }
@@ -92,4 +92,3 @@ class LoadingApp extends StatelessWidget {
     );
   }
 }
-

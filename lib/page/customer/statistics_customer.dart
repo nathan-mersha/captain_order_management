@@ -16,7 +16,6 @@ class StatisticsCustomerView extends StatefulWidget {
 }
 
 class StatisticsCustomerViewState extends State<StatisticsCustomerView> {
-
   @override
   Widget build(BuildContext context) {
     return Row(

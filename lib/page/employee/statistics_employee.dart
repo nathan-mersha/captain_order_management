@@ -16,7 +16,6 @@ class StatisticsEmployeeView extends StatefulWidget {
 }
 
 class StatisticsEmployeeViewState extends State<StatisticsEmployeeView> {
-
   @override
   Widget build(BuildContext context) {
     return Row(

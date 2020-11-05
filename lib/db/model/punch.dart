@@ -26,46 +26,39 @@ class Punch {
   DateTime firstModified;
   DateTime lastModified;
 
-  Punch({
-    this.id,
-    this.idFS,
-    this.employee,
-    this.product,
-    this.type,
-    this.weight,
-    this.note,
-    this.firstModified, 
-    this.lastModified
-  });
+  Punch({this.id, this.idFS, this.employee, this.product, this.type, this.weight, this.note, this.firstModified, this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Punch punch) {
-    return punch == null ? null : {
-      ID: punch.id,
-      ID_FS: punch.idFS,
-      EMPLOYEE: Personnel.toMap(punch.employee),
-      PRODUCT: Product.toMap(punch.product),
-      TYPE: punch.type,
-      WEIGHT: punch.weight,
-      NOTE: punch.note,
-      FIRST_MODIFIED: punch.firstModified.toIso8601String(),
-      LAST_MODIFIED: punch.lastModified.toIso8601String()
-    };
+    return punch == null
+        ? null
+        : {
+            ID: punch.id,
+            ID_FS: punch.idFS,
+            EMPLOYEE: Personnel.toMap(punch.employee),
+            PRODUCT: Product.toMap(punch.product),
+            TYPE: punch.type,
+            WEIGHT: punch.weight,
+            NOTE: punch.note,
+            FIRST_MODIFIED: punch.firstModified.toIso8601String(),
+            LAST_MODIFIED: punch.lastModified.toIso8601String()
+          };
   }
 
   /// Converts Map to Model
   static Punch toModel(dynamic map) {
-    return map == null ? null : Punch(
-        id: map[ID],
-        idFS: map[ID_FS],
-        employee: Personnel.toModel(map[EMPLOYEE]),
-        product: Product.toModel(map[PRODUCT]),
-        type: map[TYPE],
-        weight: map[WEIGHT],
-        note: map[NOTE],
-        firstModified: DateTime(map[FIRST_MODIFIED]),
-        lastModified: DateTime(map[LAST_MODIFIED])
-    );
+    return map == null
+        ? null
+        : Punch(
+            id: map[ID],
+            idFS: map[ID_FS],
+            employee: Personnel.toModel(map[EMPLOYEE]),
+            product: Product.toModel(map[PRODUCT]),
+            type: map[TYPE],
+            weight: map[WEIGHT],
+            note: map[NOTE],
+            firstModified: DateTime(map[FIRST_MODIFIED]),
+            lastModified: DateTime(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

@@ -57,47 +57,43 @@ class _CDialogState extends State<CDialog> {
                     ),
                     widget.onNo == null
                         ? Container(
-                      width: double.infinity,
-                      child: FlatButton(
-                        child: Image.asset(
-                          _tickImgPath,
-                          height: _iconHeight,
-                        ),
-                        onPressed: widget.onYes,
-                      ),
-                    )
+                            width: double.infinity,
+                            child: FlatButton(
+                              child: Image.asset(
+                                _tickImgPath,
+                                height: _iconHeight,
+                              ),
+                              onPressed: widget.onYes,
+                            ),
+                          )
                         : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Expanded(
-                          child: FlatButton(
-                            child: widget.widgetYes != null
-                                ? widget.widgetYes
-                                : Image.asset(
-                              _tickImgPath,
-                              height: _iconHeight,
-                            ),
-                            onPressed: widget.onYes,
-                          ),
-                        ),
-                        Container(
-                          height: 60,
-                          width: 3,
-                          color: Colors.black26
-                        ),
-                        Expanded(
-                          child: FlatButton(
-                            child: widget.widgetNo != null
-                                ? widget.widgetNo
-                                : Image.asset(
-                              _crossImgPath,
-                              height: _iconHeight,
-                            ),
-                            onPressed: widget.onNo,
-                          ),
-                        ),
-                      ],
-                    )
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Expanded(
+                                child: FlatButton(
+                                  child: widget.widgetYes != null
+                                      ? widget.widgetYes
+                                      : Image.asset(
+                                          _tickImgPath,
+                                          height: _iconHeight,
+                                        ),
+                                  onPressed: widget.onYes,
+                                ),
+                              ),
+                              Container(height: 60, width: 3, color: Colors.black26),
+                              Expanded(
+                                child: FlatButton(
+                                  child: widget.widgetNo != null
+                                      ? widget.widgetNo
+                                      : Image.asset(
+                                          _crossImgPath,
+                                          height: _iconHeight,
+                                        ),
+                                  onPressed: widget.onNo,
+                                ),
+                              ),
+                            ],
+                          )
                   ],
                 ),
               ),

@@ -22,6 +22,7 @@ class DashboardPage extends StatefulWidget {
 
 class DashboardPageState extends State<DashboardPage> {
   int selectedMenuIndex = 7; // todo : change index to 1 over view page selected by default
+  final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
     {
       "name": "Captain",
@@ -61,21 +62,21 @@ class DashboardPageState extends State<DashboardPage> {
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return Container(
-                            padding: EdgeInsets.only(left: 20, bottom: 14, top: 6, right: 0),
+                            padding: EdgeInsets.only(left: 20, bottom: 13, top: 6, right: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset(
-                                  "assets/images/captain_icon.png",
+                                  captainIcon,
                                   scale: 9,
                                 ),
                                 SizedBox(
-                                  width: 20,
+                                  width: 17,
                                 ),
                                 Text(
                                   "Captain",
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
                                 )
                               ],
                             ),
@@ -100,7 +101,7 @@ class DashboardPageState extends State<DashboardPage> {
                                 padding: EdgeInsets.only(right: 10),
                                 child: Icon(
                                   Icons.navigate_next,
-                                  color: Colors.white60,
+                                  color: selectedMenuIndex == index ? Colors.white : Colors.white54,
                                   size: selectedMenuIndex == index ? 16 : 13,
                                 ),
                               ),

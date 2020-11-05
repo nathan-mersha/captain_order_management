@@ -17,37 +17,27 @@ class Message {
   DateTime firstModified;
   DateTime lastModified;
 
-  Message({
-    this.id,
-    this.idFS,
-    this.recipient,
-    this.body,
-    this.firstModified,
-    this.lastModified
-  });
+  Message({this.id, this.idFS, this.recipient, this.body, this.firstModified, this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Message message) {
-    return message == null ? null : {
-      ID: message.id,
-      ID_FS: message.idFS,
-      RECIPIENT : message.recipient,
-      BODY : message.body,
-      FIRST_MODIFIED: message.firstModified.toIso8601String(),
-      LAST_MODIFIED: message.lastModified.toIso8601String()
-    };
+    return message == null
+        ? null
+        : {
+            ID: message.id,
+            ID_FS: message.idFS,
+            RECIPIENT: message.recipient,
+            BODY: message.body,
+            FIRST_MODIFIED: message.firstModified.toIso8601String(),
+            LAST_MODIFIED: message.lastModified.toIso8601String()
+          };
   }
 
   /// Converts Map to Model
   static Message toModel(dynamic map) {
-    return map == null ? null : Message(
-        id: map[ID],
-        idFS: map[ID_FS],
-        recipient: map[RECIPIENT],
-        body: map[BODY],
-        firstModified: DateTime(map[FIRST_MODIFIED]),
-        lastModified: DateTime(map[LAST_MODIFIED])
-    );
+    return map == null
+        ? null
+        : Message(id: map[ID], idFS: map[ID_FS], recipient: map[RECIPIENT], body: map[BODY], firstModified: DateTime(map[FIRST_MODIFIED]), lastModified: DateTime(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model
