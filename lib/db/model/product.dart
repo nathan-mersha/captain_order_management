@@ -74,8 +74,8 @@ class Product {
             QUANTITY_IN_CART: product.quantityInCart,
             SUB_TOTAL: product.subTotal,
             DELIVERED: product.delivered,
-            FIRST_MODIFIED: product.firstModified,
-            LAST_MODIFIED: product.lastModified
+            FIRST_MODIFIED: product.firstModified.toIso8601String(),
+            LAST_MODIFIED: product.lastModified.toIso8601String()
           };
   }
 

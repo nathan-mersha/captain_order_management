@@ -1,5 +1,4 @@
 import 'package:captain/db/model/normal_order.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 import 'package:uuid/uuid.dart';
@@ -7,35 +6,23 @@ import 'package:uuid/uuid.dart';
 class NormalOrderDAL {
   static const String TABLE_NAME = NormalOrder.COLLECTION_NAME;
 
-  static Future<Database> getDatabase() async {
-    String createTable = "CREATE TABLE $TABLE_NAME (" +
-        "${NormalOrder.ID} TEXT," +
-        "${NormalOrder.ID_FS} TEXT," +
-        "${NormalOrder.EMPLOYEE} BLOB," +
-        "${NormalOrder.CUSTOMER} BLOB," +
-        "${NormalOrder.PAINT_ORDER} BLOB," +
-        "${NormalOrder.OTHER_PRODUCTS} BLOB," +
-        "${NormalOrder.VOLUME} REAL," +
-        "${NormalOrder.TOTAL_AMOUNT} REAL," +
-        "${NormalOrder.ADVANCE_PAYMENT} REAL," +
-        "${NormalOrder.REMAINING_PAYMENT} REAL," +
-        "${NormalOrder.PAID_IN_FULL} BLOB," +
-        "${NormalOrder.STATUS} TEXT," +
-        "${NormalOrder.USER_NOTIFIED} BLOB," +
-        "${NormalOrder.FIRST_MODIFIED} TEXT," +
-        "${NormalOrder.LAST_MODIFIED} TEXT" +
-        ")";
-
-    final database = openDatabase(
-      join(await getDatabasesPath(), global.DB_NAME),
-      onCreate: (db, version) {
-        return db.execute(createTable);
-      },
-      version: 1,
-    );
-
-    return database;
-  }
+  static String createTable = "CREATE TABLE $TABLE_NAME (" +
+      "${NormalOrder.ID} TEXT," +
+      "${NormalOrder.ID_FS} TEXT," +
+      "${NormalOrder.EMPLOYEE} BLOB," +
+      "${NormalOrder.CUSTOMER} BLOB," +
+      "${NormalOrder.PAINT_ORDER} BLOB," +
+      "${NormalOrder.OTHER_PRODUCTS} BLOB," +
+      "${NormalOrder.VOLUME} REAL," +
+      "${NormalOrder.TOTAL_AMOUNT} REAL," +
+      "${NormalOrder.ADVANCE_PAYMENT} REAL," +
+      "${NormalOrder.REMAINING_PAYMENT} REAL," +
+      "${NormalOrder.PAID_IN_FULL} BLOB," +
+      "${NormalOrder.STATUS} TEXT," +
+      "${NormalOrder.USER_NOTIFIED} BLOB," +
+      "${NormalOrder.FIRST_MODIFIED} TEXT," +
+      "${NormalOrder.LAST_MODIFIED} TEXT" +
+      ")";
 
   static Future<NormalOrder> create(NormalOrder normalOrder) async {
     // updating first and last modified stamps.
@@ -45,20 +32,18 @@ class NormalOrderDAL {
     normalOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    final Database db = await getDatabase();
-    int val = await db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    int val = await global.db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
     return val == 1 ? normalOrder : null;
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
   static Future<List<NormalOrder>> find({String where, dynamic whereArgs}) async {
-    final Database db = await getDatabase();
     final List<Map<String, dynamic>> maps = where == null
-        ? await db.query(
+        ? await global.db.query(
             TABLE_NAME,
           )
-        : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return NormalOrder(
@@ -85,15 +70,13 @@ class NormalOrderDAL {
   /// whereArgs : [2]
   static Future<void> update({String where, dynamic whereArgs, NormalOrder normalOrder}) async {
     normalOrder.lastModified = DateTime.now();
-    final Database db = await getDatabase();
-    await db.update(TABLE_NAME, NormalOrder.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, NormalOrder.toMap(normalOrder), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> delete(String where, dynamic whereArgs) async {
-    final Database db = await getDatabase();
-    await db.delete(
+  static Future<void> delete({String where, dynamic whereArgs}) async {
+    await global.db.delete(
       TABLE_NAME,
       where: where,
       whereArgs: whereArgs,
