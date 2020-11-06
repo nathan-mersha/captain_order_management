@@ -55,7 +55,7 @@ class SpecialOrderDAL {
         ? await db.query(
             TABLE_NAME,
           )
-        : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs);
+        : await db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return SpecialOrder(

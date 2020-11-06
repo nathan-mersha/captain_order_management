@@ -21,7 +21,22 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardPageState extends State<DashboardPage> {
-  int selectedMenuIndex = 12; // todo : change index to 1 over view page selected by default
+  static const int OVERVIEW_PAGE = 1;
+  static const int ORDERS_PAGE = 2;
+  static const int SPECIAL_ORDER_PAGE = 3;
+  static const int PRODUCTS_PAGE = 4;
+  static const int CUSTOMERS_PAGE = 5;
+  static const int RETURNED_ORDERS_PAGE = 6;
+  static const int EMPLOYEES_PAGE = 7;
+  static const int PUNCH_PAGE = 8;
+  static const int ANALYSIS_PAGE = 9;
+  static const int MESSAGES_PAGE = 10;
+  static const int SETTINGS_PAGE = 11;
+  static const int DEVELOPER_PAGE = 12;
+
+//  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
+  int selectedMenuIndex = EMPLOYEES_PAGE;
+
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
     {
