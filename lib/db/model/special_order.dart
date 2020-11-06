@@ -61,8 +61,8 @@ class SpecialOrder {
             REMAINING_PAYMENT: specialOrder.remainingPayment,
             PAID_IN_FULL: specialOrder.paidInFull,
             NOTE: specialOrder.note,
-            FIRST_MODIFIED: specialOrder.firstModified,
-            LAST_MODIFIED: specialOrder.lastModified
+            FIRST_MODIFIED: specialOrder.firstModified.toIso8601String(),
+            LAST_MODIFIED: specialOrder.lastModified.toIso8601String()
           };
   }
 

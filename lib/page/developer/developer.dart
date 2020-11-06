@@ -15,7 +15,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
           Icon(
             Icons.code,
             color: Theme.of(context).primaryColor,
-            size: 120,
+            size: 80,
           ),
           Text(
             "Developed by",
