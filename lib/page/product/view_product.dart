@@ -109,6 +109,7 @@ class ProductTableState extends State<ProductTable> {
                         _rowsPerPage = value;
                       });
                     },
+
                     sortColumnIndex: _sortColumnIndex,
                     sortAscending: _sortAscending,
                     columnSpacing: 20,
@@ -176,11 +177,12 @@ class _ProductDataSource extends DataTableSource {
     if (index >= products.length) return null;
     final product = products[index];
     return DataRow.byIndex(
+
       index: index,
       cells: [
-        DataCell(Text(product.name ?? '-'), onTap: () {
+        DataCell(buildProductView(products[index]), onTap: () {
           createProductKey.currentState.passForUpdate(products[index]);
-        }, showEditIcon: true),
+        }),
         DataCell(Text(product.paintType ?? "-")),
         DataCell(Text(product.manufacturer ?? "-")),
         DataCell(Text(product.unitPrice.toStringAsFixed(2))),
@@ -198,6 +200,38 @@ class _ProductDataSource extends DataTableSource {
         ))
       ],
     );
+  }
+
+  Widget buildProductView(Product product) {
+    if (product.type == CreateProductViewState.PAINT) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              product.isGallonBased ? Icon(
+                Icons.check_circle,
+                size: 9,
+                color : Theme.of(context).primaryColorLight
+              ) : Container(),
+              SizedBox(
+                width: 5,
+              ),
+              Text(product.name ?? '-'),
+            ],
+          ),
+          SizedBox(height: 4,),
+          Container(
+            height: 5,
+            width: 16,
+            color: Color(int.parse(product.colorValue ?? "0xfffffffff")),
+          )
+        ],
+      );
+    } else {
+      return Text(product.name ?? '-');
+    }
   }
 
   Future<void> deleteProduct(Product product) async {

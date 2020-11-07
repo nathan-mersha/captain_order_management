@@ -526,6 +526,8 @@ class CreateProductViewState extends State<CreateProductView> {
       product = products.first;
       _nameController.text = product.name;
       _unitPriceController.text = product.unitPrice.toString();
+      _colorValueController.text = product.colorValue;
+      _manufacturerController.text = product.manufacturer;
     });
   }
 }

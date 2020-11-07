@@ -8,6 +8,7 @@ class CTheme {
   static const String BUNA = "BUNA";
   static const String WEHA = "WEHA";
   static const String KETEL = "KETEL";
+  static const String LELIT = "LELIT";
 
   static const String primaryColor = "primaryColor";
   static const String primaryColorLight = "primaryColorLight";
@@ -20,6 +21,7 @@ class CTheme {
     BUNA: {primaryColor: Color(0xff502d16), primaryColorLight: Color(0xff784421), accentColor: Color(0xff1d4413)},
     WEHA: {primaryColor: Color(0xff003399), primaryColorLight: Color(0xff3366cc), accentColor: Color(0xffe66400)},
     KETEL: {primaryColor: Color(0xff669900), primaryColorLight: Color(0xff99cc33), accentColor: Color(0xffa00074)},
+    LELIT: {primaryColor: Color(0xff404040), primaryColorLight: Color(0xff808080), accentColor: Color(0xff6100b5)},
   };
 
   static ThemeData getTheme() {
