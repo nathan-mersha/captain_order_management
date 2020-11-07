@@ -131,7 +131,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
                           clearOnSubmit: false,
-                          decoration: InputDecoration(labelText: "Address"),
+                          decoration: InputDecoration(labelText: "Address",contentPadding: EdgeInsets.all(0)),
                           controller: _addressController,
                           textSubmitted: (String addressValue) {
                             customer.address = addressValue;

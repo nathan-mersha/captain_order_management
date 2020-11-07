@@ -1,10 +1,15 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/product/statistics_product.dart';
 import 'package:captain/page/product/view_product.dart';
+import 'package:captain/rsr/kapci/kapci_constants.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CreateProductView extends StatefulWidget {
   final GlobalKey<CreateProductViewState> createProductKey;
@@ -19,7 +24,7 @@ class CreateProductView extends StatefulWidget {
 
 class CreateProductViewState extends State<CreateProductView> {
   final _formKey = GlobalKey<FormState>();
-  Product product = Product(type: PAINT, unitOfMeasurement: LITER);
+  Product product = Product(type: PAINT, unitOfMeasurement: LITER, paintType: METALIC, isGallonBased: true); // Assigning default product values here
 
   // Product types
   static const String PAINT = "Paint"; // values not translatables
@@ -35,24 +40,35 @@ class CreateProductViewState extends State<CreateProductView> {
   List<String> measurementTypes = [LITER, GRAM, PIECE, PACKAGE];
   Map<String, String> measurementTypesValues;
 
+  // Paint type
+  static const String METALIC = "Metalic"; // values not translatables
+  static const String AUTO_CRYL = "Auto-Cryl"; // value not translatable
+  List<String> paintTypes = [METALIC, AUTO_CRYL];
+  Map<String, String> paintTypesValues;
+
   // Text editing controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _unitPriceController = TextEditingController();
-  TextEditingController _noteController = TextEditingController();
-  // todo : assign more controllers here.
+  TextEditingController _manufacturerController = TextEditingController();
+  TextEditingController _colorValueController = TextEditingController();
 
   bool _doingCRUD = false;
+  bool _manuallyAdjustPaintPrice = false;
 
   @override
   void initState() {
     super.initState();
     // Separating keys to values for translatable.
+    // translatable values
     productTypesValues = {PAINT: "paint", OTHER_PRODUCTS: "others"};
     measurementTypesValues = {LITER: "liter", GRAM: "gram", PIECE: "piece", PACKAGE: "package"};
+    paintTypesValues = {METALIC: "Metalic", AUTO_CRYL: "Auto-Cryl"};
   }
 
   @override
   Widget build(BuildContext context) {
+    setPaintTypeUnitPrice();
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
@@ -91,7 +107,9 @@ class CreateProductViewState extends State<CreateProductView> {
                               value: product.type,
                               hint: Text(
                                 "product type",
-                                style: TextStyle(fontSize: 12,),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
                               ),
                               isExpanded: true,
                               iconSize: 18,
@@ -103,18 +121,17 @@ class CreateProductViewState extends State<CreateProductView> {
                                 return DropdownMenuItem(
                                   child: Row(
                                     children: [
+                                      Icon(
+                                        productValue == PAINT ? Icons.invert_colors : Icons.shopping_basket,
+                                        size: 15,
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                      SizedBox(width: 10,),
                                       Text(
                                         productTypesValues[productValue],
                                         style: TextStyle(fontSize: 12),
                                       ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Icon(
-                                        productValue == PAINT ? Icons.format_paint : Icons.local_drink,
-                                        size: 15,
-                                        color: Theme.of(context).accentColor,
-                                      ),
+
                                     ],
                                   ),
                                   value: productValue,
@@ -128,7 +145,7 @@ class CreateProductViewState extends State<CreateProductView> {
                         ),
 
                         SizedBox(
-                          height: 15,
+                          height: 10,
                         ),
 
                         TextFormField(
@@ -149,7 +166,53 @@ class CreateProductViewState extends State<CreateProductView> {
                           decoration: InputDecoration(labelText: "Name", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
 
-                        product.type == PAINT ? buildForPaintProduct() : buildForOtherProduct()
+                        product.type == PAINT ? buildForPaintProduct() : buildForOtherProduct(),
+
+                        TextFormField(
+                          validator: (unitPriceValue) {
+                            if (unitPriceValue.isEmpty) {
+                              return "Unit price must not be empty";
+                            } else if (num.tryParse(unitPriceValue) == null) {
+                              return "Unit price is not valid format";
+                            } else {
+                              return null;
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          controller: _unitPriceController,
+                          onChanged: (unitPriceValue) {
+                            product.unitPrice = num.parse(unitPriceValue);
+                            _manuallyAdjustPaintPrice = true;
+                          },
+                          onFieldSubmitted: (unitPriceValue) {
+                            product.unitPrice = num.parse(unitPriceValue);
+                            _manuallyAdjustPaintPrice = true;
+                          },
+                          decoration: InputDecoration(
+                              labelText: "Unit price",
+                              contentPadding: EdgeInsets.symmetric(vertical: 5),
+                              suffix: Text("br per ${measurementTypesValues[product.unitOfMeasurement] ?? measurementTypesValues[LITER]}")),
+                        ),
+
+                        product.type == PAINT
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Checkbox(
+                                    value: product.isGallonBased,
+                                    onChanged: (bool isGallonBasedValue) {
+                                      setState(() {
+                                        product.isGallonBased = isGallonBasedValue;
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    "gallon based",
+                                    style: TextStyle(fontSize: 12, color: Colors.black87),
+                                  )
+                                ],
+                              )
+                            : Container()
                       ],
                     ),
                   ),
@@ -223,12 +286,17 @@ class CreateProductViewState extends State<CreateProductView> {
   Widget buildForOtherProduct() {
     return Column(
       children: [
-        SizedBox(height: 5,),
+        SizedBox(
+          height: 5,
+        ),
         SizedBox(
           width: double.infinity,
           child: DropdownButton(
               value: product.unitOfMeasurement,
-              hint: Text("unit of measurment", style: TextStyle(fontSize: 12,)),
+              hint: Text("unit of measurment",
+                  style: TextStyle(
+                    fontSize: 12,
+                  )),
               isExpanded: true,
               iconSize: 18,
               icon: Icon(
@@ -254,60 +322,116 @@ class CreateProductViewState extends State<CreateProductView> {
                 });
               }),
         ),
-        TextFormField(
-          validator: (unitPriceValue) {
-            if (unitPriceValue.isEmpty) {
-              return "Unit price must not be empty";
-            } else if (num.tryParse(unitPriceValue) == null) {
-              return "Unit price is not valid format";
-            } else {
-              return null;
-            }
-          },
-          keyboardType: TextInputType.number,
-          controller: _unitPriceController,
-          onChanged: (unitPriceValue) {
-            product.unitPrice = num.parse(unitPriceValue);
-          },
-          onFieldSubmitted: (unitPriceValue) {
-            product.unitPrice = num.parse(unitPriceValue);
-          },
-          decoration: InputDecoration(
-              labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br per ${measurementTypesValues[product.unitOfMeasurement] ?? measurementTypesValues[LITER]}")),
-        ),
-        TextFormField(
-          controller: _noteController,
-          onChanged: (noteValue) {
-            product.note = noteValue;
-          },
-          onFieldSubmitted: (noteValue) {
-            product.note = noteValue;
-          },
-          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
-        )
       ],
     );
   }
 
   Widget buildForPaintProduct() {
+    Color pickerColor = Color(0xff443a49);
+
     return Column(
       children: [
-        TextFormField(
-          validator: (nameValue) {
-            if (nameValue.isEmpty) {
-              return "Name must not be empty";
-            } else {
-              return null;
-            }
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              child: AlertDialog(
+                title: const Text('Pick a color!'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: pickerColor,
+                    onColorChanged: (changedColor) {
+                      pickerColor = changedColor;
+                    },
+                    showLabel: true,
+                    pickerAreaHeightPercent: 0.8,
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Select'),
+                    onPressed: () {
+                      setState(() {
+                        product.colorValue = pickerColor.value.toString();
+                        _colorValueController.text = pickerColor.value.toString();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
           },
-          controller: _nameController,
-          onChanged: (nameValue) {
-            product.name = nameValue;
+          child: TextFormField(
+            style: TextStyle(fontSize: 12, color: Color(int.parse(product.colorValue ?? "0xfffffffff")), fontWeight: FontWeight.w800),
+            controller: _colorValueController,
+            validator: (colorValue) {
+              if (colorValue.isEmpty) {
+                return "Please select a color";
+              } else {
+                return null;
+              }
+            },
+            enabled: false,
+            decoration: InputDecoration(
+                errorStyle: TextStyle(color: Colors.red),
+                labelText: "Color value",
+                contentPadding: EdgeInsets.symmetric(vertical: 5),
+                suffix: Container(
+                  height: 8,
+                  width: 16,
+                  color: Color(int.parse(product.colorValue ?? "0xfffffffff")),
+                )),
+          ),
+        ),
+        SizedBox(
+          height: 13,
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: DropdownButton(
+              value: product.paintType,
+              hint: Text("paint type",
+                  style: TextStyle(
+                    fontSize: 12,
+                  )),
+              isExpanded: true,
+              iconSize: 18,
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Theme.of(context).primaryColor,
+              ),
+              items: paintTypes.map<DropdownMenuItem<String>>((String paintTypeValue) {
+                return DropdownMenuItem(
+                  child: Row(
+                    children: [
+                      Text(
+                        paintTypesValues[paintTypeValue],
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  value: paintTypeValue,
+                );
+              }).toList(),
+              onChanged: (String newValue) {
+                setState(() {
+                  product.paintType = newValue;
+                });
+              }),
+        ),
+        SimpleAutoCompleteTextField(
+          suggestions: KapciConstants.MANUFACTURER,
+          clearOnSubmit: false,
+          decoration: InputDecoration(labelText: "Manufacturer", contentPadding: EdgeInsets.all(0)),
+          textCapitalization: TextCapitalization.none,
+          controller: _manufacturerController,
+          textSubmitted: (String manufacturerValue) {
+            product.manufacturer = manufacturerValue;
           },
-          onFieldSubmitted: (nameValue) {
-            product.name = nameValue;
-          },
-          decoration: InputDecoration(labelText: "Name", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+        ),
+        SizedBox(
+          height: 5,
         ),
       ],
     );
@@ -317,7 +441,8 @@ class CreateProductViewState extends State<CreateProductView> {
     setState(() {
       /// Clearing data
       _doingCRUD = false;
-      product = Product(type: PAINT, unitOfMeasurement: LITER);
+      // Assigning default product values on clearing fields here.
+      product = Product(type: PAINT, unitOfMeasurement: LITER, paintType: METALIC, isGallonBased: true);
       clearInputs();
     });
 
@@ -328,8 +453,15 @@ class CreateProductViewState extends State<CreateProductView> {
 
   Future createProduct(BuildContext context) async {
     /// Create Product Product data to local db
-
+    /// on creating product based on the product type nullify corresponding fields
+    if(product.type == OTHER_PRODUCTS){
+      product.colorValue = null;
+      product.paintType = null;
+      product.manufacturer = null;
+      product.isGallonBased = null;
+    }
     Product createdProduct = await ProductDAL.create(product);
+
     /// Showing notification
     CNotifications.showSnackBar(context, "Successfuly created : ${product.name}", "success", () {}, backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdProduct);
@@ -351,6 +483,17 @@ class CreateProductViewState extends State<CreateProductView> {
     });
   }
 
+  setPaintTypeUnitPrice(){
+    CSharedPreference cSP = GetCSPInstance.cSharedPreference;
+    num metalicPrice = cSP.metalicPricePerLitter;
+    num autoCrylPrice = cSP.autoCrylPricePerLitter;
+
+    if(product.id == null && product.type == PAINT && _manuallyAdjustPaintPrice == false){
+      product.unitPrice = product.paintType == METALIC ? metalicPrice : autoCrylPrice;
+      _unitPriceController.text =  product.unitPrice.toString();
+    }
+  }
+
   Future updateProduct(BuildContext context) async {
     /// Query and update user
     String where = "${Product.ID} = ?";
@@ -370,7 +513,8 @@ class CreateProductViewState extends State<CreateProductView> {
   void clearInputs() {
     _nameController.clear();
     _unitPriceController.clear();
-    _noteController.clear();
+    _colorValueController.clear();
+    _manufacturerController.clear();
   }
 
   void passForUpdate(Product productUpdateData) async {
@@ -382,7 +526,6 @@ class CreateProductViewState extends State<CreateProductView> {
       product = products.first;
       _nameController.text = product.name;
       _unitPriceController.text = product.unitPrice.toString();
-      _noteController.text = product.note;
     });
   }
 }
