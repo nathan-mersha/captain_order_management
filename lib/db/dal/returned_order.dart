@@ -26,8 +26,8 @@ class ReturnedOrderDAL {
     returnedOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, ReturnedOrder.toMap(returnedOrder), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? returnedOrder : null;
+    await global.db.insert(TABLE_NAME, ReturnedOrder.toMap(returnedOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    return returnedOrder;
   }
 
   /// where : "id = ?"

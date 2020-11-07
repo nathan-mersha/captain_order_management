@@ -1,4 +1,5 @@
 import 'package:captain/db/model/normal_order.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 import 'package:uuid/uuid.dart';
@@ -32,8 +33,8 @@ class NormalOrderDAL {
     normalOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? normalOrder : null;
+    await global.db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    return normalOrder;
   }
 
   /// where : "id = ?"

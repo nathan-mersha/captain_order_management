@@ -25,8 +25,8 @@ class PunchDAL {
     punch.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, Punch.toMap(punch), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? punch : null;
+    await global.db.insert(TABLE_NAME, Punch.toMap(punch), conflictAlgorithm: ConflictAlgorithm.replace);
+    return punch;
   }
 
   /// where : "id = ?"

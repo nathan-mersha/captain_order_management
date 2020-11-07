@@ -31,8 +31,8 @@ class PersonnelDAL {
     personnel.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, Personnel.toMap(personnel), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? personnel : null;
+    await global.db.insert(TABLE_NAME, Personnel.toMap(personnel), conflictAlgorithm: ConflictAlgorithm.replace);
+    return personnel;
   }
 
   /// where : "id = ?"

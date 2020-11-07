@@ -23,8 +23,8 @@ class MessageDAL {
     message.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, Message.toMap(message), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? message : null;
+    await global.db.insert(TABLE_NAME, Message.toMap(message), conflictAlgorithm: ConflictAlgorithm.replace);
+    return message;
   }
 
   /// where : "id = ?"

@@ -33,8 +33,8 @@ class ProductDAL {
     product.firstModified = DateTime.now();
     product.lastModified = DateTime.now();
     // Get a reference to the database.
-    int val = await global.db.insert(TABLE_NAME, Product.toMap(product), conflictAlgorithm: ConflictAlgorithm.replace);
-    return val == 1 ? product : null;
+    await global.db.insert(TABLE_NAME, Product.toMap(product), conflictAlgorithm: ConflictAlgorithm.replace);
+    return product;
   }
 
   /// where : "id = ?"
@@ -57,7 +57,7 @@ class ProductDAL {
         colorValue: maps[i][Product.COLOR_VALUE],
         paintType: maps[i][Product.PAINT_TYPE],
         manufacturer: maps[i][Product.MANUFACTURER],
-        isGallonBased: maps[i][Product.IS_GALLON_BASED],
+        isGallonBased: maps[i][Product.IS_GALLON_BASED] == 1 ? true : false,
         note: maps[i][Product.NOTE],
         quantityInCart: maps[i][Product.QUANTITY_IN_CART],
         subTotal: maps[i][Product.SUB_TOTAL],
