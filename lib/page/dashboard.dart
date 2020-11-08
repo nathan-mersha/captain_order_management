@@ -7,7 +7,7 @@ import 'package:captain/page/order/orders.dart';
 import 'package:captain/page/overview/overview.dart';
 import 'package:captain/page/product/home_product.dart';
 import 'package:captain/page/punch/punch.dart';
-import 'package:captain/page/returned_order/returned_orders.dart';
+import 'package:captain/page/returned_order/home_returned_order.dart';
 import 'package:captain/page/setting/settings.dart';
 import 'package:captain/page/special_order/special_orders.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +35,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int DEVELOPER_PAGE = 12;
 
 //  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-  int selectedMenuIndex = MESSAGES_PAGE;
+  int selectedMenuIndex = RETURNED_ORDERS_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
@@ -48,7 +48,7 @@ class DashboardPageState extends State<DashboardPage> {
     {"name": "Special Order", "iconData": Icons.star, "child": SpecialOrdersPage()},
     {"name": "Products", "iconData": Icons.business_center, "child": HomeProductPage()},
     {"name": "Customers", "iconData": Icons.supervisor_account, "child": HomeCustomerPage()},
-    {"name": "Returned Orders", "iconData": Icons.assignment_return, "child": ReturnedOrdersPage()},
+    {"name": "Returned Orders", "iconData": Icons.assignment_return, "child": HomeReturnedOrderPage()},
     {"name": "Employees", "iconData": Icons.person, "child": HomeEmployeePage()},
     {"name": "Punch", "iconData": Icons.call_split, "child": PunchPage()},
     {"name": "Analysis", "iconData": Icons.pie_chart_outlined, "child": AnalysisPage()},
