@@ -120,9 +120,6 @@ class EmployeeTableState extends State<EmployeeTable> {
                     columnSpacing: 30,
                     columns: [
                       DataColumn(
-                        label: Text("Img"),
-                      ),
-                      DataColumn(
                         label: Text("Name"),
                         onSort: (columnIndex, ascending) {
                           return _sort<String>((d) => d.name, columnIndex, ascending);
@@ -181,23 +178,27 @@ class _EmployeeDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-          employee.profileImage == null
-              ? Icon(
-                  Icons.person,
-                  color: Colors.black12,
-                )
-              : ClipOval(
-                  child: Image.memory(
-                    employee.profileImage,
-                    fit: BoxFit.cover,
-                    height: 30,
-                    width: 30,
-                  ),
-                ),
-        ),
-        DataCell(Text(employee.name ?? '-'), onTap: () {
+            Row(
+              children: [
+                employee.profileImage == null
+                    ? Icon(
+                        Icons.person,
+                        color: Colors.black12,
+                      )
+                    : ClipOval(
+                        child: Image.memory(
+                          employee.profileImage,
+                          fit: BoxFit.cover,
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
+                SizedBox(width: 10,),
+                Text(employee.name ?? '-',style: TextStyle(color: Theme.of(context).primaryColor),)
+              ],
+            ), onTap: () {
           createEmployeeKey.currentState.passForUpdate(employees[index]);
-        }, showEditIcon: true),
+        }),
         DataCell(Text(employee.phoneNumber ?? '-')),
         DataCell(Text(employee.address ?? '-')),
         DataCell(Text(DateFormat.yMMMd().format(employee.firstModified))),

@@ -1,11 +1,17 @@
+import 'package:captain/db/dal/personnel.dart';
+import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/returned_order.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/returned_order.dart';
+import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/returned_order/statistics_returned_order.dart';
 import 'package:captain/page/returned_order/view_returned_order.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class CreateReturnedOrderView extends StatefulWidget {
   final GlobalKey<CreateReturnedOrderViewState> createReturnedOrderKey;
@@ -23,12 +29,30 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
   ReturnedOrder returnedOrder = ReturnedOrder();
 
   /// Assigning default returnedOrder values here
-
   // Text editing controllers
+  TextEditingController _employeeController = TextEditingController();
+  TextEditingController _paintController = TextEditingController();
+  TextEditingController _customerController = TextEditingController();
   TextEditingController _countController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
 
+  // Lists required for view to be build
+  List<Personnel> _employees = [];
+  List<Product> _paints = [];
+  List<Personnel> _customers = [];
+
+  /// Default true, unlike other pages because the page requires three data sources to be populated
   bool _doingCRUD = false;
+
+  /// Handles employee and paint input validation
+  bool _noEmployeeValue = false;
+  bool _noPaintValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _assignPersonnelAndPaintData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +87,181 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        /// Employee input
+                        TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: _employeeController,
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                  errorText: _noEmployeeValue ? "Employee is required" : null,
+                                  hintText: "Select employee",
+                                  labelText: "Employee",
+                                  icon: returnedOrder == null || returnedOrder.employee == null || returnedOrder.employee.profileImage == null
+                                      ? Icon(
+                                          Icons.person_pin,
+                                          color: Colors.black12,
+                                          size: 30,
+                                        )
+                                      : ClipOval(
+                                          child: Image.memory(
+                                            returnedOrder.employee.profileImage,
+                                            fit: BoxFit.cover,
+                                            height: 30,
+                                            width: 30,
+                                          ),
+                                        ))),
+                          suggestionsCallback: (pattern) async {
+                            return _employees.where((Personnel employee) {
+                              return employee.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                            });
+                          },
+                          itemBuilder: (context, Personnel suggestedEmployee) {
+                            return ListTile(
+                              dense: true,
+                              leading: suggestedEmployee.profileImage == null
+                                  ? Icon(
+                                      Icons.person,
+                                      color: Colors.black12,
+                                    )
+                                  : ClipOval(
+                                      child: Image.memory(
+                                        suggestedEmployee.profileImage,
+                                        fit: BoxFit.cover,
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                              title: Text(suggestedEmployee.name),
+                              subtitle: Text(suggestedEmployee.phoneNumber),
+                            );
+                          },
+                          onSuggestionSelected: (Personnel selectedEmployee) {
+                            setState(() {
+                              _employeeController.text = selectedEmployee.name;
+                              returnedOrder.employee = selectedEmployee;
+                            });
+                          },
+                          noItemsFoundBuilder: (BuildContext context) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              child: Text(
+                                "No employees found",
+                              ),
+                            );
+                          },
+                        ),
+
+                        /// Paint input
+                        TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: _paintController,
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                  errorText: _noPaintValue ? "Paint value is required" : null,
+                                  hintText: "Select paint",
+                                  labelText: "Paint",
+                                  icon: Icon(
+                                    Icons.circle,
+                                    size: 30,
+                                    color: returnedOrder == null || returnedOrder.product == null || returnedOrder.product.colorValue == null
+                                        ? Colors.black12
+                                        : Color(int.parse(returnedOrder.product.colorValue)),
+                                  ))),
+                          suggestionsCallback: (pattern) async {
+                            return _paints.where((Product paint) {
+                              return paint.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                            });
+                          },
+                          itemBuilder: (context, Product suggestedPaint) {
+                            return ListTile(
+                              dense: true,
+                              leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
+                              title: Text(suggestedPaint.name),
+                              subtitle: Text(suggestedPaint.colorValue),
+                            );
+                          },
+                          onSuggestionSelected: (Product selectedPaint) {
+                            setState(() {
+                              _paintController.text = selectedPaint.name;
+                              returnedOrder.product = selectedPaint;
+                            });
+                          },
+                          noItemsFoundBuilder: (BuildContext context) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              child: Text(
+                                "No paint found",
+                              ),
+                            );
+                          },
+                        ),
+
+                        /// Customer input
+                        TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: _customerController,
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                  hintText: "Select customer",
+                                  labelText: "Customer",
+                                  icon: returnedOrder == null || returnedOrder.customer == null || returnedOrder.customer.profileImage == null
+                                      ? Icon(
+                                          Icons.person_pin,
+                                          color: Colors.black12,
+                                          size: 30,
+                                        )
+                                      : ClipOval(
+                                          child: Image.memory(
+                                            returnedOrder.customer.profileImage,
+                                            fit: BoxFit.cover,
+                                            height: 30,
+                                            width: 30,
+                                          ),
+                                        ))),
+                          suggestionsCallback: (pattern) async {
+                            return _customers.where((Personnel customer) {
+                              return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                            });
+                          },
+                          itemBuilder: (context, Personnel suggestedCustomer) {
+                            return ListTile(
+                              dense: true,
+                              leading: suggestedCustomer.profileImage == null
+                                  ? Icon(
+                                      Icons.person,
+                                      color: Colors.black12,
+                                    )
+                                  : ClipOval(
+                                      child: Image.memory(
+                                        suggestedCustomer.profileImage,
+                                        fit: BoxFit.cover,
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                              title: Text(suggestedCustomer.name),
+                              subtitle: Text(suggestedCustomer.phoneNumber),
+                            );
+                          },
+                          onSuggestionSelected: (Personnel selectedCustomer) {
+                            setState(() {
+                              _customerController.text = selectedCustomer.name;
+                              returnedOrder.customer = selectedCustomer;
+                            });
+                          },
+                          noItemsFoundBuilder: (BuildContext context) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              child: Text(
+                                "No customer found",
+                              ),
+                            );
+                          },
+                        ),
+
+                        SizedBox(
+                          height: 5,
+                        ),
                         TextFormField(
                           validator: (nameValue) {
                             if (nameValue.isEmpty) {
@@ -80,6 +279,20 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                             returnedOrder.count = num.parse(countValue);
                           },
                           decoration: InputDecoration(labelText: "Count", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+
+                        TextFormField(
+                          controller: _noteController,
+                          onChanged: (noteValue) {
+                            returnedOrder.note = noteValue;
+                          },
+                          onFieldSubmitted: (noteValue) {
+                            returnedOrder.note = noteValue;
+                          },
+                          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                       ],
                     ),
@@ -107,7 +320,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               ),
                             ),
                       onPressed: () async {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState.validate() && fieldsValidated()) {
                           setState(() {
                             _doingCRUD = true;
                           });
@@ -125,7 +338,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
                             ),
                             onPressed: () async {
-                              if (_formKey.currentState.validate()) {
+                              if (_formKey.currentState.validate() && fieldsValidated()) {
                                 setState(() {
                                   _doingCRUD = true;
                                 });
@@ -165,11 +378,27 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     widget.statisticsReturnedOrderKey.currentState.setState(() {});
   }
 
+  Future<bool> _assignPersonnelAndPaintData() async {
+    // Assigning employees data.
+    String wherePersonnel = "${Personnel.TYPE} = ?";
+    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
+    List<String> whereArgsEmployees = [Personnel.EMPLOYEE]; // Querying only employees
+    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
+    _employees = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsEmployees); // Assign employees
+
+    // Assigning paints data
+    String wherePaint = "${Product.TYPE} = ?";
+    List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
+    _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    setState(() {});
+    return true;
+  }
+
   Future createReturnedOrder(BuildContext context) async {
     ReturnedOrder createdReturnedOrder = await ReturnedOrderDAL.create(returnedOrder);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfuly created returned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdReturnedOrder);
   }
 
@@ -205,11 +434,19 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _countController.dispose();
+    _noteController.dispose();
+  }
+
   void clearInputs() {
     _countController.clear();
     _noteController.clear();
-
-    // todo : add clear inputs for customer and employee values
+    _employeeController.clear();
+    _paintController.clear();
+    _customerController.clear();
   }
 
   void passForUpdate(ReturnedOrder returnedOrderUpdateData) async {
@@ -221,7 +458,18 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
       returnedOrder = returnedOrders.first;
       _countController.text = returnedOrder.count.toString();
       _noteController.text = returnedOrder.note;
-      // todo : pass customer, color code and employee values for update here.
+      _employeeController.text = returnedOrder.employee.name;
+      _paintController.text = returnedOrder.product.name;
+      _customerController.text = returnedOrder.customer.name;
     });
+  }
+
+  bool fieldsValidated() {
+    /// Checking if employee and paint value is empty
+    setState(() {
+      _noEmployeeValue = _employeeController.text.isEmpty;
+      _noPaintValue = _paintController.text.isEmpty;
+    });
+    return !_noEmployeeValue && !_noPaintValue;
   }
 }

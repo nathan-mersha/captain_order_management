@@ -131,7 +131,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
                           clearOnSubmit: false,
-                          decoration: InputDecoration(labelText: "Address",contentPadding: EdgeInsets.all(0)),
+                          decoration: InputDecoration(labelText: "Address", contentPadding: EdgeInsets.all(0)),
                           controller: _addressController,
                           textSubmitted: (String addressValue) {
                             customer.address = addressValue;
@@ -435,6 +435,17 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     _addressController.clear();
     _addressDetailController.clear();
     _noteController.clear();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _addressDetailController.dispose();
+    _noteController.dispose();
   }
 
   void passForUpdate(Personnel customerUpdateData) async {

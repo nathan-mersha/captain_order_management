@@ -1,5 +1,7 @@
 import 'package:captain/db/dal/returned_order.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/returned_order.dart';
+import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/returned_order/create_returned_order.dart';
 import 'package:captain/page/returned_order/statistics_returned_order.dart';
 import 'package:captain/widget/c_dialog.dart';
@@ -36,6 +38,8 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
 
   Future<List<ReturnedOrder>> getListOfReturnedOrders() async {
     List<ReturnedOrder> returnedOrders = await ReturnedOrderDAL.find();
+
+    print("REturned order length : ${returnedOrders.length}");
     return returnedOrders;
   }
 
@@ -110,7 +114,6 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                         _rowsPerPage = value;
                       });
                     },
-
                     sortColumnIndex: _sortColumnIndex,
                     sortAscending: _sortAscending,
                     columnSpacing: 20,
@@ -126,7 +129,7 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                       ),
                       DataColumn(
                         label: Text("Count"),
-                        numeric: true,
+//                        numeric: true,
                         onSort: (columnIndex, ascending) {
                           return _sort<num>((d) => d.count, columnIndex, ascending);
                         },
@@ -173,23 +176,72 @@ class _ReturnedOrderDataSource extends DataTableSource {
 
   int _selectedCount = 0;
 
+  Widget buildProductView(Product product) {
+    if (product.type == CreateProductViewState.PAINT) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              product.isGallonBased ? Icon(
+                  Icons.check_circle,
+                  size: 9,
+                  color : Theme.of(context).primaryColorLight
+              ) : Container(),
+              SizedBox(
+                width: 5,
+              ),
+              Text(product.name ?? '-'),
+            ],
+          ),
+          SizedBox(height: 4,),
+          Container(
+            height: 5,
+            width: 16,
+            color: Color(int.parse(product.colorValue ?? "0xfffffffff")),
+          )
+        ],
+      );
+    } else {
+      return Text(product.name ?? '-');
+    }
+  }
+
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
     if (index >= returnedOrders.length) return null;
     final returnedOrder = returnedOrders[index];
     return DataRow.byIndex(
-
       index: index,
       cells: [
-
-
-        DataCell(Text(returnedOrder.employee.name ?? "-")),
-        DataCell(Text(returnedOrder.product.name ?? "-")),
+        DataCell(
+            Row(
+              children: [
+                returnedOrder.employee.profileImage == null
+                    ? Icon(
+                  Icons.person,
+                  color: Colors.black12,
+                )
+                    : ClipOval(
+                  child: Image.memory(
+                    returnedOrder.employee.profileImage,
+                    fit: BoxFit.cover,
+                    height: 30,
+                    width: 30,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Text(returnedOrder.employee.name ?? '-',style: TextStyle(color: Theme.of(context).primaryColor),)
+              ],
+            ), onTap: () {
+          createReturnedOrderKey.currentState.passForUpdate(returnedOrders[index]);
+        }),
+        DataCell(buildProductView(returnedOrder.product)),
         DataCell(Text(returnedOrder.count.toString() ?? "-")),
-        DataCell(Text(returnedOrder.customer.name ?? "-")),
+        DataCell(Text(returnedOrder.customer == null ? "-" : returnedOrder.customer.name)),
         DataCell(Text(DateFormat.yMMMd().format(returnedOrder.firstModified))),
-
         DataCell(IconButton(
           icon: Icon(
             Icons.delete_outline,
@@ -204,7 +256,6 @@ class _ReturnedOrderDataSource extends DataTableSource {
       ],
     );
   }
-
 
   Future<void> deleteReturnedOrder(ReturnedOrder returnedOrder) async {
     return await showDialog<String>(

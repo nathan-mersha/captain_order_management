@@ -81,6 +81,7 @@ class Product {
 
   /// Converts Map to Model
   static Product toModel(dynamic map) {
+
     return map == null
         ? null
         : Product(
@@ -98,8 +99,10 @@ class Product {
             quantityInCart: map[QUANTITY_IN_CART],
             subTotal: map[SUB_TOTAL],
             delivered: map[DELIVERED],
-            firstModified: DateTime(map[FIRST_MODIFIED]),
-            lastModified: DateTime(map[LAST_MODIFIED]));
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED])
+
+    );
   }
 
   /// Changes List of Map to List of Model

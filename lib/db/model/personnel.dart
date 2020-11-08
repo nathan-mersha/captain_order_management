@@ -75,22 +75,22 @@ class Personnel {
 
   /// Converts Map to Model
   static Personnel toModel(dynamic map) {
-    return map == null
-        ? null
-        : Personnel(
-            id: map[ID],
-            idFS: map[ID_FS],
-            contactIdentifier: map[CONTACT_IDENTIFIER],
-            name: map[NAME],
-            phoneNumber: map[PHONE_NUMBER],
-            email: map[EMAIL],
-            address: map[ADDRESS],
-            addressDetail: map[ADDRESS_DETAIL],
-            type: map[TYPE],
-            profileImage: map[PROFILE_IMAGE],
-            note: map[NOTE],
-            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
-            lastModified: DateTime.parse(map[LAST_MODIFIED]));
+
+    return map == null ? null : Personnel(
+        id: map[ID],
+        idFS: map[ID_FS],
+        contactIdentifier: map[CONTACT_IDENTIFIER],
+        name: map[NAME],
+        phoneNumber: map[PHONE_NUMBER],
+        email: map[EMAIL],
+        address: map[ADDRESS],
+        addressDetail: map[ADDRESS_DETAIL],
+        type: map[TYPE],
+        profileImage: map[PROFILE_IMAGE] != null ? Uint8List.fromList(List.castFrom(map[PROFILE_IMAGE])) : null,
+        note: map[NOTE],
+        firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+        lastModified: DateTime.parse(map[LAST_MODIFIED])
+    );
   }
 
   /// Changes List of Map to List of Model

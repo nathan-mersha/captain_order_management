@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 
@@ -35,9 +37,9 @@ class ReturnedOrder {
         : {
             ID: returnedOrder.id,
             ID_FS: returnedOrder.idFS,
-            EMPLOYEE: Personnel.toMap(returnedOrder.employee),
-            CUSTOMER: Personnel.toMap(returnedOrder.customer),
-            PRODUCT: Product.toMap(returnedOrder.product),
+            EMPLOYEE: jsonEncode(Personnel.toMap(returnedOrder.employee)),
+            CUSTOMER: jsonEncode(Personnel.toMap(returnedOrder.customer)),
+            PRODUCT: jsonEncode(Product.toMap(returnedOrder.product)),
             COUNT: returnedOrder.count,
             NOTE: returnedOrder.note,
             FIRST_MODIFIED: returnedOrder.firstModified.toIso8601String(),
@@ -52,13 +54,13 @@ class ReturnedOrder {
         : ReturnedOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(map[EMPLOYEE]),
-            customer: Personnel.toModel(map[CUSTOMER]),
-            product: Product.toModel(map[PRODUCT]),
+            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
+            customer: Personnel.toModel(jsonDecode(map[CUSTOMER])),
+            product: Product.toModel(jsonDecode(map[CUSTOMER])),
             count: map[COUNT],
             note: map[NOTE],
-            firstModified: DateTime(map[FIRST_MODIFIED]),
-            lastModified: DateTime(map[LAST_MODIFIED]));
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

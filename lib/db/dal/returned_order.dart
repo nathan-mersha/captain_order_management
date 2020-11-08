@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/returned_order.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
@@ -9,9 +13,9 @@ class ReturnedOrderDAL {
   static String createTable = "CREATE TABLE $TABLE_NAME (" +
       "${ReturnedOrder.ID} TEXT," +
       "${ReturnedOrder.ID_FS} TEXT," +
-      "${ReturnedOrder.EMPLOYEE} BLOB," +
-      "${ReturnedOrder.CUSTOMER} BLOB," +
-      "${ReturnedOrder.PRODUCT} BLOB," +
+      "${ReturnedOrder.EMPLOYEE} TEXT," +
+      "${ReturnedOrder.CUSTOMER} TEXT," +
+      "${ReturnedOrder.PRODUCT} TEXT," +
       "${ReturnedOrder.COUNT} INTEGER," +
       "${ReturnedOrder.NOTE} TEXT," +
       "${ReturnedOrder.FIRST_MODIFIED} TEXT," +
@@ -39,13 +43,15 @@ class ReturnedOrderDAL {
           )
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC");
 
+    print("Query returned orders");
+    print("maps length : ${maps.length}");
     return List.generate(maps.length, (i) {
       return ReturnedOrder(
         id: maps[i][ReturnedOrder.ID],
         idFS: maps[i][ReturnedOrder.ID_FS],
-        employee: maps[i][ReturnedOrder.EMPLOYEE],
-        customer: maps[i][ReturnedOrder.CUSTOMER],
-        product: maps[i][ReturnedOrder.PRODUCT],
+        employee: Personnel.toModel(jsonDecode(maps[i][ReturnedOrder.EMPLOYEE])),
+        customer: Personnel.toModel(jsonDecode(maps[i][ReturnedOrder.CUSTOMER])),
+        product: Product.toModel(jsonDecode(maps[i][ReturnedOrder.PRODUCT])),
         count: maps[i][ReturnedOrder.COUNT],
         note: maps[i][ReturnedOrder.NOTE],
         firstModified: DateTime.parse(maps[i][ReturnedOrder.FIRST_MODIFIED]),

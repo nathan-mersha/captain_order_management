@@ -96,8 +96,8 @@ class NormalOrder {
             paidInFull: map[PAID_IN_FULL],
             status: map[STATUS],
             userNotified: map[USER_NOTIFIED],
-            firstModified: DateTime(map[FIRST_MODIFIED]),
-            lastModified: DateTime(map[LAST_MODIFIED]));
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

@@ -120,9 +120,6 @@ class CustomerTableState extends State<CustomerTable> {
                     columnSpacing: 30,
                     columns: [
                       DataColumn(
-                        label: Text("Img"),
-                      ),
-                      DataColumn(
                         label: Text("Name"),
                         onSort: (columnIndex, ascending) {
                           return _sort<String>((d) => d.name, columnIndex, ascending);
@@ -181,12 +178,14 @@ class _CustomerDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-          customer.profileImage == null
-              ? Icon(
+            Row(
+              children: [
+                customer.profileImage == null
+                    ? Icon(
                   Icons.person,
                   color: Colors.black12,
                 )
-              : ClipOval(
+                    : ClipOval(
                   child: Image.memory(
                     customer.profileImage,
                     fit: BoxFit.cover,
@@ -194,10 +193,12 @@ class _CustomerDataSource extends DataTableSource {
                     width: 30,
                   ),
                 ),
-        ),
-        DataCell(Text(customer.name ?? '-'), onTap: () {
+                SizedBox(width: 10,),
+                Text(customer.name ?? '-',style: TextStyle(color: Theme.of(context).primaryColor),)
+              ],
+            ), onTap: () {
           createCustomerKey.currentState.passForUpdate(customers[index]);
-        }, showEditIcon: true),
+        }),
         DataCell(Text(customer.phoneNumber ?? '-')),
         DataCell(Text(customer.address ?? '-')),
         DataCell(Text(DateFormat.yMMMd().format(customer.firstModified))),

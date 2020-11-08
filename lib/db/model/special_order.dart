@@ -81,8 +81,8 @@ class SpecialOrder {
             remainingPayment: map[REMAINING_PAYMENT],
             paidInFull: map[PAID_IN_FULL],
             note: map[NOTE],
-            firstModified: DateTime(map[FIRST_MODIFIED]),
-            lastModified: DateTime(map[LAST_MODIFIED]));
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model
