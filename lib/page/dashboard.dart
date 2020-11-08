@@ -2,7 +2,7 @@ import 'package:captain/page/analysis/analysis.dart';
 import 'package:captain/page/customer/home_customer.dart';
 import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/employee/home_employee.dart';
-import 'package:captain/page/message/messages.dart';
+import 'package:captain/page/message/home_message.dart';
 import 'package:captain/page/order/orders.dart';
 import 'package:captain/page/overview/overview.dart';
 import 'package:captain/page/product/home_product.dart';
@@ -35,7 +35,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int DEVELOPER_PAGE = 12;
 
 //  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-  int selectedMenuIndex = PRODUCTS_PAGE;
+  int selectedMenuIndex = MESSAGES_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
@@ -52,7 +52,7 @@ class DashboardPageState extends State<DashboardPage> {
     {"name": "Employees", "iconData": Icons.person, "child": HomeEmployeePage()},
     {"name": "Punch", "iconData": Icons.call_split, "child": PunchPage()},
     {"name": "Analysis", "iconData": Icons.pie_chart_outlined, "child": AnalysisPage()},
-    {"name": "Messages", "iconData": Icons.question_answer, "child": MessagesPage()},
+    {"name": "Messages", "iconData": Icons.question_answer, "child": HomeMessagePage()},
     {"name": "Settings", "iconData": Icons.settings, "child": SettingsPage()},
     {"name": "Developer", "iconData": Icons.code, "child": DeveloperPage()},
   ];

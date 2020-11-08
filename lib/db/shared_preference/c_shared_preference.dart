@@ -71,7 +71,7 @@ class CSharedPreference {
   bool get systemLocked => pref.getBool(SYSTEM_LOCKED) ?? false;
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
 
-  String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.LELIT;
+  String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
 
   String get currentLanguage => pref.getString(CURRENT_LANGUAGE) ?? CString.ENGLISH_LC;
 

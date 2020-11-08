@@ -12,7 +12,7 @@ class Message {
 
   String id;
   String idFS;
-  String recipient;
+  String recipient; // All, Employees, Customers, PhoneNumber
   String body;
   DateTime firstModified;
   DateTime lastModified;

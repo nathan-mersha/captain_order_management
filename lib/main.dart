@@ -53,7 +53,7 @@ class MyAppState extends State<MyApp> {
   }
 
   requestPermissions() async {
-    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage]);
+    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage, PermissionGroup.sms]);
   }
 
   Future initializeSharedPreference() async {

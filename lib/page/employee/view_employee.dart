@@ -117,6 +117,7 @@ class EmployeeTableState extends State<EmployeeTable> {
                     },
                     sortColumnIndex: _sortColumnIndex,
                     sortAscending: _sortAscending,
+                    columnSpacing: 30,
                     columns: [
                       DataColumn(
                         label: Text("Img"),
