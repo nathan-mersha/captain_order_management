@@ -95,7 +95,6 @@ class MyAppState extends State<MyApp> {
 
     /// No product has been seeded.
     if(!paintProductSeeded){
-      print("Seeding product paint for the first time");
       KapciColors.VALUES.forEach((Map<String, String> paintValue) async{
         Product paint = Product(
           type: CreateProductViewState.PAINT,
@@ -116,7 +115,6 @@ class MyAppState extends State<MyApp> {
     }
     /// Paint product already seeded.
     else{
-      print("Product has already been seeded.");
       return true;
     }
 
@@ -142,16 +140,19 @@ class LoadingApp extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          CircularProgressIndicator(
-            strokeWidth: 3,
-          ),
+          Image.asset("assets/images/captain_icon.png", height: 120,width: 120,),
+          SizedBox(height: 20,),
+          SizedBox(height: 20,width: 20,child: CircularProgressIndicator(
+            strokeWidth: 1,
+            backgroundColor: Colors.white,
+          ),),
           SizedBox(
-            height: 15,
+            height: 10,
           ),
           Text(
             "initializing captain",
             textDirection: TextDirection.ltr,
-            style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 15, fontWeight: FontWeight.w600),
+            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 5,
@@ -160,13 +161,13 @@ class LoadingApp extends StatelessWidget {
             "populating db ...",
             textDirection: TextDirection.ltr,
             style: TextStyle(
-              color: Colors.deepPurpleAccent,
+              color: Colors.white,
               fontSize: 9,
             ),
           ),
         ],
       ),
-      color: Colors.white,
+      color: Colors.deepPurple,
     );
   }
 }
