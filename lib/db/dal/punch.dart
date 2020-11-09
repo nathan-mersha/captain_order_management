@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/punch.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
@@ -9,8 +13,8 @@ class PunchDAL {
   static String createTable = "CREATE TABLE $TABLE_NAME (" +
       "${Punch.ID} TEXT," +
       "${Punch.ID_FS} TEXT," +
-      "${Punch.EMPLOYEE} BLOB," +
-      "${Punch.PRODUCT} BLOB," +
+      "${Punch.EMPLOYEE} TEXT," +
+      "${Punch.PRODUCT} TEXT," +
       "${Punch.TYPE} TEXT," +
       "${Punch.WEIGHT} REAL," +
       "${Punch.NOTE} TEXT," +
@@ -42,8 +46,8 @@ class PunchDAL {
       return Punch(
         id: maps[i][Punch.ID],
         idFS: maps[i][Punch.ID_FS],
-        employee: maps[i][Punch.EMPLOYEE],
-        product: maps[i][Punch.PRODUCT],
+        employee: Personnel.toModel(jsonDecode(maps[i][Punch.EMPLOYEE])),
+        product: Product.toModel(jsonDecode(maps[i][Punch.PRODUCT])),
         type: maps[i][Punch.TYPE],
         weight: maps[i][Punch.WEIGHT],
         note: maps[i][Punch.NOTE],

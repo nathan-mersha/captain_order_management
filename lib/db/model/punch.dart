@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 
@@ -35,8 +37,8 @@ class Punch {
         : {
             ID: punch.id,
             ID_FS: punch.idFS,
-            EMPLOYEE: Personnel.toMap(punch.employee),
-            PRODUCT: Product.toMap(punch.product),
+            EMPLOYEE: jsonEncode(Personnel.toMap(punch.employee)),
+            PRODUCT: jsonEncode(Product.toMap(punch.product)),
             TYPE: punch.type,
             WEIGHT: punch.weight,
             NOTE: punch.note,
@@ -52,13 +54,13 @@ class Punch {
         : Punch(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(map[EMPLOYEE]),
-            product: Product.toModel(map[PRODUCT]),
+            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
+            product: Product.toModel(jsonDecode(map[PRODUCT])),
             type: map[TYPE],
             weight: map[WEIGHT],
             note: map[NOTE],
-            firstModified: DateTime(map[FIRST_MODIFIED]),
-            lastModified: DateTime(map[LAST_MODIFIED]));
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

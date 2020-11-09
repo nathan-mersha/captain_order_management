@@ -43,8 +43,6 @@ class ReturnedOrderDAL {
           )
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC");
 
-    print("Query returned orders");
-    print("maps length : ${maps.length}");
     return List.generate(maps.length, (i) {
       return ReturnedOrder(
         id: maps[i][ReturnedOrder.ID],

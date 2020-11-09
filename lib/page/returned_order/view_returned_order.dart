@@ -129,7 +129,6 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                       ),
                       DataColumn(
                         label: Text("Count"),
-//                        numeric: true,
                         onSort: (columnIndex, ascending) {
                           return _sort<num>((d) => d.count, columnIndex, ascending);
                         },
