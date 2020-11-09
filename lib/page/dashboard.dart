@@ -6,7 +6,7 @@ import 'package:captain/page/message/home_message.dart';
 import 'package:captain/page/order/orders.dart';
 import 'package:captain/page/overview/overview.dart';
 import 'package:captain/page/product/home_product.dart';
-import 'package:captain/page/punch/punch.dart';
+import 'package:captain/page/punch/home_punch.dart';
 import 'package:captain/page/returned_order/home_returned_order.dart';
 import 'package:captain/page/setting/settings.dart';
 import 'package:captain/page/special_order/special_orders.dart';
@@ -35,7 +35,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int DEVELOPER_PAGE = 12;
 
 //  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-  int selectedMenuIndex = RETURNED_ORDERS_PAGE;
+  int selectedMenuIndex = PUNCH_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
@@ -50,7 +50,7 @@ class DashboardPageState extends State<DashboardPage> {
     {"name": "Customers", "iconData": Icons.supervisor_account, "child": HomeCustomerPage()},
     {"name": "Returned Orders", "iconData": Icons.assignment_return, "child": HomeReturnedOrderPage()},
     {"name": "Employees", "iconData": Icons.person, "child": HomeEmployeePage()},
-    {"name": "Punch", "iconData": Icons.call_split, "child": PunchPage()},
+    {"name": "Punch", "iconData": Icons.call_split, "child": HomePunchPage()},
     {"name": "Analysis", "iconData": Icons.pie_chart_outlined, "child": AnalysisPage()},
     {"name": "Messages", "iconData": Icons.question_answer, "child": HomeMessagePage()},
     {"name": "Settings", "iconData": Icons.settings, "child": SettingsPage()},

@@ -23,7 +23,7 @@ class Punch {
   Personnel employee;
   Product product;
   String type; // in/out
-  String weight;
+  num weight;
   String note;
   DateTime firstModified;
   DateTime lastModified;

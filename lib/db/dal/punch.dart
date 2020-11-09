@@ -59,9 +59,9 @@ class PunchDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Punch normalOrder}) async {
-    normalOrder.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, Punch.toMap(normalOrder), where: where, whereArgs: whereArgs);
+  static Future<void> update({String where, dynamic whereArgs, Punch punch}) async {
+    punch.lastModified = DateTime.now();
+    await global.db.update(TABLE_NAME, Punch.toMap(punch), where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"
