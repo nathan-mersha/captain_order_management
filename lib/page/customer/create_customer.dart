@@ -3,7 +3,7 @@ import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/customer/statistics_customer.dart';
 import 'package:captain/page/customer/view_customer.dart';
-import 'package:captain/rsr/kapci/regions.dart';
+import 'package:captain/rsr/regions.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

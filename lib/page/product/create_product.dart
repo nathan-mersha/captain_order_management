@@ -4,7 +4,7 @@ import 'package:captain/db/model/product.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/product/statistics_product.dart';
 import 'package:captain/page/product/view_product.dart';
-import 'package:captain/rsr/kapci/kapci_constants.dart';
+import 'package:captain/rsr/kapci/manufacturers.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -421,7 +421,7 @@ class CreateProductViewState extends State<CreateProductView> {
               }),
         ),
         SimpleAutoCompleteTextField(
-          suggestions: KapciConstants.MANUFACTURER,
+          suggestions: KapciManufacturers.VALUES,
           clearOnSubmit: false,
           decoration: InputDecoration(labelText: "Manufacturer", contentPadding: EdgeInsets.all(0)),
           textCapitalization: TextCapitalization.none,

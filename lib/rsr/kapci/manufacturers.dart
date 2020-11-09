@@ -1,5 +1,5 @@
-class KapciConstants {
-  static const List<String> MANUFACTURER = [
+class KapciManufacturers {
+  static const List<String> VALUES = [
      "acura",
      "aixam-mega",
      "alfa romeo",

@@ -33,6 +33,9 @@ class CSharedPreference {
   static const FEATURE_ADMIN_ONLY_SPECIAL_ORDER = "FEATURE_ADMIN_ONLY_SPECIAL_ORDER";
   static const FEATURE_ADMIN_ONLY_SETTINGS = "FEATURE_ADMIN_ONLY_SETTINGS";
 
+  // Paint product seeded from kapci constants
+  static const PAINT_PRODUCT_SEEDED = "PAINT_PRODUCT_SEEDED";
+
   SharedPreferences pref = global.cSP;
 
   // Passwords and password settings
@@ -64,6 +67,9 @@ class CSharedPreference {
   set featureAdminOnlySpecialOrder(bool featureAdminOnlySpecialOrder) => pref.setBool(FEATURE_ADMIN_ONLY_SPECIAL_ORDER, featureAdminOnlySpecialOrder);
   set featureAdminOnlySettings(bool featureAdminOnlySettings) => pref.setBool(FEATURE_ADMIN_ONLY_SETTINGS, featureAdminOnlySettings);
 
+  set paintProductSeeded(bool paintProductSeeded) => pref.setBool(PAINT_PRODUCT_SEEDED, paintProductSeeded);
+
+
   String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
   bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false; // todo : change to true
@@ -88,6 +94,8 @@ class CSharedPreference {
   bool get featureAdminOnlyMessages => pref.getBool(FEATURE_ADMIN_ONLY_MESSAGES) ?? false;
   bool get featureAdminOnlySpecialOrder => pref.getBool(FEATURE_ADMIN_ONLY_SPECIAL_ORDER) ?? true;
   bool get featureAdminOnlySettings => pref.getBool(FEATURE_ADMIN_ONLY_SETTINGS) ?? false;
+
+  bool get paintProductSeeded => pref.getBool(PAINT_PRODUCT_SEEDED) ?? false;
 }
 
 class GetCSPInstance {

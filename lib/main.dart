@@ -6,8 +6,13 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/db/model/product.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
+import 'package:captain/page/product/create_product.dart';
 import 'package:captain/route.dart';
+import 'package:captain/rsr/kapci/colors.dart';
 import 'package:captain/rsr/theme/c_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -59,6 +64,7 @@ class MyAppState extends State<MyApp> {
   Future initializeSharedPreference() async {
     global.cSP = await SharedPreferences.getInstance();
     global.db = await createTable();
+    await seedPaintProducts();
     return true;
   }
 
@@ -79,6 +85,49 @@ class MyAppState extends State<MyApp> {
     );
 
     return db;
+  }
+  
+  
+  Future<bool> seedPaintProducts()async{
+    CSharedPreference cSP = GetCSPInstance.cSharedPreference;
+    bool paintProductSeeded = cSP.paintProductSeeded;
+    num metalicUnitPrice = cSP.metalicPricePerLitter;
+
+    /// No product has been seeded.
+    if(!paintProductSeeded){
+      print("Seeding product paint for the first time");
+      KapciColors.VALUES.forEach((Map<String, String> paintValue) async{
+        Product paint = Product(
+          type: CreateProductViewState.PAINT,
+          isGallonBased: true,
+          unitOfMeasurement: CreateProductViewState.LITER,
+          paintType: CreateProductViewState.METALIC,
+          name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
+          manufacturer: paintValue["Car"],
+          note: "Measure id is ${paintValue["MeasureID"]}",
+          unitPrice: metalicUnitPrice,
+          colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString()
+        );
+        
+        await createPaint(paint);
+      });
+      cSP.paintProductSeeded = true;
+      return true;
+    }
+    /// Paint product already seeded.
+    else{
+      print("Product has already been seeded.");
+      return true;
+    }
+
+  }
+  
+  Future<bool> createPaint(Product product) async{
+    // Create product local db
+    await ProductDAL.create(product);
+    return true;
+    // todo : Create product in fs
+    // todo : Update product in local db
   }
 }
 
