@@ -126,12 +126,13 @@ class CreateProductViewState extends State<CreateProductView> {
                                         size: 15,
                                         color: Theme.of(context).accentColor,
                                       ),
-                                      SizedBox(width: 10,),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
                                       Text(
                                         productTypesValues[productValue],
                                         style: TextStyle(fontSize: 12),
                                       ),
-
                                     ],
                                   ),
                                   value: productValue,
@@ -454,7 +455,7 @@ class CreateProductViewState extends State<CreateProductView> {
   Future createProduct(BuildContext context) async {
     /// Create Product Product data to local db
     /// on creating product based on the product type nullify corresponding fields
-    if(product.type == OTHER_PRODUCTS){
+    if (product.type == OTHER_PRODUCTS) {
       product.colorValue = null;
       product.paintType = null;
       product.manufacturer = null;
@@ -483,14 +484,14 @@ class CreateProductViewState extends State<CreateProductView> {
     });
   }
 
-  setPaintTypeUnitPrice(){
+  setPaintTypeUnitPrice() {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     num metalicPrice = cSP.metalicPricePerLitter;
     num autoCrylPrice = cSP.autoCrylPricePerLitter;
 
-    if(product.id == null && product.type == PAINT && _manuallyAdjustPaintPrice == false){
+    if (product.id == null && product.type == PAINT && _manuallyAdjustPaintPrice == false) {
       product.unitPrice = product.paintType == METALIC ? metalicPrice : autoCrylPrice;
-      _unitPriceController.text =  product.unitPrice.toString();
+      _unitPriceController.text = product.unitPrice.toString();
     }
   }
 

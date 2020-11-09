@@ -109,7 +109,6 @@ class ProductTableState extends State<ProductTable> {
                         _rowsPerPage = value;
                       });
                     },
-
                     sortColumnIndex: _sortColumnIndex,
                     sortAscending: _sortAscending,
                     columnSpacing: 20,
@@ -177,7 +176,6 @@ class _ProductDataSource extends DataTableSource {
     if (index >= products.length) return null;
     final product = products[index];
     return DataRow.byIndex(
-
       index: index,
       cells: [
         DataCell(buildProductView(products[index]), onTap: () {
@@ -210,18 +208,16 @@ class _ProductDataSource extends DataTableSource {
         children: [
           Row(
             children: [
-              product.isGallonBased ? Icon(
-                Icons.check_circle,
-                size: 9,
-                color : Theme.of(context).primaryColorLight
-              ) : Container(),
+              product.isGallonBased ? Icon(Icons.check_circle, size: 9, color: Theme.of(context).primaryColorLight) : Container(),
               SizedBox(
                 width: 5,
               ),
               Text(product.name ?? '-'),
             ],
           ),
-          SizedBox(height: 4,),
+          SizedBox(
+            height: 4,
+          ),
           Container(
             height: 5,
             width: 16,

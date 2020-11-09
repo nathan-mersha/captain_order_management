@@ -193,8 +193,13 @@ class _EmployeeDataSource extends DataTableSource {
                           width: 30,
                         ),
                       ),
-                SizedBox(width: 10,),
-                Text(employee.name ?? '-',style: TextStyle(color: Theme.of(context).primaryColor),)
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  employee.name ?? '-',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                )
               ],
             ), onTap: () {
           createEmployeeKey.currentState.passForUpdate(employees[index]);

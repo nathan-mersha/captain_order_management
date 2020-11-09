@@ -42,16 +42,12 @@ class MyAppState extends State<MyApp> {
 
     return FutureBuilder(
         builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
-            return LoadingApp();
+          if (projectSnap.data == true) {
+            return AppBuilder(builder: (context) {
+              return MaterialApp(title: "Captain", theme: CTheme.getTheme(), routes: CRoutes().routes);
+            });
           } else {
-            if (projectSnap.data == true) {
-              return AppBuilder(builder: (context) {
-                return MaterialApp(title: "Captain", theme: CTheme.getTheme(), routes: CRoutes().routes);
-              });
-            } else {
-              return LoadingApp();
-            }
+            return LoadingApp();
           }
         },
         future: initializeSharedPreference());
@@ -86,41 +82,39 @@ class MyAppState extends State<MyApp> {
 
     return db;
   }
-  
-  
-  Future<bool> seedPaintProducts()async{
+
+  Future<bool> seedPaintProducts() async {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     bool paintProductSeeded = cSP.paintProductSeeded;
     num metalicUnitPrice = cSP.metalicPricePerLitter;
 
     /// No product has been seeded.
-    if(!paintProductSeeded){
-      KapciColors.VALUES.forEach((Map<String, String> paintValue) async{
+    if (!paintProductSeeded) {
+      KapciColors.VALUES.forEach((Map<String, String> paintValue) async {
         Product paint = Product(
-          type: CreateProductViewState.PAINT,
-          isGallonBased: true,
-          unitOfMeasurement: CreateProductViewState.LITER,
-          paintType: CreateProductViewState.METALIC,
-          name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
-          manufacturer: paintValue["Car"],
-          note: "Measure id is ${paintValue["MeasureID"]}",
-          unitPrice: metalicUnitPrice,
-          colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString()
-        );
-        
+            type: CreateProductViewState.PAINT,
+            isGallonBased: true,
+            unitOfMeasurement: CreateProductViewState.LITER,
+            paintType: CreateProductViewState.METALIC,
+            name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
+            manufacturer: paintValue["Car"],
+            note: "Measure id is ${paintValue["MeasureID"]}",
+            unitPrice: metalicUnitPrice,
+            colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString());
+
         await createPaint(paint);
       });
       cSP.paintProductSeeded = true;
       return true;
     }
+
     /// Paint product already seeded.
-    else{
+    else {
       return true;
     }
-
   }
-  
-  Future<bool> createPaint(Product product) async{
+
+  Future<bool> createPaint(Product product) async {
     // Create product local db
     await ProductDAL.create(product);
     return true;
@@ -140,12 +134,22 @@ class LoadingApp extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset("assets/images/captain_icon.png", height: 120,width: 120,),
-          SizedBox(height: 20,),
-          SizedBox(height: 20,width: 20,child: CircularProgressIndicator(
-            strokeWidth: 1,
-            backgroundColor: Colors.white,
-          ),),
+          Image.asset(
+            "assets/images/captain_icon.png",
+            height: 120,
+            width: 120,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 1,
+              backgroundColor: Colors.white,
+            ),
+          ),
           SizedBox(
             height: 10,
           ),

@@ -3,7 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:captain/global.dart' as global;
 
-
 class PersonnelDAL {
   static const String TABLE_NAME = Personnel.COLLECTION_NAME;
 
@@ -42,7 +41,7 @@ class PersonnelDAL {
         ? await global.db.query(
             TABLE_NAME,
           )
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${Personnel.LAST_MODIFIED} DESC");
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Personnel.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Personnel(

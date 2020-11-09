@@ -69,7 +69,6 @@ class CSharedPreference {
 
   set paintProductSeeded(bool paintProductSeeded) => pref.setBool(PAINT_PRODUCT_SEEDED, paintProductSeeded);
 
-
   String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
   String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
   bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false; // todo : change to true

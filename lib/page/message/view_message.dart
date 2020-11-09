@@ -165,8 +165,19 @@ class _MessageDataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(message.recipient ?? '-', style: TextStyle(color: Colors.black54),)),
-        DataCell(SizedBox(width: 300,child: Text(message.body ?? '-', overflow: TextOverflow.ellipsis,maxLines: 1,),),onTap: (){
+        DataCell(Text(
+          message.recipient ?? '-',
+          style: TextStyle(color: Colors.black54),
+        )),
+        DataCell(
+            SizedBox(
+              width: 300,
+              child: Text(
+                message.body ?? '-',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ), onTap: () {
           createMessageKey.currentState.passForView(message);
         }),
         DataCell(Text(DateFormat.yMMMd().format(message.firstModified), style: TextStyle(color: Colors.black54))),

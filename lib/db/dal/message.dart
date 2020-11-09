@@ -34,7 +34,7 @@ class MessageDAL {
         ? await global.db.query(
             TABLE_NAME,
           )
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${Message.LAST_MODIFIED} DESC");
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Message.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Message(

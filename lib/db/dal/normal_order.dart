@@ -44,7 +44,7 @@ class NormalOrderDAL {
         ? await global.db.query(
             TABLE_NAME,
           )
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return NormalOrder(

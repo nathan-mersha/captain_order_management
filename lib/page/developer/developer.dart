@@ -11,7 +11,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
     return Container(
       child: Column(
         children: [
-          SizedBox(height: 200,),
+          SizedBox(
+            height: 200,
+          ),
           Icon(
             Icons.code,
             color: Theme.of(context).primaryColor,

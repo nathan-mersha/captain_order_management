@@ -25,7 +25,6 @@ class ProductDAL {
       "${Product.LAST_MODIFIED} TEXT" +
       ")";
 
-
   static Future<Product> create(Product product) async {
     // updating first and last modified stamps.
     var uuid = Uuid();
@@ -44,7 +43,7 @@ class ProductDAL {
         ? await global.db.query(
             TABLE_NAME,
           )
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs,orderBy: "${Product.FIRST_MODIFIED} DESC");
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Product.FIRST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Product(

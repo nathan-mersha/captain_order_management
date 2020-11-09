@@ -55,7 +55,7 @@ class CreatePunchViewState extends State<CreatePunchView> {
   @override
   void initState() {
     super.initState();
-    punchTypeValues = {PUNCH_IN : "in", PUNCH_OUT : "out"};
+    punchTypeValues = {PUNCH_IN: "in", PUNCH_OUT: "out"};
     _assignPersonnelAndPaintData();
   }
 
@@ -168,9 +168,7 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                   icon: Icon(
                                     Icons.circle,
                                     size: 30,
-                                    color: punch == null || punch.product == null || punch.product.colorValue == null
-                                        ? Colors.black12
-                                        : Color(int.parse(punch.product.colorValue)),
+                                    color: punch == null || punch.product == null || punch.product.colorValue == null ? Colors.black12 : Color(int.parse(punch.product.colorValue)),
                                   ))),
                           suggestionsCallback: (pattern) async {
                             return _paints.where((Product paint) {
@@ -201,7 +199,9 @@ class CreatePunchViewState extends State<CreatePunchView> {
                           },
                         ),
 
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         SizedBox(
                           width: double.infinity,
                           child: DropdownButton(
@@ -227,12 +227,13 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                         size: 15,
                                         color: punchValue == PUNCH_IN ? Colors.red : Colors.green,
                                       ),
-                                      SizedBox(width: 10,),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
                                       Text(
                                         punchTypeValues[punchValue],
                                         style: TextStyle(fontSize: 12),
                                       ),
-
                                     ],
                                   ),
                                   value: punchValue,

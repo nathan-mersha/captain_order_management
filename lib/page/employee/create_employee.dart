@@ -131,7 +131,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
                           clearOnSubmit: false,
-                          decoration: InputDecoration(labelText: "Address",contentPadding: EdgeInsets.all(0)),
+                          decoration: InputDecoration(labelText: "Address", contentPadding: EdgeInsets.all(0)),
                           controller: _addressController,
                           textSubmitted: (String addressValue) {
                             employee.address = addressValue;

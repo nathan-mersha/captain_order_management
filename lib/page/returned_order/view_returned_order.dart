@@ -183,18 +183,16 @@ class _ReturnedOrderDataSource extends DataTableSource {
         children: [
           Row(
             children: [
-              product.isGallonBased ? Icon(
-                  Icons.check_circle,
-                  size: 9,
-                  color : Theme.of(context).primaryColorLight
-              ) : Container(),
+              product.isGallonBased ? Icon(Icons.check_circle, size: 9, color: Theme.of(context).primaryColorLight) : Container(),
               SizedBox(
                 width: 5,
               ),
               Text(product.name ?? '-'),
             ],
           ),
-          SizedBox(height: 4,),
+          SizedBox(
+            height: 4,
+          ),
           Container(
             height: 5,
             width: 16,
@@ -220,19 +218,24 @@ class _ReturnedOrderDataSource extends DataTableSource {
               children: [
                 returnedOrder.employee.profileImage == null
                     ? Icon(
-                  Icons.person,
-                  color: Colors.black12,
-                )
+                        Icons.person,
+                        color: Colors.black12,
+                      )
                     : ClipOval(
-                  child: Image.memory(
-                    returnedOrder.employee.profileImage,
-                    fit: BoxFit.cover,
-                    height: 30,
-                    width: 30,
-                  ),
+                        child: Image.memory(
+                          returnedOrder.employee.profileImage,
+                          fit: BoxFit.cover,
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
+                SizedBox(
+                  width: 10,
                 ),
-                SizedBox(width: 10,),
-                Text(returnedOrder.employee.name ?? '-',style: TextStyle(color: Theme.of(context).primaryColor),)
+                Text(
+                  returnedOrder.employee.name ?? '-',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                )
               ],
             ), onTap: () {
           createReturnedOrderKey.currentState.passForUpdate(returnedOrders[index]);
