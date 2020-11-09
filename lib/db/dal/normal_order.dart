@@ -10,10 +10,10 @@ class NormalOrderDAL {
   static String createTable = "CREATE TABLE $TABLE_NAME (" +
       "${NormalOrder.ID} TEXT," +
       "${NormalOrder.ID_FS} TEXT," +
-      "${NormalOrder.EMPLOYEE} BLOB," +
-      "${NormalOrder.CUSTOMER} BLOB," +
-      "${NormalOrder.PAINT_ORDER} BLOB," +
-      "${NormalOrder.OTHER_PRODUCTS} BLOB," +
+      "${NormalOrder.EMPLOYEE} TEXT," +
+      "${NormalOrder.CUSTOMER} TEXT," +
+      "${NormalOrder.PAINT_ORDERS} TEXT," +
+      "${NormalOrder.OTHER_PRODUCTS} TEXT," +
       "${NormalOrder.VOLUME} REAL," +
       "${NormalOrder.TOTAL_AMOUNT} REAL," +
       "${NormalOrder.ADVANCE_PAYMENT} REAL," +
@@ -52,7 +52,7 @@ class NormalOrderDAL {
         idFS: maps[i][NormalOrder.ID_FS],
         employee: maps[i][NormalOrder.EMPLOYEE],
         customer: maps[i][NormalOrder.CUSTOMER],
-        paintOrder: maps[i][NormalOrder.PAINT_ORDER],
+        paintOrders: maps[i][NormalOrder.PAINT_ORDERS],
         otherProducts: maps[i][NormalOrder.OTHER_PRODUCTS],
         volume: maps[i][NormalOrder.VOLUME],
         totalAmount: maps[i][NormalOrder.TOTAL_AMOUNT],

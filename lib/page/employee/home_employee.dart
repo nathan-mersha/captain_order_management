@@ -14,7 +14,6 @@ class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerPro
   GlobalKey<CreateEmployeeViewState> createEmployeeKey = GlobalKey();
   GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey = GlobalKey();
 
-  void doSomethingFromParent() {}
   @override
   Widget build(BuildContext context) {
     return Container(

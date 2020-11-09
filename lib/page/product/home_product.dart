@@ -14,7 +14,6 @@ class HomeProductPageState extends State<HomeProductPage> with SingleTickerProvi
   GlobalKey<CreateProductViewState> createProductKey = GlobalKey();
   GlobalKey<StatisticsProductViewState> statisticsProductKey = GlobalKey();
 
-  void doSomethingFromParent() {}
   @override
   Widget build(BuildContext context) {
     return Container(

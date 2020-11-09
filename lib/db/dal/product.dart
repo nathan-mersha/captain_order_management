@@ -20,7 +20,7 @@ class ProductDAL {
       "${Product.NOTE} TEXT," +
       "${Product.QUANTITY_IN_CART} INTEGER," +
       "${Product.SUB_TOTAL} REAL," +
-      "${Product.DELIVERED} BLOB," +
+      "${Product.STATUS} TEXT," +
       "${Product.FIRST_MODIFIED} TEXT," +
       "${Product.LAST_MODIFIED} TEXT" +
       ")";
@@ -60,7 +60,7 @@ class ProductDAL {
         note: maps[i][Product.NOTE],
         quantityInCart: maps[i][Product.QUANTITY_IN_CART],
         subTotal: maps[i][Product.SUB_TOTAL],
-        delivered: maps[i][Product.DELIVERED],
+        status: maps[i][Product.STATUS],
         firstModified: DateTime.parse(maps[i][Product.FIRST_MODIFIED]),
         lastModified: DateTime.parse(maps[i][Product.LAST_MODIFIED]),
       );

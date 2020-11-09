@@ -182,9 +182,9 @@ class _ProductDataSource extends DataTableSource {
           createProductKey.currentState.passForUpdate(products[index]);
         }),
         DataCell(Text(product.paintType ?? "-")),
-        DataCell(Text(product.manufacturer ?? "-")),
+        DataCell(Text(product.manufacturer ?? "-", style: TextStyle(color: Colors.black54),)),
         DataCell(Text(product.unitPrice.toStringAsFixed(2))),
-        DataCell(Text(product.unitOfMeasurement ?? "-")),
+        DataCell(Text(product.unitOfMeasurement ?? "-", style: TextStyle(color: Colors.black54))),
         DataCell(IconButton(
           icon: Icon(
             Icons.delete_outline,

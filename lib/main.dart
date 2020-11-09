@@ -97,7 +97,7 @@ class MyAppState extends State<MyApp> {
             unitOfMeasurement: CreateProductViewState.LITER,
             paintType: CreateProductViewState.METALIC,
             name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
-            manufacturer: paintValue["Car"],
+            manufacturer: paintValue["Car"].toLowerCase(),
             note: "Measure id is ${paintValue["MeasureID"]}",
             unitPrice: metalicUnitPrice,
             colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString());

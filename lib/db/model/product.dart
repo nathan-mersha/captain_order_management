@@ -16,7 +16,7 @@ class Product {
   static const String NOTE = "note";
   static const String QUANTITY_IN_CART = "quantityInCart";
   static const String SUB_TOTAL = "subTotal";
-  static const String DELIVERED = "delivered";
+  static const String STATUS = "status";
   static const String FIRST_MODIFIED = "firstModified";
   static const String LAST_MODIFIED = "lastModified";
 
@@ -33,9 +33,10 @@ class Product {
   String note;
   num quantityInCart;
   num subTotal;
-  bool delivered;
+  String status; // pending completed delivered
   DateTime firstModified;
   DateTime lastModified;
+
 
   Product(
       {this.id,
@@ -49,11 +50,17 @@ class Product {
       this.manufacturer,
       this.isGallonBased,
       this.note,
-      this.quantityInCart,
+      this.quantityInCart = 0,
       this.subTotal,
-      this.delivered,
+      this.status,
       this.firstModified,
       this.lastModified});
+
+  num calculateSubTotal(){
+    num subTotal = unitPrice * quantityInCart;
+    this.subTotal = subTotal;
+    return subTotal;
+  }
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Product product) {
@@ -73,7 +80,7 @@ class Product {
             NOTE: product.note,
             QUANTITY_IN_CART: product.quantityInCart,
             SUB_TOTAL: product.subTotal,
-            DELIVERED: product.delivered,
+            STATUS: product.status,
             FIRST_MODIFIED: product.firstModified.toIso8601String(),
             LAST_MODIFIED: product.lastModified.toIso8601String()
           };
@@ -97,7 +104,7 @@ class Product {
             note: map[NOTE],
             quantityInCart: map[QUANTITY_IN_CART],
             subTotal: map[SUB_TOTAL],
-            delivered: map[DELIVERED],
+            status: map[STATUS],
             firstModified: DateTime.parse(map[FIRST_MODIFIED]),
             lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }

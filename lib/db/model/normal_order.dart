@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 
@@ -10,7 +12,7 @@ class NormalOrder {
   static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
-  static const String PAINT_ORDER = "paintOrder";
+  static const String PAINT_ORDERS = "paintOrders";
   static const String OTHER_PRODUCTS = "otherProducts";
   static const String VOLUME = "volume";
   static const String TOTAL_AMOUNT = "totalAmount";
@@ -26,14 +28,14 @@ class NormalOrder {
   String idFS;
   Personnel employee;
   Personnel customer;
-  Product paintOrder;
+  List<Product> paintOrders;
   List<Product> otherProducts;
   num volume;
   num totalAmount;
   num advancePayment;
   num remainingPayment;
   bool paidInFull;
-  String status;
+  String status; // open,closed
   bool userNotified;
   DateTime firstModified;
   DateTime lastModified;
@@ -43,7 +45,7 @@ class NormalOrder {
       this.idFS,
       this.employee,
       this.customer,
-      this.paintOrder,
+      this.paintOrders,
       this.otherProducts,
       this.volume,
       this.totalAmount,
@@ -62,10 +64,10 @@ class NormalOrder {
         : {
             ID: normalOrder.id,
             ID_FS: normalOrder.idFS,
-            EMPLOYEE: normalOrder.employee == null ? null : Personnel.toMap(normalOrder.employee),
-            CUSTOMER: normalOrder.customer == null ? null : Personnel.toMap(normalOrder.customer),
-            PAINT_ORDER: normalOrder.paintOrder == null ? null : Product.toMap(normalOrder.paintOrder),
-            OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : Product.toMapList(normalOrder.otherProducts),
+            EMPLOYEE: normalOrder.employee == null ? null : jsonEncode(Personnel.toMap(normalOrder.employee)),
+            CUSTOMER: normalOrder.customer == null ? null : jsonEncode(Personnel.toMap(normalOrder.customer)),
+            PAINT_ORDERS: normalOrder.paintOrders == null ? null : jsonEncode(Product.toMapList(normalOrder.paintOrders)),
+            OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : jsonEncode(Product.toMapList(normalOrder.otherProducts)),
             VOLUME: normalOrder.volume,
             TOTAL_AMOUNT: normalOrder.totalAmount,
             ADVANCE_PAYMENT: normalOrder.advancePayment,
@@ -85,10 +87,10 @@ class NormalOrder {
         : NormalOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(map[EMPLOYEE]),
-            customer: Personnel.toModel(map[CUSTOMER]),
-            paintOrder: Product.toModel(map[PAINT_ORDER]),
-            otherProducts: Product.toModelList(map[OTHER_PRODUCTS]),
+            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
+            customer: Personnel.toModel(jsonDecode(map[CUSTOMER])),
+            paintOrders: Product.toModelList(jsonDecode(map[PAINT_ORDERS])),
+            otherProducts: Product.toModelList(jsonDecode(map[OTHER_PRODUCTS])),
             volume: map[VOLUME],
             totalAmount: map[TOTAL_AMOUNT],
             advancePayment: map[ADVANCE_PAYMENT],
