@@ -25,6 +25,7 @@ dependencies:
   sms: ^0.2.4
   flutter_sms: ^2.1.1
   flutter_typeahead: ^1.8.8
+  keyboard_visibility: ^0.5.2
 
 # Dev dependencies
 dev_dependencies:

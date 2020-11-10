@@ -3,7 +3,7 @@ import 'package:captain/page/customer/home_customer.dart';
 import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/employee/home_employee.dart';
 import 'package:captain/page/message/home_message.dart';
-import 'package:captain/page/normal_order/home_normal_order.dart';
+import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/overview/overview.dart';
 import 'package:captain/page/product/home_product.dart';
 import 'package:captain/page/punch/home_punch.dart';
@@ -34,7 +34,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int SETTINGS_PAGE = 11;
   static const int DEVELOPER_PAGE = 12;
 
-  int selectedMenuIndex = PRODUCTS_PAGE; // todo Uncomment for final release
+  int selectedMenuIndex = ORDERS_PAGE; // todo Uncomment for final release
 //  int selectedMenuIndex = ORDERS_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
@@ -44,7 +44,7 @@ class DashboardPageState extends State<DashboardPage> {
       "child": OverviewPage(),
     },
     {"name": "Overview", "iconData": Icons.bubble_chart, "child": OverviewPage()},
-    {"name": "Orders", "iconData": Icons.palette, "child": HomeNormalOrdersPage()},
+    {"name": "Orders", "iconData": Icons.palette, "child": NormalOrderMainPage()},
     {"name": "Special Order", "iconData": Icons.star, "child": SpecialOrdersPage()},
     {"name": "Products", "iconData": Icons.business_center, "child": HomeProductPage()},
     {"name": "Customers", "iconData": Icons.supervisor_account, "child": HomeCustomerPage()},
