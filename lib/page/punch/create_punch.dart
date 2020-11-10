@@ -431,7 +431,6 @@ class CreatePunchViewState extends State<CreatePunchView> {
     _noteController.clear();
     _employeeController.clear();
     _paintController.clear();
-    // todo : clear more controllers input here
   }
 
   void passForUpdate(Punch punchUpdateData) async {
@@ -445,8 +444,6 @@ class CreatePunchViewState extends State<CreatePunchView> {
       _noteController.text = punch.note;
       _employeeController.text = punch.employee.name;
       _paintController.text = punch.product.name;
-
-      // todo : assign controllers text on update here.
     });
   }
 

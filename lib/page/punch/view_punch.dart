@@ -71,6 +71,18 @@ class PunchTableState extends State<PunchTable> {
                 _rowsPerPage = 7;
                 return PaginatedDataTable(
                     actions: [
+                      Container(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "search",
+                            hintText: "search",
+                          ),
+                          onChanged: (String searchInput) {
+                            _punchDataSource._search(searchInput);
+                          },
+                        ),
+                        width: 120,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -158,10 +170,15 @@ class PunchTableState extends State<PunchTable> {
 
 class _PunchDataSource extends DataTableSource {
   final BuildContext context;
-  final List<Punch> punchs;
+  List<Punch> punchs;
+  List<Punch> originalBatch = [];
   final Function updateTable;
   final GlobalKey<CreatePunchViewState> createPunchKey;
-  _PunchDataSource(this.context, this.punchs, this.updateTable, this.createPunchKey);
+  int _selectedCount = 0;
+
+  _PunchDataSource(this.context, this.punchs, this.updateTable, this.createPunchKey) {
+    originalBatch = List.from(punchs);
+  }
 
   void _sort<T>(Comparable<T> Function(Punch d) getField, bool ascending) {
     punchs.sort((a, b) {
@@ -172,7 +189,11 @@ class _PunchDataSource extends DataTableSource {
     notifyListeners();
   }
 
-  int _selectedCount = 0;
+  void _search(String searchInput) {
+    punchs = List.from(originalBatch); // Restoring punches from original batch
+    punchs.retainWhere((Punch p) => p.product.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    notifyListeners();
+  }
 
   Widget buildProductView(Product product) {
     if (product.type == CreateProductViewState.PAINT) {

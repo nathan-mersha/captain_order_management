@@ -73,6 +73,18 @@ class EmployeeTableState extends State<EmployeeTable> {
 
                 return PaginatedDataTable(
                     actions: [
+                      Container(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "search",
+                            hintText: "search",
+                          ),
+                          onChanged: (String searchInput) {
+                            _employeeDataSource._search(searchInput);
+                          },
+                        ),
+                        width: 120,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -153,10 +165,15 @@ class EmployeeTableState extends State<EmployeeTable> {
 
 class _EmployeeDataSource extends DataTableSource {
   final BuildContext context;
-  final List<Personnel> employees;
+  List<Personnel> employees;
+  List<Personnel> originalBatch = [];
   final Function updateTable;
   final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
-  _EmployeeDataSource(this.context, this.employees, this.updateTable, this.createEmployeeKey);
+  int _selectedCount = 0;
+
+  _EmployeeDataSource(this.context, this.employees, this.updateTable, this.createEmployeeKey) {
+    originalBatch = List.from(employees);
+  }
 
   void _sort<T>(Comparable<T> Function(Personnel d) getField, bool ascending) {
     employees.sort((a, b) {
@@ -167,7 +184,11 @@ class _EmployeeDataSource extends DataTableSource {
     notifyListeners();
   }
 
-  int _selectedCount = 0;
+  void _search(String searchInput) {
+    employees = List.from(originalBatch); // Restoring products from original batch
+    employees.retainWhere((Personnel p) => p.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    notifyListeners();
+  }
 
   @override
   DataRow getRow(int index) {

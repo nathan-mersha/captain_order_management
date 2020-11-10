@@ -8,6 +8,8 @@ class ViewNormalOrderPage extends StatefulWidget {
 class ViewNormalOrderPageState extends State<ViewNormalOrderPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text("View normal order"),);
+    return Container(
+      child: Text("View normal order"),
+    );
   }
 }

@@ -17,12 +17,15 @@ class _HomeNormalOrdersPageState extends State<HomeNormalOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: currentPage == PAGE_CREATE_NORMAL_ORDER
-        ? CreateNormalOrderPage(normalOrder: normalOrder,)
-        : ViewNormalOrderPage());
+    return Container(
+        child: currentPage == PAGE_CREATE_NORMAL_ORDER
+            ? CreateNormalOrderPage(
+                normalOrder: normalOrder,
+              )
+            : ViewNormalOrderPage());
   }
 
-  changePage(String pageName, {NormalOrder passedNormalOrder}){
+  changePage(String pageName, {NormalOrder passedNormalOrder}) {
     setState(() {
       currentPage = pageName;
       normalOrder = passedNormalOrder;

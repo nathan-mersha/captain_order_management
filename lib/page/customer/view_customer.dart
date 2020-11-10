@@ -73,6 +73,18 @@ class CustomerTableState extends State<CustomerTable> {
 
                 return PaginatedDataTable(
                     actions: [
+                      Container(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "search",
+                            hintText: "search",
+                          ),
+                          onChanged: (String searchInput) {
+                            _customerDataSource._search(searchInput);
+                          },
+                        ),
+                        width: 120,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -153,10 +165,15 @@ class CustomerTableState extends State<CustomerTable> {
 
 class _CustomerDataSource extends DataTableSource {
   final BuildContext context;
-  final List<Personnel> customers;
+  List<Personnel> customers;
+  List<Personnel> originalBatch = [];
   final Function updateTable;
   final GlobalKey<CreateCustomerViewState> createCustomerKey;
-  _CustomerDataSource(this.context, this.customers, this.updateTable, this.createCustomerKey);
+  int _selectedCount = 0;
+
+  _CustomerDataSource(this.context, this.customers, this.updateTable, this.createCustomerKey) {
+    originalBatch = List.from(customers);
+  }
 
   void _sort<T>(Comparable<T> Function(Personnel d) getField, bool ascending) {
     customers.sort((a, b) {
@@ -167,7 +184,11 @@ class _CustomerDataSource extends DataTableSource {
     notifyListeners();
   }
 
-  int _selectedCount = 0;
+  void _search(String searchInput) {
+    customers = List.from(originalBatch); // Restoring products from original batch
+    customers.retainWhere((Personnel p) => p.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    notifyListeners();
+  }
 
   @override
   DataRow getRow(int index) {

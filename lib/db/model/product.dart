@@ -37,7 +37,6 @@ class Product {
   DateTime firstModified;
   DateTime lastModified;
 
-
   Product(
       {this.id,
       this.idFS,
@@ -56,7 +55,7 @@ class Product {
       this.firstModified,
       this.lastModified});
 
-  num calculateSubTotal(){
+  num calculateSubTotal() {
     num subTotal = unitPrice * quantityInCart;
     this.subTotal = subTotal;
     return subTotal;

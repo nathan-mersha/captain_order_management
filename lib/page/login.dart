@@ -109,6 +109,7 @@ class LoginPageState extends State<LoginPage> {
                       return null;
                     }
                   },
+                  obscureText: true,
                   controller: _passwordInputController,
                   decoration: InputDecoration(hintText: "password"),
                 ),

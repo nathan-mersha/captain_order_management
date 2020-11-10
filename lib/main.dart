@@ -93,7 +93,7 @@ class MyAppState extends State<MyApp> {
       KapciColors.VALUES.forEach((Map<String, String> paintValue) async {
         Product paint = Product(
             type: CreateProductViewState.PAINT,
-            isGallonBased: true,
+            isGallonBased: false,
             unitOfMeasurement: CreateProductViewState.LITER,
             paintType: CreateProductViewState.METALIC,
             name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
@@ -118,8 +118,6 @@ class MyAppState extends State<MyApp> {
     // Create product local db
     await ProductDAL.create(product);
     return true;
-    // todo : Create product in fs
-    // todo : Update product in local db
   }
 }
 

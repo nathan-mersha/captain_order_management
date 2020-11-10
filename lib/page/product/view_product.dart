@@ -67,6 +67,18 @@ class ProductTableState extends State<ProductTable> {
                 _rowsPerPage = 7;
                 return PaginatedDataTable(
                     actions: [
+                      Container(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "search",
+                            hintText: "search",
+                          ),
+                          onChanged: (String searchInput) {
+                            _productDataSource._search(searchInput);
+                          },
+                        ),
+                        width: 120,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -154,10 +166,15 @@ class ProductTableState extends State<ProductTable> {
 
 class _ProductDataSource extends DataTableSource {
   final BuildContext context;
-  final List<Product> products;
+  List<Product> products;
+  List<Product> originalBatch = [];
   final Function updateTable;
   final GlobalKey<CreateProductViewState> createProductKey;
-  _ProductDataSource(this.context, this.products, this.updateTable, this.createProductKey);
+  _ProductDataSource(this.context, this.products, this.updateTable, this.createProductKey) {
+    originalBatch = List.from(products);
+  }
+
+  int _selectedCount = 0;
 
   void _sort<T>(Comparable<T> Function(Product d) getField, bool ascending) {
     products.sort((a, b) {
@@ -168,7 +185,11 @@ class _ProductDataSource extends DataTableSource {
     notifyListeners();
   }
 
-  int _selectedCount = 0;
+  void _search(String searchInput) {
+    products = List.from(originalBatch); // Restoring products from original batch
+    products.retainWhere((Product p) => p.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    notifyListeners();
+  }
 
   @override
   DataRow getRow(int index) {
@@ -182,7 +203,10 @@ class _ProductDataSource extends DataTableSource {
           createProductKey.currentState.passForUpdate(products[index]);
         }),
         DataCell(Text(product.paintType ?? "-")),
-        DataCell(Text(product.manufacturer ?? "-", style: TextStyle(color: Colors.black54),)),
+        DataCell(Text(
+          product.manufacturer ?? "-",
+          style: TextStyle(color: Colors.black54),
+        )),
         DataCell(Text(product.unitPrice.toStringAsFixed(2))),
         DataCell(Text(product.unitOfMeasurement ?? "-", style: TextStyle(color: Colors.black54))),
         DataCell(IconButton(

@@ -38,8 +38,6 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
 
   Future<List<ReturnedOrder>> getListOfReturnedOrders() async {
     List<ReturnedOrder> returnedOrders = await ReturnedOrderDAL.find();
-
-    print("REturned order length : ${returnedOrders.length}");
     return returnedOrders;
   }
 
@@ -72,6 +70,18 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                 _rowsPerPage = 7;
                 return PaginatedDataTable(
                     actions: [
+                      Container(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "search",
+                            hintText: "search",
+                          ),
+                          onChanged: (String searchInput) {
+                            _returnedOrderDataSource._search(searchInput);
+                          },
+                        ),
+                        width: 120,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -159,10 +169,15 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
 
 class _ReturnedOrderDataSource extends DataTableSource {
   final BuildContext context;
-  final List<ReturnedOrder> returnedOrders;
+  List<ReturnedOrder> returnedOrders;
+  List<ReturnedOrder> originalBatch = [];
   final Function updateTable;
   final GlobalKey<CreateReturnedOrderViewState> createReturnedOrderKey;
-  _ReturnedOrderDataSource(this.context, this.returnedOrders, this.updateTable, this.createReturnedOrderKey);
+  int _selectedCount = 0;
+
+  _ReturnedOrderDataSource(this.context, this.returnedOrders, this.updateTable, this.createReturnedOrderKey) {
+    originalBatch = List.from(returnedOrders);
+  }
 
   void _sort<T>(Comparable<T> Function(ReturnedOrder d) getField, bool ascending) {
     returnedOrders.sort((a, b) {
@@ -173,7 +188,11 @@ class _ReturnedOrderDataSource extends DataTableSource {
     notifyListeners();
   }
 
-  int _selectedCount = 0;
+  void _search(String searchInput) {
+    returnedOrders = List.from(originalBatch); // Restoring returned order from original batch
+    returnedOrders.retainWhere((ReturnedOrder r) => r.product.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    notifyListeners();
+  }
 
   Widget buildProductView(Product product) {
     if (product.type == CreateProductViewState.PAINT) {
