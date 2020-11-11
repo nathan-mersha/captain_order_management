@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
-
 class CreateNormalOrderPaintPage extends StatefulWidget {
   final NormalOrder normalOrder;
 
@@ -64,12 +63,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   void initState() {
     super.initState();
     _assignPersonnelAndPaintData();
-    normalOrder = widget.normalOrder ?? NormalOrder(paintOrders: [], otherProducts: []);
+    normalOrder = widget.normalOrder ?? NormalOrder(products: []);
     paintTypesValues = {CreateProductViewState.METALIC: "Metalic", CreateProductViewState.AUTO_CRYL: "Auto-Cryl"};
     productTypesValues = {CreateProductViewState.PAINT: "paint", CreateProductViewState.OTHER_PRODUCTS: "others"};
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
     statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
-
 
     KeyboardVisibilityNotification().addNewListener(
       onChange: (bool visible) {
@@ -95,69 +93,71 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow,
-      height: 645,
-      child: Card(
-        color: Colors.purple,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: Card(
-                margin: EdgeInsets.all(0),
-                color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                  child: Text(
-                    "Paint Order",
-                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+        color: Colors.yellow,
+        height: 645,
+        child: Card(
+          color: Colors.purple,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  margin: EdgeInsets.all(0),
+                  color: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    child: Text(
+                      "Paint Order",
+                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-                color: Colors.green,
-                height: 592,
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 0),
-                child: SingleChildScrollView(child: Column(
-                  children: [
-                    buildTable(), 
-                    buildForm()
-                  ],
-                ),)),
-
-          ],
-        ),
-      )
-    );
+              Container(
+                  color: Colors.green,
+                  height: 592,
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [buildTable(), buildForm()],
+                    ),
+                  )),
+            ],
+          ),
+        ));
   }
 
   Widget buildTable() {
-    return Visibility(visible: !_keyboardIsVisible,child: SingleChildScrollView(child: Container(
-      height: 180,
-      color: Colors.red,
-      child: DataTable(
-        columns: [
-          DataColumn(label: Text("Color")),
-          DataColumn(label: Text("Type")), // Defines the paint type, auto-cryl/metalic
-          DataColumn(label: Text("Volume"), numeric: true), // Defines volume of the paint in ltr
-          DataColumn(label: Text("SubTotal")),
-          DataColumn(label: Text("")),
-        ],
-        rows: normalOrder.paintOrders.map((Product paintProduct) {
-          return DataRow(cells: [
-            DataCell(Text(paintProduct.name)),
-            DataCell(Text(paintProduct.type)),
-            DataCell(Text(paintProduct.quantityInCart.toString())),
-            DataCell(Text(paintProduct.subTotal.toString())),
-            DataCell(IconButton(
-              icon: Icon(Icons.exposure_minus_1),
-            )),
-          ]);
-        }).toList(),
-      ),
-    ),));
+    return Visibility(
+        visible: !_keyboardIsVisible,
+        child: SingleChildScrollView(
+          child: Container(
+            height: 180,
+            color: Colors.red,
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text("Color")),
+                DataColumn(label: Text("Type")), // Defines the paint type, auto-cryl/metalic
+                DataColumn(label: Text("Volume"), numeric: true), // Defines volume of the paint in ltr
+                DataColumn(label: Text("SubTotal")),
+                DataColumn(label: Text("")),
+              ],
+              rows: normalOrder.products.map((Product paintProduct) {
+                // todo : check type of product to be paint
+                return DataRow(cells: [
+                  DataCell(Text(paintProduct.name)),
+                  DataCell(Text(paintProduct.type)),
+                  DataCell(Text(paintProduct.quantityInCart.toString())),
+                  DataCell(Text(paintProduct.subTotal.toString())),
+                  DataCell(IconButton(
+                    icon: Icon(Icons.exposure_minus_1),
+                  )),
+                ]);
+              }).toList(),
+            ),
+          ),
+        ));
   }
 
   Widget buildForm() {
@@ -168,7 +168,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
+
                 /// Paint input
                 TypeAheadField(
                   textFieldConfiguration: TextFieldConfiguration(
@@ -278,80 +281,81 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   onFieldSubmitted: (volumeValue) {
                     _currentOnEditPaint.quantityInCart = num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(
-                      labelText: "Volume",
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
-                      suffix: Text("liter")),
+                  decoration: InputDecoration(labelText: "Volume", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("liter")),
                 ),
 
-                SizedBox(height: 8,),
-                Align(alignment: Alignment.topRight,child: OutlineButton(onPressed: (){}, child: Text("Add")),),
+                SizedBox(
+                  height: 8,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: OutlineButton(onPressed: () {}, child: Text("Add")),
+                ),
 
-                SizedBox(height: 90,),
+                SizedBox(
+                  height: 90,
+                ),
                 // To create overall order
                 Container(
                   width: 200,
                   color: Colors.blue,
                   child: normalOrder.id == null
                       ? RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    child: _doingCRUD == true
-                        ? Container(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 1,
-                        backgroundColor: Colors.white,
-                      ),
-                    )
-                        : Text(
-                      "Create Order",
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      // dont need to validate form as the corresponding product type form already do.
-
-                      // todo : create order
-                      // todo : clear all fields
-                      // todo : navigate to table page
-                    },
-                  )
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      RaisedButton(
-                          child: Text(
-                            "Update",
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
-                          ),
+                          color: Theme.of(context).primaryColor,
+                          child: _doingCRUD == true
+                              ? Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  "Create Order",
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
+                                ),
                           onPressed: () {
-                            // todo : update order
-                            // todo : clear fields
+                            // dont need to validate form as the corresponding product type form already do.
+
+                            // todo : create order
+                            // todo : clear all fields
                             // todo : navigate to table page
-                          }),
-                      OutlineButton(
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                          },
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            RaisedButton(
+                                child: Text(
+                                  "Update",
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  // todo : update order
+                                  // todo : clear fields
+                                  // todo : navigate to table page
+                                }),
+                            OutlineButton(
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                              ),
+                              onPressed: () {
+                                // todo : clear both form fields
+                              },
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          // todo : clear both form fields
-                        },
-                      ),
-                    ],
-                  ),
                 )
                 // Define inputs here.
               ],
             ),
-          )),);
+          )),
+    );
   }
-
-
-
-
 }

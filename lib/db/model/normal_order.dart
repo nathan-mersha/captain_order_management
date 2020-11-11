@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Defines normalOrder db.model
-class NormalOrder {
+class NormalOrder with ChangeNotifier{
   static const String COLLECTION_NAME = "normalOrder";
 
   /// Defines key values to extract from a map
@@ -12,9 +13,7 @@ class NormalOrder {
   static const String ID_FS = "idFs";
   static const String EMPLOYEE = "employee";
   static const String CUSTOMER = "customer";
-  static const String PAINT_ORDERS = "paintOrders";
-  static const String OTHER_PRODUCTS = "otherProducts";
-  static const String VOLUME = "volume";
+  static const String PRODUCTS = "products";
   static const String TOTAL_AMOUNT = "totalAmount";
   static const String ADVANCE_PAYMENT = "advancePayment";
   static const String REMAINING_PAYMENT = "remainingPayment";
@@ -28,9 +27,7 @@ class NormalOrder {
   String idFS;
   Personnel employee;
   Personnel customer;
-  List<Product> paintOrders;
-  List<Product> otherProducts;
-  num volume;
+  List<Product> products; // Collection of paint and other products
   num totalAmount;
   num advancePayment;
   num remainingPayment;
@@ -45,17 +42,38 @@ class NormalOrder {
       this.idFS,
       this.employee,
       this.customer,
-      this.paintOrders,
-      this.otherProducts,
-      this.volume,
+      this.products,
       this.totalAmount,
-      this.advancePayment,
+      this.advancePayment = 0,
       this.remainingPayment,
       this.paidInFull,
       this.status,
       this.userNotified,
       this.firstModified,
       this.lastModified});
+
+
+  addProduct(Product product){
+    products.add(product);
+    calculatePaymentInfo();
+    notifyListeners();
+  }
+
+  removeProduct(Product product){
+    products.remove(product);
+    calculatePaymentInfo();
+    notifyListeners();
+  }
+
+  calculatePaymentInfo(){
+    num totalAmount = 0;
+    products.forEach((Product product){
+      num subTotal = product.quantityInCart * product.unitPrice;
+      totalAmount += subTotal;
+    });
+    this.totalAmount = totalAmount;
+    this.remainingPayment = this.totalAmount - this.advancePayment;
+  }
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {
@@ -66,9 +84,7 @@ class NormalOrder {
             ID_FS: normalOrder.idFS,
             EMPLOYEE: normalOrder.employee == null ? null : jsonEncode(Personnel.toMap(normalOrder.employee)),
             CUSTOMER: normalOrder.customer == null ? null : jsonEncode(Personnel.toMap(normalOrder.customer)),
-            PAINT_ORDERS: normalOrder.paintOrders == null ? null : jsonEncode(Product.toMapList(normalOrder.paintOrders)),
-            OTHER_PRODUCTS: normalOrder.otherProducts == null ? null : jsonEncode(Product.toMapList(normalOrder.otherProducts)),
-            VOLUME: normalOrder.volume,
+            PRODUCTS: normalOrder.products == null ? null : jsonEncode(Product.toMapList(normalOrder.products)),
             TOTAL_AMOUNT: normalOrder.totalAmount,
             ADVANCE_PAYMENT: normalOrder.advancePayment,
             REMAINING_PAYMENT: normalOrder.remainingPayment,
@@ -89,9 +105,7 @@ class NormalOrder {
             idFS: map[ID_FS],
             employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
             customer: Personnel.toModel(jsonDecode(map[CUSTOMER])),
-            paintOrders: Product.toModelList(jsonDecode(map[PAINT_ORDERS])),
-            otherProducts: Product.toModelList(jsonDecode(map[OTHER_PRODUCTS])),
-            volume: map[VOLUME],
+            products: Product.toModelList(jsonDecode(map[PRODUCTS])),
             totalAmount: map[TOTAL_AMOUNT],
             advancePayment: map[ADVANCE_PAYMENT],
             remainingPayment: map[REMAINING_PAYMENT],
