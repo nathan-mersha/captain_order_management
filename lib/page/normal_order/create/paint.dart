@@ -1,11 +1,9 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/product/create_product.dart';
-import 'package:captain/rsr/kapci/manufacturers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -13,7 +11,6 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 
 class CreateNormalOrderPaintPage extends StatefulWidget {
-
   CreateNormalOrderPaintPage();
 
   @override
@@ -27,7 +24,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   // Text editing controllers
   TextEditingController _paintController = TextEditingController();
-  TextEditingController _manufacturerController = TextEditingController();
   TextEditingController _volumeController = TextEditingController();
 
   // Lists required for view to be build
@@ -37,15 +33,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   // Handles paint validation
   bool _noPaintValue = false;
 
-  // Paint type
-  List<String> paintTypes = [CreateProductViewState.METALIC, CreateProductViewState.AUTO_CRYL];
-  Map<String, String> paintTypesValues;
-  Map<String, String> productTypesValues;
-
   Product _currentOnEditPaint = Product(
     type: CreateProductViewState.PAINT,
     unitOfMeasurement: CreateProductViewState.LITER,
-    paintType: CreateProductViewState.METALIC,
+    quantityInCart: 0,
+    unitPrice: 0,
   );
 
   // Status type
@@ -59,15 +51,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   bool _doingCRUD = false;
   bool _keyboardIsVisible = false;
 
-  NormalOrder order;
-  
   @override
   void initState() {
     super.initState();
     _assignPersonnelAndPaintData();
-    
-    paintTypesValues = {CreateProductViewState.METALIC: "Metalic", CreateProductViewState.AUTO_CRYL: "Auto-Cryl"};
-    productTypesValues = {CreateProductViewState.PAINT: "paint", CreateProductViewState.OTHER_PRODUCTS: "others"};
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
     statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
 
@@ -95,6 +82,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
+
     return Container(
         height: 645,
         child: Card(
@@ -117,10 +105,15 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
               ),
               Container(
                   height: 592,
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 0),
                   child: SingleChildScrollView(
                     child: Column(
-                      children: [buildTable(), buildForm()],
+                      children: [
+                        buildTable(),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        buildForm()
+                      ],
                     ),
                   )),
             ],
@@ -128,39 +121,112 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         ));
   }
 
+  TextStyle dataCellStyle() {
+    return TextStyle(fontSize: 12, color: Colors.black54);
+  }
+
+  TextStyle dataColumnStyle() {
+    return TextStyle(
+      fontSize: 13,
+      color: Colors.black87,
+    );
+  }
+
+  bool paintInNormalOrderAvailable() {
+    return normalOrder.products.any((element) => element.type == CreateProductViewState.PAINT);
+  }
+
+  Widget noPaintAddedInNormalOrder() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.invert_colors_off,
+            color: Theme.of(context).accentColor,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "No paint product in order",
+            style: TextStyle(color: Colors.black54, fontSize: 13),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget buildTable() {
     return Visibility(
         visible: !_keyboardIsVisible,
-        child: SingleChildScrollView(
-          child: Container(
-            height: 180,
-            child: DataTable(
-              columns: [
-                DataColumn(label: Text("Color")),
-                DataColumn(label: Text("Type")), // Defines the paint type, auto-cryl/metalic
-                DataColumn(label: Text("Volume"), numeric: true), // Defines volume of the paint in ltr
-                DataColumn(label: Text("SubTotal")),
-                DataColumn(label: Text("")),
-              ],
-              rows: normalOrder.products.map((Product paintProduct) {
-                // todo : check type of product to be paint
-                return DataRow(cells: [
-                  DataCell(Text(paintProduct.name)),
-                  DataCell(Text(paintProduct.type)),
-                  DataCell(Text(paintProduct.quantityInCart.toString())),
-                  DataCell(Text(paintProduct.subTotal.toString())),
-                  DataCell(IconButton(
-                    icon: Icon(Icons.exposure_minus_1),
-                  )),
-                ]);
-              }).toList(),
-            ),
-          ),
+        child: Container(
+          height: 240,
+          child: !paintInNormalOrderAvailable()
+              ? noPaintAddedInNormalOrder()
+              : ListView(
+                  children: [
+                    DataTable(
+                      columnSpacing: 30,
+                      columns: [
+                        DataColumn(
+                            label: Text(
+                          "Color",
+                          style: dataColumnStyle(),
+                        )),
+                        DataColumn(label: Text("Type", style: dataColumnStyle())), // Defines the paint type, auto-cryl/metalic
+                        DataColumn(label: Text("Ltr", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
+                        DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
+                        DataColumn(
+                            label: SizedBox(
+                          width: 1000,
+                          child: Text("", style: dataColumnStyle()),
+                        )),
+                      ],
+                      rows: normalOrder.products.map((Product paintProduct) {
+                        return DataRow(cells: [
+                          DataCell(Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: paintProduct == null || paintProduct.colorValue == null ? Colors.black12 : Color(int.parse(paintProduct.colorValue)),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                paintProduct.name ?? "-",
+                                style: dataCellStyle(),
+                              )
+                            ],
+                          )),
+                          DataCell(Text(paintProduct.paintType ?? "-", style: dataCellStyle())),
+                          DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
+                          DataCell(Text(paintProduct.calculateSubTotal().toString(), style: dataCellStyle())),
+                          DataCell(IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              color: Colors.pink,
+                              size: 13,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                normalOrder.products.remove(paintProduct);
+                              });
+                            },
+                          )),
+                        ]);
+                      }).toList(),
+                    )
+                  ],
+                ),
         ));
   }
 
   Widget buildForm() {
     return Container(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 30, left: 30, top: 0),
       child: Form(
           key: _paintOrderFormKey,
           child: SingleChildScrollView(
@@ -213,60 +279,17 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   },
                 ),
 
-                /// Paint type input
                 SizedBox(
-                  width: double.infinity,
-                  child: DropdownButton(
-                      value: _currentOnEditPaint.paintType,
-                      hint: Text("paint type",
-                          style: TextStyle(
-                            fontSize: 12,
-                          )),
-                      isExpanded: true,
-                      iconSize: 18,
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      items: paintTypes.map<DropdownMenuItem<String>>((String paintTypeValue) {
-                        return DropdownMenuItem(
-                          child: Row(
-                            children: [
-                              Text(
-                                paintTypesValues[paintTypeValue],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          value: paintTypeValue,
-                        );
-                      }).toList(),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          _currentOnEditPaint.paintType = newValue;
-                        });
-                      }),
-                ),
-
-                /// Manufacturer type
-                SimpleAutoCompleteTextField(
-                  suggestions: KapciManufacturers.VALUES,
-                  clearOnSubmit: false,
-                  decoration: InputDecoration(labelText: "Manufacturer", contentPadding: EdgeInsets.all(0)),
-                  textCapitalization: TextCapitalization.none,
-                  controller: _manufacturerController,
-                  textSubmitted: (String manufacturerValue) {
-                    _currentOnEditPaint.manufacturer = manufacturerValue;
-                  },
+                  height: 10,
                 ),
 
                 /// Volume controller
                 TextFormField(
-                  validator: (unitPriceValue) {
-                    if (unitPriceValue.isEmpty) {
-                      return "Unit price must not be empty";
-                    } else if (num.tryParse(unitPriceValue) == null) {
-                      return "Unit price is not valid format";
+                  validator: (volumeValue) {
+                    if (volumeValue.isEmpty) {
+                      return "Volume must not be empty";
+                    } else if (num.tryParse(volumeValue) == null) {
+                      return "Volume is not valid format";
                     } else {
                       return null;
                     }
@@ -283,15 +306,42 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                 ),
 
                 SizedBox(
-                  height: 8,
+                  height: 16,
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: OutlineButton(onPressed: () {}, child: Text("Add")),
+                  child: OutlineButton(
+                      onPressed: () {
+                        if (_paintOrderFormKey.currentState.validate()) {
+                          if (_paintController.text.isEmpty) {
+                            setState(() {
+                              _noPaintValue = true;
+                            });
+                          } else {
+                            // Every thing seems good.
+                            setState(() {
+                              _noPaintValue = false;
+                              _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
+                              normalOrder.addProduct(_currentOnEditPaint);
+                              _currentOnEditPaint = Product(
+                                type: CreateProductViewState.PAINT,
+                                unitOfMeasurement: CreateProductViewState.LITER,
+                                quantityInCart: 0,
+                                unitPrice: 0,
+                              );
+                              clearInputs();
+                            });
+                          }
+                        }
+                      },
+                      child: Text(
+                        "add",
+                        style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
+                      )),
                 ),
 
                 SizedBox(
-                  height: 90,
+                  height: 70,
                 ),
                 // To create overall order
                 Container(
@@ -352,5 +402,12 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
             ),
           )),
     );
+  }
+
+  void clearInputs() {
+    setState(() {
+      _paintController.clear();
+      _volumeController.clear();
+    });
   }
 }

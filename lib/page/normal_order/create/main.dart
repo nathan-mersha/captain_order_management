@@ -18,7 +18,7 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => NormalOrder(),
+      create: (_) => NormalOrder(products: []),
       child: Container(
         height: 645,
         child: Row(
