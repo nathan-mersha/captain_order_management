@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /// Defines normalOrder db.model
 class NormalOrder with ChangeNotifier{

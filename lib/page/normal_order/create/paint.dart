@@ -10,11 +10,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:provider/provider.dart';
 
 class CreateNormalOrderPaintPage extends StatefulWidget {
-  final NormalOrder normalOrder;
 
-  CreateNormalOrderPaintPage({this.normalOrder});
+  CreateNormalOrderPaintPage();
 
   @override
   CreateNormalOrderPaintPageState createState() => CreateNormalOrderPaintPageState();
@@ -59,11 +59,13 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   bool _doingCRUD = false;
   bool _keyboardIsVisible = false;
 
+  NormalOrder order;
+  
   @override
   void initState() {
     super.initState();
     _assignPersonnelAndPaintData();
-    normalOrder = widget.normalOrder ?? NormalOrder(products: []);
+    
     paintTypesValues = {CreateProductViewState.METALIC: "Metalic", CreateProductViewState.AUTO_CRYL: "Auto-Cryl"};
     productTypesValues = {CreateProductViewState.PAINT: "paint", CreateProductViewState.OTHER_PRODUCTS: "others"};
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
@@ -92,11 +94,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   @override
   Widget build(BuildContext context) {
+    normalOrder = Provider.of<NormalOrder>(context);
     return Container(
-        color: Colors.yellow,
         height: 645,
         child: Card(
-          color: Colors.purple,
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -115,7 +116,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                 ),
               ),
               Container(
-                  color: Colors.green,
                   height: 592,
                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 0),
                   child: SingleChildScrollView(
@@ -134,7 +134,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         child: SingleChildScrollView(
           child: Container(
             height: 180,
-            color: Colors.red,
             child: DataTable(
               columns: [
                 DataColumn(label: Text("Color")),
@@ -162,7 +161,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   Widget buildForm() {
     return Container(
-      color: Colors.lightGreenAccent,
       child: Form(
           key: _paintOrderFormKey,
           child: SingleChildScrollView(
@@ -298,7 +296,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                 // To create overall order
                 Container(
                   width: 200,
-                  color: Colors.blue,
                   child: normalOrder.id == null
                       ? RaisedButton(
                           color: Theme.of(context).primaryColor,
@@ -308,7 +305,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 1,
-                                    backgroundColor: Colors.white,
                                   ),
                                 )
                               : Text(
@@ -316,7 +312,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w800,
-                                    color: Colors.white,
                                   ),
                                 ),
                           onPressed: () {
@@ -333,7 +328,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                             RaisedButton(
                                 child: Text(
                                   "Update",
-                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
                                 ),
                                 onPressed: () {
                                   // todo : update order
