@@ -1,6 +1,7 @@
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
@@ -34,15 +35,19 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    return Card(child: Container(child: Row(children: [
+    return Card(child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(children: [
 
       // Column
-      Column(children: [
-        Text("Customer Information",),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
         SizedBox(
           width: 200,
-          height: 100,
+          height: 30,
           child: TypeAheadField(
           textFieldConfiguration: TextFieldConfiguration(
               controller: _customerController,
@@ -103,7 +108,14 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
               ),
             );
           },
-        ),)
+        ),),
+
+          GestureDetector(onTap: (){
+            // todo : call user here
+          },child: Text("phone number", style: TextStyle(color: Theme.of(context).primaryColor),),),
+        Text("user email"),
+        Text("user address")
+
       ],)
     ],),),);
   }

@@ -3,7 +3,9 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/page/normal_order/create/paint.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -138,10 +140,18 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 75,),
           Icon(
-            Icons.offline_bolt,
+            Icons.flash_off,
             color: Theme.of(context).accentColor,
           ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "No other product in order",
+            style: TextStyle(color: Colors.black54, fontSize: 13),
+          )
         ],
       ),
     );
@@ -168,34 +178,35 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                         DataColumn(label: Text("Unit Price", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Delivered", style: dataColumnStyle())),
-                        DataColumn(
-
-                            label: Text("", style: dataColumnStyle())),
                       ],
                       rows: normalOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
                         return DataRow(cells: [
-                          DataCell(Text(
+                          DataCell(GestureDetector(child: Text(
                             otherProduct.name ?? "-",
-                            style: dataCellStyle(),
-                          )),
+                            style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                          ),onDoubleTap: (){
+
+                            setState(() {
+                              normalOrder.products.remove(otherProduct);
+                            });
+                            CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+
+
+                          },)),
                           DataCell(Container(width: 20,child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),)),
                           DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(Switch(
-                            value: true,
-                          )),
-                          DataCell(SizedBox(width: 1,child: IconButton(
-                            icon: Icon(
-                              Icons.delete_outline,
-                              color: Colors.red.withOpacity(0.5),
-                              size: 13,
-                            ),
-                            onPressed: () {
+
+                            value: otherProduct.status == CreateNormalOrderPaintPageState.DELIVERED,
+                            onChanged: (bool changed){
+
                               setState(() {
-                                normalOrder.products.remove(otherProduct);
+                                otherProduct.status = changed ? CreateNormalOrderPaintPageState.DELIVERED : CreateNormalOrderPaintPageState.PENDING;
+
                               });
                             },
-                          ),)),
+                          )),
                         ]);
                       }).toList(),
                     )
@@ -212,9 +223,6 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-//                  height: 5,
-                ),
 
                 /// Paint input
                 TypeAheadField(
@@ -276,7 +284,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                   onFieldSubmitted: (volumeValue) {
                     currentOnEditProduct.quantityInCart = num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(labelText: "Volume", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("liter")),
+                  decoration: InputDecoration(labelText: "Quantity", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text(currentOnEditProduct.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(

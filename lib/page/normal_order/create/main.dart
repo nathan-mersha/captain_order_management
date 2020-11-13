@@ -24,11 +24,10 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
         child: Row(
           children: [
             // Create paint order
-            Expanded(flex: 2, child: CreateNormalOrderPaintPage()), // todo : pass Normal order model.
+            Expanded(child: CreateNormalOrderPaintPage()), // todo : pass Normal order model.
 
             // Other product & information section
             Expanded(
-                flex: 3,
                 child: Container(
                   child: Column(
                     children: [

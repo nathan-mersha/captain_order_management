@@ -2,6 +2,7 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -33,6 +34,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   Product _currentOnEditPaint = Product(
     type: CreateProductViewState.PAINT,
     unitOfMeasurement: CreateProductViewState.LITER,
+    status: PENDING,
     quantityInCart: 0,
     unitPrice: 0,
   );
@@ -104,7 +106,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                         SizedBox(
                           height: 30,
                         ),
-                        buildForm()
+                        Row(
+                          children: [Expanded(child: Container()), Expanded(flex: 2, child: buildForm())],
+                        ),
+                        buildCreateOrder()
                       ],
                     ),
                   )),
@@ -126,6 +131,61 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   bool paintInNormalOrderAvailable() {
     return normalOrder.products.any((element) => element.type == CreateProductViewState.PAINT);
+  }
+
+  Widget buildCreateOrder() {
+    return Container(
+      width: 200,
+      child: normalOrder.id == null
+          ? RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: _doingCRUD == true
+                  ? Container(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                      ),
+                    )
+                  : Text(
+                      "Create Order",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+              onPressed: () {
+                // don't need to validate form as the corresponding product type form already do.
+                // todo : create order
+                // todo : clear all fields
+                // todo : navigate to table page
+              },
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                    child: Text(
+                      "Update",
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+                    ),
+                    onPressed: () {
+                      // todo : update order
+                      // todo : clear fields
+                      // todo : navigate to table page
+                    }),
+                OutlineButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () {
+                    // todo : clear both form fields
+                  },
+                ),
+              ],
+            ),
+    );
   }
 
   Widget noPaintAddedInNormalOrder() {
@@ -169,51 +229,86 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                         DataColumn(label: Text("Type", style: dataColumnStyle())), // Defines the paint type, auto-cryl/metalic
                         DataColumn(label: Text("Ltr", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
-                        DataColumn(
-                            label: SizedBox(
-                          width: 1000,
-                          child: Text("", style: dataColumnStyle()),
-                        )),
+                        DataColumn(label: Text("Status", style: dataColumnStyle())),
                       ],
                       rows: normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
                         return DataRow(cells: [
-                          DataCell(Row(
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                size: 10,
-                                color: paintProduct == null || paintProduct.colorValue == null ? Colors.black12 : Color(int.parse(paintProduct.colorValue)),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                paintProduct.name ?? "-",
-                                style: dataCellStyle(),
-                              )
-                            ],
+                          DataCell(GestureDetector(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  size: 10,
+                                  color: paintProduct == null || paintProduct.colorValue == null ? Colors.black12 : Color(int.parse(paintProduct.colorValue)),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  paintProduct.name ?? "-",
+                                  style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                                )
+                              ],
+                            ),
+                            onDoubleTap: () {
+                              setState(() {
+                                normalOrder.products.remove(paintProduct);
+                              });
+                              CNotifications.showSnackBar(context, "Successfuly removed ${paintProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                            },
                           )),
                           DataCell(Text(paintProduct.paintType ?? "-", style: dataCellStyle())),
                           DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
                           DataCell(Text(paintProduct.calculateSubTotal().toString(), style: dataCellStyle())),
-                          DataCell(IconButton(
-                            icon: Icon(
-                              Icons.clear,
-                              color: Colors.pink,
-                              size: 13,
+                          DataCell(
+                            SizedBox(
+                              width: double.infinity,
+                              child: DropdownButton(
+                                  value: paintProduct.status,
+                                  isExpanded: true,
+                                  iconSize: 16,
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: getStatusColor(paintProduct.status),
+                                  ),
+                                  items: statusTypes.map<DropdownMenuItem<String>>((String statusValue) {
+                                    return DropdownMenuItem(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            statusTypeValues[statusValue],
+                                            style: TextStyle(fontSize: 12, color: getStatusColor(statusValue)),
+                                          ),
+                                        ],
+                                      ),
+                                      value: statusValue,
+                                    );
+                                  }).toList(),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      paintProduct.status = newValue;
+                                    });
+                                  }),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                normalOrder.products.remove(paintProduct);
-                              });
-                            },
-                          )),
+                          ),
                         ]);
                       }).toList(),
                     )
                   ],
                 ),
         ));
+  }
+
+  Color getStatusColor(String status){
+    if(status ==  PENDING){
+      return Colors.orange;
+    }else if(status == COMPLETED){
+      return Colors.green;
+    }else if(status == DELIVERED){
+      return Colors.blue;
+    }else{
+      return Colors.black54;
+    }
   }
 
   Widget buildForm() {
@@ -315,9 +410,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               _noPaintValue = false;
                               _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
                               normalOrder.addProduct(_currentOnEditPaint);
+                              _currentOnEditPaint.status = PENDING;
                               _currentOnEditPaint = Product(
                                 type: CreateProductViewState.PAINT,
                                 unitOfMeasurement: CreateProductViewState.LITER,
+                                status: PENDING,
                                 quantityInCart: 0,
                                 unitPrice: 0,
                               );
@@ -335,61 +432,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                 SizedBox(
                   height: 70,
                 ),
-                // To create overall order
-                Container(
-                  width: 200,
-                  child: normalOrder.id == null
-                      ? RaisedButton(
-                          color: Theme.of(context).primaryColor,
-                          child: _doingCRUD == true
-                              ? Container(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                  ),
-                                )
-                              : Text(
-                                  "Create Order",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                          onPressed: () {
-                            // dont need to validate form as the corresponding product type form already do.
-
-                            // todo : create order
-                            // todo : clear all fields
-                            // todo : navigate to table page
-                          },
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            RaisedButton(
-                                child: Text(
-                                  "Update",
-                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
-                                ),
-                                onPressed: () {
-                                  // todo : update order
-                                  // todo : clear fields
-                                  // todo : navigate to table page
-                                }),
-                            OutlineButton(
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
-                              ),
-                              onPressed: () {
-                                // todo : clear both form fields
-                              },
-                            ),
-                          ],
-                        ),
-                )
-                // Define inputs here.
               ],
             ),
           )),
