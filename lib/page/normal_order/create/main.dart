@@ -33,7 +33,7 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
                   child: Column(
                     children: [
                       // Other product
-                      Expanded(flex: 3, child: CreateNormalOrderOtherProductPage()), // todo : pass Normal order model.
+                      Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()), // todo : pass Normal order model.
 
                       // Customer and Payment information page
                       Expanded(

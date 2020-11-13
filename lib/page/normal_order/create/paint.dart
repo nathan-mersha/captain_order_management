@@ -1,7 +1,5 @@
-import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
-import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +26,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   // Lists required for view to be build
   List<Product> _paints = [];
-  List<Personnel> _customers = [];
 
   // Handles paint validation
   bool _noPaintValue = false;
@@ -54,7 +51,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   @override
   void initState() {
     super.initState();
-    _assignPersonnelAndPaintData();
+    _assignPaintData();
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
     statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
 
@@ -65,12 +62,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     );
   }
 
-  Future<bool> _assignPersonnelAndPaintData() async {
-    // Assigning employees data.
-    String wherePersonnel = "${Personnel.TYPE} = ?";
-    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
-    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
-
+  Future<bool> _assignPaintData() async {
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
     List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
@@ -183,7 +175,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                           child: Text("", style: dataColumnStyle()),
                         )),
                       ],
-                      rows: normalOrder.products.map((Product paintProduct) {
+                      rows: normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
                         return DataRow(cells: [
                           DataCell(Row(
                             children: [
