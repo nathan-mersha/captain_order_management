@@ -5,15 +5,19 @@ import 'package:flutter/material.dart';
 
 class NormalOrderMainPage extends StatefulWidget {
   @override
-  _NormalOrderMainPageState createState() => _NormalOrderMainPageState();
+  NormalOrderMainPageState createState() => NormalOrderMainPageState();
 }
 
-class _NormalOrderMainPageState extends State<NormalOrderMainPage> {
+class NormalOrderMainPageState extends State<NormalOrderMainPage> {
   static const String PAGE_CREATE_NORMAL_ORDER = "PAGE_CREATE_NORMAL_ORDER";
   static const String PAGE_VIEW_NORMAL_ORDER = "PAGE_VIEW_NORMAL_ORDER";
 
   String currentPage = PAGE_CREATE_NORMAL_ORDER; // TODO : default page change to PAGE_VIEW_NORMAL_ORDER on release
-  NormalOrder normalOrder;
+
+  static const String PENDING = "Pending"; // values not translatables
+  static const String COMPLETED = "Completed"; // value not translatable
+  static const String DELIVERED = "Delivered"; // value not translatable
+  NormalOrder normalOrder = NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment : 0, userNotified: false, status: PENDING, products: []);
 
   @override
   Widget build(BuildContext context) {

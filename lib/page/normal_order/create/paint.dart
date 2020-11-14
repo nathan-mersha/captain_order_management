@@ -1,6 +1,7 @@
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,16 +35,14 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   Product _currentOnEditPaint = Product(
     type: CreateProductViewState.PAINT,
     unitOfMeasurement: CreateProductViewState.LITER,
-    status: PENDING,
+    status: NormalOrderMainPageState.PENDING,
     quantityInCart: 0,
     unitPrice: 0,
   );
 
   // Status type
-  static const String PENDING = "Pending"; // values not translatables
-  static const String COMPLETED = "Completed"; // value not translatable
-  static const String DELIVERED = "Delivered"; // value not translatable
-  List<String> statusTypes = [PENDING, COMPLETED, DELIVERED];
+
+  List<String> statusTypes = [NormalOrderMainPageState.PENDING, NormalOrderMainPageState.COMPLETED, NormalOrderMainPageState.DELIVERED];
   Map<String, String> statusTypeValues;
   Map<String, String> measurementTypesValues;
 
@@ -55,7 +54,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     super.initState();
     _assignPaintData();
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
-    statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
+    statusTypeValues = {NormalOrderMainPageState.PENDING: "pending", NormalOrderMainPageState.COMPLETED: "completed", NormalOrderMainPageState.DELIVERED: "delivered"};
 
     KeyboardVisibilityNotification().addNewListener(
       onChange: (bool visible) {
@@ -300,11 +299,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   }
 
   Color getStatusColor(String status){
-    if(status ==  PENDING){
+    if(status == NormalOrderMainPageState.PENDING){
       return Colors.orange;
-    }else if(status == COMPLETED){
+    }else if(status == NormalOrderMainPageState.COMPLETED){
       return Colors.green;
-    }else if(status == DELIVERED){
+    }else if(status == NormalOrderMainPageState.DELIVERED){
       return Colors.blue;
     }else{
       return Colors.black54;
@@ -410,11 +409,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               _noPaintValue = false;
                               _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
                               normalOrder.addProduct(_currentOnEditPaint);
-                              _currentOnEditPaint.status = PENDING;
+                              _currentOnEditPaint.status = NormalOrderMainPageState.PENDING;
                               _currentOnEditPaint = Product(
                                 type: CreateProductViewState.PAINT,
                                 unitOfMeasurement: CreateProductViewState.LITER,
-                                status: PENDING,
+                                status: NormalOrderMainPageState.PENDING,
                                 quantityInCart: 0,
                                 unitPrice: 0,
                               );

@@ -56,13 +56,11 @@ class NormalOrder with ChangeNotifier{
   addProduct(Product product){
     products.add(product);
     calculatePaymentInfo();
-    notifyListeners();
   }
 
   removeProduct(Product product){
     products.remove(product);
     calculatePaymentInfo();
-    notifyListeners();
   }
 
   calculatePaymentInfo(){
@@ -73,7 +71,15 @@ class NormalOrder with ChangeNotifier{
     });
     this.totalAmount = totalAmount;
     this.remainingPayment = this.totalAmount - this.advancePayment;
+    if(remainingPayment == 0){
+      this.paidInFull = true;
+      this.advancePayment = this.totalAmount;
+    }
+    notifyListeners();
   }
+
+
+
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {

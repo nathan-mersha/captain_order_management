@@ -1,7 +1,7 @@
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
-import 'package:captain/page/normal_order/create/paint.dart';
+import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -196,11 +196,11 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(Switch(
 
-                            value: otherProduct.status == CreateNormalOrderPaintPageState.DELIVERED,
+                            value: otherProduct.status == NormalOrderMainPageState.DELIVERED,
                             onChanged: (bool changed){
 
                               setState(() {
-                                otherProduct.status = changed ? CreateNormalOrderPaintPageState.DELIVERED : CreateNormalOrderPaintPageState.PENDING;
+                                otherProduct.status = changed ? NormalOrderMainPageState.DELIVERED : NormalOrderMainPageState.PENDING;
 
                               });
                             },

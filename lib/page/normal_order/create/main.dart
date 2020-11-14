@@ -10,6 +10,7 @@ class NormalOrderCreateMainPage extends StatefulWidget {
   final NormalOrder normalOrder;
 
   NormalOrderCreateMainPage({this.normalOrder});
+
   @override
   _NormalOrderCreateMainPageState createState() => _NormalOrderCreateMainPageState();
 }
@@ -23,14 +24,20 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
     super.initState();
     _focusCustomer.addListener(() {
       setState(() {
-        focusOnLowerElements = _focusCustomer.hasFocus || _focusPayment.hasFocus;
+        focusOnLowerElements = _focusCustomer.hasFocus;
+      });
+    });
+    _focusPayment.addListener(() {
+      setState(() {
+        focusOnLowerElements = _focusPayment.hasFocus;
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => NormalOrder(products: []),
+      create: (_) => widget.normalOrder,
       child: Container(
         height: 645,
         child: Row(
@@ -41,32 +48,46 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
             // Other product & information section
             Expanded(
                 child: Container(
-                  child: Column(
-                    children: [
-
-                      // Other product
-                      /// Not visible when focus
-                      Visibility(child: Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()), visible: !focusOnLowerElements,),
-
-                      // Customer and Payment information page
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                            child: Row(
-                              children: [
-                                // Customer information
-                                Expanded(child: NormalOrderCustomerInformationPage(focus: _focusCustomer,)), // todo : pass Normal order model.
-                                // Payment information
-                                Expanded(child: NormalOrderPaymentInformationPage()) // todo : pass Normal order model.
-                              ],
-                            ),
-                          )),
-
-                      /// visible only when focusing on customer and payment info
-                      Visibility(child: Expanded(flex: 2, child: Container(),), visible: focusOnLowerElements,)
-                    ],
+              child: Column(
+                children: [
+                  // Other product
+                  /// Not visible when focus
+                  Visibility(
+                    child: Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()),
+                    visible: !focusOnLowerElements,
                   ),
-                )),
+
+                  // Customer and Payment information page
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            // Customer information
+                            Expanded(
+                                child: NormalOrderCustomerInformationPage(
+                              focus: _focusCustomer,
+                            )), // todo : pass Normal order model.
+                            // Payment information
+                            Expanded(
+                                child: NormalOrderPaymentInformationPage(
+                              focus: _focusPayment,
+                            )) // todo : pass Normal order model.
+                          ],
+                        ),
+                      )),
+
+                  /// visible only when focusing on customer and payment info
+                  Visibility(
+                    child: Expanded(
+                      flex: 2,
+                      child: Container(),
+                    ),
+                    visible: focusOnLowerElements,
+                  )
+                ],
+              ),
+            )),
           ],
         ),
       ),
