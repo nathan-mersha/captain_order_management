@@ -25,6 +25,7 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
         child: currentPage == PAGE_CREATE_NORMAL_ORDER
             ? NormalOrderCreateMainPage(
                 normalOrder: normalOrder,
+                navigateTo: changePage,
               )
             : ViewNormalOrderPage());
   }

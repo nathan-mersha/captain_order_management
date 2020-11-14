@@ -1,3 +1,4 @@
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
@@ -7,11 +8,15 @@ import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
+import 'package:sms/sms.dart';
 
 class CreateNormalOrderPaintPage extends StatefulWidget {
-  CreateNormalOrderPaintPage();
+  final Function navigateTo;
+
+  CreateNormalOrderPaintPage({this.navigateTo});
 
   @override
   CreateNormalOrderPaintPageState createState() => CreateNormalOrderPaintPageState();
@@ -48,6 +53,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   bool _doingCRUD = false;
   bool _keyboardIsVisible = false;
+
+  final oCCy = NumberFormat("#,##0.00", "en_US");
 
   @override
   void initState() {
@@ -155,9 +162,16 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                     ),
               onPressed: () {
                 // don't need to validate form as the corresponding product type form already do.
-                // todo : create order
-                // todo : clear all fields
-                // todo : navigate to table page
+                if(normalOrder.products.length == 0){ // No products added
+                  CNotifications.showSnackBar(context, "No products have been added in cart", "ok", () {}, backgroundColor: Colors.red);
+                }else if(normalOrder.customer == null){ // No customer added
+                  CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
+                }else{
+                  // Everything seems ok
+                  NormalOrderDAL.create(normalOrder).then((value){
+                    widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
+                  });
+                }
               },
             )
           : Row(
@@ -286,6 +300,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   onChanged: (String newValue) {
                                     setState(() {
                                       paintProduct.status = newValue;
+                                      allPaintOrdersHaveBeenCompleted(normalOrder);
                                     });
                                   }),
                             ),
@@ -298,14 +313,39 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         ));
   }
 
-  Color getStatusColor(String status){
-    if(status == NormalOrderMainPageState.PENDING){
+  allPaintOrdersHaveBeenCompleted(NormalOrder normalOrder) {
+    if (normalOrder.customer != null && normalOrder.customer.phoneNumber != null) {
+      bool allPaintsCompleted = normalOrder.products.every((Product product) {
+        if (product.type == CreateProductViewState.PAINT) {
+          return product.status == NormalOrderMainPageState.COMPLETED;
+        } else {
+          return true;
+        }
+      });
+
+      if (allPaintsCompleted) {
+        String smsMessage = "Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())}, has been completed."
+            "\n Total amount ${oCCy.format(normalOrder.totalAmount)}br "
+            "\n Advance payment ${oCCy.format(normalOrder.advancePayment)}br"
+            "\n Remaining payment ${oCCy.format(normalOrder.remainingPayment)}br";
+
+        SmsSender sender = SmsSender();
+        SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);
+        sender.sendSms(message);
+        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.red);
+
+      }
+    }
+  }
+
+  Color getStatusColor(String status) {
+    if (status == NormalOrderMainPageState.PENDING) {
       return Colors.orange;
-    }else if(status == NormalOrderMainPageState.COMPLETED){
+    } else if (status == NormalOrderMainPageState.COMPLETED) {
       return Colors.green;
-    }else if(status == NormalOrderMainPageState.DELIVERED){
+    } else if (status == NormalOrderMainPageState.DELIVERED) {
       return Colors.blue;
-    }else{
+    } else {
       return Colors.black54;
     }
   }

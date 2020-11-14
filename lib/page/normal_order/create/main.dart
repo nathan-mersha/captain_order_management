@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 class NormalOrderCreateMainPage extends StatefulWidget {
   final NormalOrder normalOrder;
-
-  NormalOrderCreateMainPage({this.normalOrder});
+  final Function navigateTo;
+  NormalOrderCreateMainPage({this.normalOrder, this.navigateTo});
 
   @override
   _NormalOrderCreateMainPageState createState() => _NormalOrderCreateMainPageState();
@@ -43,7 +43,7 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
         child: Row(
           children: [
             // Create paint order
-            Expanded(child: CreateNormalOrderPaintPage()), // todo : pass Normal order model.
+            Expanded(child: CreateNormalOrderPaintPage(navigateTo: widget.navigateTo,)), // todo : pass Normal order model.
 
             // Other product & information section
             Expanded(
