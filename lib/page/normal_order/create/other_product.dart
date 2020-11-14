@@ -1,7 +1,5 @@
-import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
-import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/create/paint.dart';
 import 'package:captain/page/product/create_product.dart';

@@ -15,6 +15,18 @@ class NormalOrderCreateMainPage extends StatefulWidget {
 }
 
 class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
+  FocusNode _focusCustomer = FocusNode();
+  FocusNode _focusPayment = FocusNode();
+  bool focusOnLowerElements = false;
+  @override
+  void initState() {
+    super.initState();
+    _focusCustomer.addListener(() {
+      setState(() {
+        focusOnLowerElements = _focusCustomer.hasFocus || _focusPayment.hasFocus;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -31,8 +43,10 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
                 child: Container(
                   child: Column(
                     children: [
+
                       // Other product
-                      Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()), // todo : pass Normal order model.
+                      /// Not visible when focus
+                      Visibility(child: Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()), visible: !focusOnLowerElements,),
 
                       // Customer and Payment information page
                       Expanded(
@@ -41,12 +55,15 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
                             child: Row(
                               children: [
                                 // Customer information
-                                Expanded(child: NormalOrderCustomerInformationPage()), // todo : pass Normal order model.
+                                Expanded(child: NormalOrderCustomerInformationPage(focus: _focusCustomer,)), // todo : pass Normal order model.
                                 // Payment information
                                 Expanded(child: NormalOrderPaymentInformationPage()) // todo : pass Normal order model.
                               ],
                             ),
-                          ))
+                          )),
+
+                      /// visible only when focusing on customer and payment info
+                      Visibility(child: Expanded(flex: 2, child: Container(),), visible: focusOnLowerElements,)
                     ],
                   ),
                 )),

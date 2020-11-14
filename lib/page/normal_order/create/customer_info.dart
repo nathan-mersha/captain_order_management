@@ -1,12 +1,18 @@
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NormalOrderCustomerInformationPage extends StatefulWidget {
+  final FocusNode focus;
+
+  NormalOrderCustomerInformationPage({this.focus});
+
   @override
   _NormalOrderCustomerInformationPageState createState() => _NormalOrderCustomerInformationPageState();
 }
@@ -35,88 +41,133 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    return Card(child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Row(children: [
-
-      // Column
-      Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-        SizedBox(
-          width: 200,
-          height: 30,
-          child: TypeAheadField(
-          textFieldConfiguration: TextFieldConfiguration(
-              controller: _customerController,
-              maxLines: 1,
-              decoration: InputDecoration(
-                  hintText: "Select customer",
-                  labelText: "Customer",
-                  icon: normalOrder == null || normalOrder.customer == null || normalOrder.customer.profileImage == null
-                      ? Icon(
-                    Icons.person_pin,
-                    color: Colors.black12,
-                    size: 30,
-                  )
-                      : ClipOval(
-                    child: Image.memory(
-                      normalOrder.customer.profileImage,
-                      fit: BoxFit.cover,
-                      height: 30,
-                      width: 30,
+    return Card(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Customer Information",
+              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+            ),
+            SizedBox(
+              height: 18,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    height: 30,
+                    child: TypeAheadField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                          focusNode: widget.focus,
+                          controller: _customerController,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                              hintText: "customer name",
+                              icon: normalOrder == null || normalOrder.customer == null || normalOrder.customer.profileImage == null
+                                  ? Icon(
+                                      Icons.person_pin,
+                                      color: Colors.black12,
+                                      size: 30,
+                                    )
+                                  : ClipOval(
+                                      child: Image.memory(
+                                        normalOrder.customer.profileImage,
+                                        fit: BoxFit.cover,
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ))),
+                      suggestionsCallback: (pattern) async {
+                        return _customers.where((Personnel customer) {
+                          return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                        });
+                      },
+                      itemBuilder: (context, Personnel suggestedCustomer) {
+                        return ListTile(
+                          dense: true,
+                          leading: suggestedCustomer.profileImage == null
+                              ? Icon(
+                                  Icons.person,
+                                  color: Colors.black12,
+                                )
+                              : ClipOval(
+                                  child: Image.memory(
+                                    suggestedCustomer.profileImage,
+                                    fit: BoxFit.cover,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                ),
+                          title: Text(suggestedCustomer.name),
+                          subtitle: Text(suggestedCustomer.phoneNumber),
+                        );
+                      },
+                      onSuggestionSelected: (Personnel selectedCustomer) {
+                        setState(() {
+                          _customerController.text = selectedCustomer.name;
+                          normalOrder.customer = selectedCustomer;
+                        });
+                      },
+                      noItemsFoundBuilder: (BuildContext context) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                          child: Text(
+                            "No customer found",
+                          ),
+                        );
+                      },
                     ),
-                  ))),
-          suggestionsCallback: (pattern) async {
-            return _customers.where((Personnel customer) {
-              return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
-            });
-          },
-          itemBuilder: (context, Personnel suggestedCustomer) {
-            return ListTile(
-              dense: true,
-              leading: suggestedCustomer.profileImage == null
-                  ? Icon(
-                Icons.person,
-                color: Colors.black12,
-              )
-                  : ClipOval(
-                child: Image.memory(
-                  suggestedCustomer.profileImage,
-                  fit: BoxFit.cover,
-                  height: 30,
-                  width: 30,
-                ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      if (normalOrder.customer != null && normalOrder.customer.phoneNumber != null) {
+                        String launchURL = 'tel:${normalOrder.customer.phoneNumber}';
+                        _makePhoneCall(launchURL);
+                      } else {
+                        CNotifications.showSnackBar(context, "No phone provided", "failed", () {}, backgroundColor: Colors.red);
+                      }
+                    },
+                    child: Text(
+                      getPhoneNumber(),
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                  Text(
+                    getEmail(),
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  Text(getAddress(), style: TextStyle(color: Colors.black54))
+                ],
               ),
-              title: Text(suggestedCustomer.name),
-              subtitle: Text(suggestedCustomer.phoneNumber),
-            );
-          },
-          onSuggestionSelected: (Personnel selectedCustomer) {
-            setState(() {
-              _customerController.text = selectedCustomer.name;
-              normalOrder.customer = selectedCustomer;
-            });
-          },
-          noItemsFoundBuilder: (BuildContext context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
-              child: Text(
-                "No customer found",
-              ),
-            );
-          },
-        ),),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-          GestureDetector(onTap: (){
-            // todo : call user here
-          },child: Text("phone number", style: TextStyle(color: Theme.of(context).primaryColor),),),
-        Text("user email"),
-        Text("user address")
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    }
+  }
 
-      ],)
-    ],),),);
+  String getPhoneNumber() {
+    return normalOrder.customer == null || normalOrder.customer.phoneNumber == null ? "no phone number" : normalOrder.customer.phoneNumber;
+  }
+
+  String getEmail() {
+    return normalOrder.customer == null || normalOrder.customer.email == null ? "no email" : normalOrder.customer.email;
+  }
+
+  String getAddress() {
+    return normalOrder.customer == null || normalOrder.customer.address == null ? "no address" : normalOrder.customer.address;
   }
 }
