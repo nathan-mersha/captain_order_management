@@ -105,7 +105,9 @@ class Personnel {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<Personnel> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((Personnel model) {
+    models == null
+        ? []
+        : models.forEach((Personnel model) {
       mapList.add(toMap(model));
     });
     return mapList;

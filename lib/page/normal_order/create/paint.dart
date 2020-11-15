@@ -1,5 +1,7 @@
+import 'package:captain/db/dal/message.dart';
 import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
+import 'package:captain/db/model/message.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/main.dart';
@@ -162,13 +164,15 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                     ),
               onPressed: () {
                 // don't need to validate form as the corresponding product type form already do.
-                if(normalOrder.products.length == 0){ // No products added
+                if (normalOrder.products.length == 0) {
+                  // No products added
                   CNotifications.showSnackBar(context, "No products have been added in cart", "ok", () {}, backgroundColor: Colors.red);
-                }else if(normalOrder.customer == null){ // No customer added
+                } else if (normalOrder.customer == null) {
+                  // No customer added
                   CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
-                }else{
+                } else {
                   // Everything seems ok
-                  NormalOrderDAL.create(normalOrder).then((value){
+                  NormalOrderDAL.create(normalOrder).then((value) {
                     widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
                   });
                 }
@@ -300,7 +304,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   onChanged: (String newValue) {
                                     setState(() {
                                       paintProduct.status = newValue;
-                                      allPaintOrdersHaveBeenCompleted(normalOrder);
+                                      notifyUserViaSMS(normalOrder);
                                     });
                                   }),
                             ),
@@ -313,7 +317,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         ));
   }
 
-  allPaintOrdersHaveBeenCompleted(NormalOrder normalOrder) {
+  notifyUserViaSMS(NormalOrder normalOrder) async {
     if (normalOrder.customer != null && normalOrder.customer.phoneNumber != null) {
       bool allPaintsCompleted = normalOrder.products.every((Product product) {
         if (product.type == CreateProductViewState.PAINT) {
@@ -325,15 +329,26 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
       if (allPaintsCompleted) {
         String smsMessage = "Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())}, has been completed."
+            "\n Your outstanding is : "
             "\n Total amount ${oCCy.format(normalOrder.totalAmount)}br "
             "\n Advance payment ${oCCy.format(normalOrder.advancePayment)}br"
-            "\n Remaining payment ${oCCy.format(normalOrder.remainingPayment)}br";
+            "\n Remaining payment ${oCCy.format(normalOrder.remainingPayment)}br"
+            "\n Kapci Paints";
 
         SmsSender sender = SmsSender();
         SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);
         sender.sendSms(message);
-        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.red);
 
+        Message sentMessage = Message(recipient: normalOrder.customer.name, body: smsMessage);
+        MessageDAL.create(sentMessage);
+
+        normalOrder.userNotified = true;
+
+        String where = "${Product.ID} = ?";
+        List<String> whereArgs = [normalOrder.id];
+        await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
+
+        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.red);
       }
     }
   }

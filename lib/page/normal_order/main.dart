@@ -12,7 +12,7 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
   static const String PAGE_CREATE_NORMAL_ORDER = "PAGE_CREATE_NORMAL_ORDER";
   static const String PAGE_VIEW_NORMAL_ORDER = "PAGE_VIEW_NORMAL_ORDER";
 
-  String currentPage = PAGE_CREATE_NORMAL_ORDER; // TODO : default page change to PAGE_VIEW_NORMAL_ORDER on release
+  String currentPage = PAGE_VIEW_NORMAL_ORDER; // TODO : default page change to PAGE_VIEW_NORMAL_ORDER on release
 
   static const String PENDING = "Pending"; // values not translatables
   static const String COMPLETED = "Completed"; // value not translatable
@@ -27,13 +27,15 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
                 normalOrder: normalOrder,
                 navigateTo: changePage,
               )
-            : ViewNormalOrderPage());
+            : NormalOrderTablePage(navigateTo:changePage));
   }
 
   changePage(String pageName, {NormalOrder passedNormalOrder}) {
     setState(() {
       currentPage = pageName;
-      normalOrder = passedNormalOrder;
+      if(passedNormalOrder != null){
+        normalOrder = passedNormalOrder; // normal order passed for update reasons
+      }
     });
   }
 }

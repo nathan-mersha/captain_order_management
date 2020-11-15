@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 import 'package:uuid/uuid.dart';
@@ -44,21 +48,26 @@ class NormalOrderDAL {
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
-      return NormalOrder(
+      NormalOrder n = NormalOrder(
         id: maps[i][NormalOrder.ID],
         idFS: maps[i][NormalOrder.ID_FS],
-        employee: maps[i][NormalOrder.EMPLOYEE],
-        customer: maps[i][NormalOrder.CUSTOMER],
-        products: maps[i][NormalOrder.PRODUCTS],
+        employee: Personnel.toModel(jsonDecode(maps[i][NormalOrder.EMPLOYEE])),
+        customer: Personnel.toModel(jsonDecode(maps[i][NormalOrder.CUSTOMER])),
+        products: Product.toModelList(jsonDecode(maps[i][NormalOrder.PRODUCTS])),
         totalAmount: maps[i][NormalOrder.TOTAL_AMOUNT],
         advancePayment: maps[i][NormalOrder.ADVANCE_PAYMENT],
         remainingPayment: maps[i][NormalOrder.REMAINING_PAYMENT],
-        paidInFull: maps[i][NormalOrder.PAID_IN_FULL],
+        paidInFull: maps[i][NormalOrder.PAID_IN_FULL] == 1 ? true : false,
         status: maps[i][NormalOrder.STATUS],
-        userNotified: maps[i][NormalOrder.USER_NOTIFIED],
+        userNotified: maps[i][NormalOrder.USER_NOTIFIED] == 1 ? true : false,
         firstModified: DateTime.parse(maps[i][NormalOrder.FIRST_MODIFIED]),
         lastModified: DateTime.parse(maps[i][NormalOrder.LAST_MODIFIED]),
       );
+
+
+
+      print("n to map : ${NormalOrder.toMap(n)}");
+      return n;
     });
   }
 

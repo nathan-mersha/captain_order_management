@@ -97,7 +97,9 @@ class SpecialOrder {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<SpecialOrder> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((SpecialOrder model) {
+    models == null
+        ? []
+        : models.forEach((SpecialOrder model) {
       mapList.add(toMap(model));
     });
     return mapList;

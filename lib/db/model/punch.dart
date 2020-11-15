@@ -75,7 +75,9 @@ class Punch {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<Punch> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((Punch model) {
+    models == null
+        ? []
+        : models.forEach((Punch model) {
       mapList.add(toMap(model));
     });
     return mapList;

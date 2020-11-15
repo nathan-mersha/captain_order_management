@@ -52,7 +52,9 @@ class Message {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<Message> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((Message model) {
+    models == null
+        ? []
+        : models.forEach((Message model) {
       mapList.add(toMap(model));
     });
     return mapList;

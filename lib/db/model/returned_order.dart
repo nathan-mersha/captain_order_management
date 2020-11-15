@@ -75,7 +75,9 @@ class ReturnedOrder {
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<ReturnedOrder> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((ReturnedOrder model) {
+    models == null
+        ? []
+        : models.forEach((ReturnedOrder model) {
       mapList.add(toMap(model));
     });
     return mapList;

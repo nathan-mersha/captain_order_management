@@ -88,9 +88,9 @@ class NormalOrder with ChangeNotifier{
         : {
             ID: normalOrder.id,
             ID_FS: normalOrder.idFS,
-            EMPLOYEE: normalOrder.employee == null ? null : jsonEncode(Personnel.toMap(normalOrder.employee)),
-            CUSTOMER: normalOrder.customer == null ? null : jsonEncode(Personnel.toMap(normalOrder.customer)),
-            PRODUCTS: normalOrder.products == null ? null : jsonEncode(Product.toMapList(normalOrder.products)),
+            EMPLOYEE: jsonEncode(Personnel.toMap(normalOrder.employee)),
+            CUSTOMER: jsonEncode(Personnel.toMap(normalOrder.customer)),
+            PRODUCTS: jsonEncode(Product.toMapList(normalOrder.products)),
             TOTAL_AMOUNT: normalOrder.totalAmount,
             ADVANCE_PAYMENT: normalOrder.advancePayment,
             REMAINING_PAYMENT: normalOrder.remainingPayment,
@@ -134,7 +134,9 @@ class NormalOrder with ChangeNotifier{
   /// Changes List of Model to List of Map
   static List<Map<String, dynamic>> toMapList(List<NormalOrder> models) {
     List<Map<String, dynamic>> mapList = [];
-    models.forEach((NormalOrder model) {
+    models == null
+    ? []
+    : models.forEach((NormalOrder model) {
       mapList.add(toMap(model));
     });
     return mapList;
