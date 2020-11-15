@@ -78,8 +78,8 @@ class Punch {
     models == null
         ? []
         : models.forEach((Punch model) {
-      mapList.add(toMap(model));
-    });
+            mapList.add(toMap(model));
+          });
     return mapList;
   }
 }

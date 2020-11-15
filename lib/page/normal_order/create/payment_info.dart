@@ -102,33 +102,25 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                         "paid in full",
                         style: getTitleStyle(),
                       ),
-
-
                       Switch(
-
                         value: normalOrder.paidInFull,
-                        onChanged: (bool changed){
+                        onChanged: (bool changed) {
                           setState(() {
-                            if(changed){
+                            if (changed) {
                               normalOrder.paidInFull = true;
                               normalOrder.advancePayment = normalOrder.totalAmount;
                               normalOrder.calculatePaymentInfo();
-                            }else{
+                            } else {
                               normalOrder.paidInFull = false;
                               normalOrder.advancePayment = 0; // Reset advance payment to 0
                               normalOrder.calculatePaymentInfo();
                             }
                             _advanceController.text = oCCy.format(normalOrder.advancePayment);
-
                           });
                         },
                       )
-
-
                     ],
                   ),
-
-
                 ],
               ),
             )

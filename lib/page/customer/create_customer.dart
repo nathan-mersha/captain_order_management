@@ -388,7 +388,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
             ));
 
     if (imageSource != null) {
-      final PickedFile file = await picker.getImage(source: imageSource, imageQuality: 50);
+      final PickedFile file = await picker.getImage(source: imageSource, imageQuality: 10);
 
       if (file != null) {
         customer.profileImage = await file.readAsBytes();

@@ -48,7 +48,7 @@ class NormalOrderDAL {
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
-      NormalOrder n = NormalOrder(
+      return NormalOrder(
         id: maps[i][NormalOrder.ID],
         idFS: maps[i][NormalOrder.ID_FS],
         employee: Personnel.toModel(jsonDecode(maps[i][NormalOrder.EMPLOYEE])),
@@ -63,11 +63,6 @@ class NormalOrderDAL {
         firstModified: DateTime.parse(maps[i][NormalOrder.FIRST_MODIFIED]),
         lastModified: DateTime.parse(maps[i][NormalOrder.LAST_MODIFIED]),
       );
-
-
-
-      print("n to map : ${NormalOrder.toMap(n)}");
-      return n;
     });
   }
 

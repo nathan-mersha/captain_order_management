@@ -43,7 +43,10 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
         child: Row(
           children: [
             // Create paint order
-            Expanded(child: CreateNormalOrderPaintPage(navigateTo: widget.navigateTo,)), // todo : pass Normal order model.
+            Expanded(
+                child: CreateNormalOrderPaintPage(
+              navigateTo: widget.navigateTo,
+            )),
 
             // Other product & information section
             Expanded(

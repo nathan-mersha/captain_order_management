@@ -55,8 +55,8 @@ class Message {
     models == null
         ? []
         : models.forEach((Message model) {
-      mapList.add(toMap(model));
-    });
+            mapList.add(toMap(model));
+          });
     return mapList;
   }
 }

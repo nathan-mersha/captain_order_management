@@ -5,7 +5,7 @@ import 'package:captain/db/model/product.dart';
 import 'package:flutter/material.dart';
 
 /// Defines normalOrder db.model
-class NormalOrder with ChangeNotifier{
+class NormalOrder with ChangeNotifier {
   static const String COLLECTION_NAME = "normalOrder";
 
   /// Defines key values to extract from a map
@@ -52,34 +52,30 @@ class NormalOrder with ChangeNotifier{
       this.firstModified,
       this.lastModified});
 
-
-  addProduct(Product product){
+  addProduct(Product product) {
     products.add(product);
     calculatePaymentInfo();
   }
 
-  removeProduct(Product product){
+  removeProduct(Product product) {
     products.remove(product);
     calculatePaymentInfo();
   }
 
-  calculatePaymentInfo(){
+  calculatePaymentInfo() {
     num totalAmount = 0;
-    products.forEach((Product product){
+    products.forEach((Product product) {
       num subTotal = product.quantityInCart * product.unitPrice;
       totalAmount += subTotal;
     });
     this.totalAmount = totalAmount;
     this.remainingPayment = this.totalAmount - this.advancePayment;
-    if(remainingPayment == 0){
+    if (remainingPayment == 0) {
       this.paidInFull = true;
       this.advancePayment = this.totalAmount;
     }
     notifyListeners();
   }
-
-
-
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(NormalOrder normalOrder) {
@@ -135,10 +131,10 @@ class NormalOrder with ChangeNotifier{
   static List<Map<String, dynamic>> toMapList(List<NormalOrder> models) {
     List<Map<String, dynamic>> mapList = [];
     models == null
-    ? []
-    : models.forEach((NormalOrder model) {
-      mapList.add(toMap(model));
-    });
+        ? []
+        : models.forEach((NormalOrder model) {
+            mapList.add(toMap(model));
+          });
     return mapList;
   }
 }

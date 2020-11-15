@@ -46,7 +46,6 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   Map<String, String> statusTypeValues;
   Map<String, String> measurementTypesValues;
 
-  bool _doingCRUD = false;
   bool _keyboardIsVisible = false;
 
   @override
@@ -138,7 +137,9 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 75,),
+          SizedBox(
+            height: 75,
+          ),
           Icon(
             Icons.flash_off,
             color: Theme.of(context).accentColor,
@@ -172,36 +173,40 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                           "Name",
                           style: dataColumnStyle(),
                         )),
-                        DataColumn(label: Container(width: 30,child: Text("Qnt", style: dataColumnStyle()),)), // Defines the paint type, auto-cryl/metalic
+                        DataColumn(
+                            label: Container(
+                          width: 30,
+                          child: Text("Qnt", style: dataColumnStyle()),
+                        )), // Defines the paint type, auto-cryl/metalic
                         DataColumn(label: Text("Unit Price", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Delivered", style: dataColumnStyle())),
                       ],
                       rows: normalOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
                         return DataRow(cells: [
-                          DataCell(GestureDetector(child: Text(
-                            otherProduct.name ?? "-",
-                            style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                          ),onDoubleTap: (){
-
-                            setState(() {
-                              normalOrder.products.remove(otherProduct);
-                            });
-                            CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
-
-
-                          },)),
-                          DataCell(Container(width: 20,child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),)),
+                          DataCell(GestureDetector(
+                            child: Text(
+                              otherProduct.name ?? "-",
+                              style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                            ),
+                            onDoubleTap: () {
+                              setState(() {
+                                normalOrder.products.remove(otherProduct);
+                              });
+                              CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                            },
+                          )),
+                          DataCell(Container(
+                            width: 20,
+                            child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
+                          )),
                           DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(Switch(
-
                             value: otherProduct.status == NormalOrderMainPageState.DELIVERED,
-                            onChanged: (bool changed){
-
+                            onChanged: (bool changed) {
                               setState(() {
                                 otherProduct.status = changed ? NormalOrderMainPageState.DELIVERED : NormalOrderMainPageState.PENDING;
-
                               });
                             },
                           )),
@@ -221,7 +226,6 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
           child: SingleChildScrollView(
             child: Column(
               children: [
-
                 /// Paint input
                 TypeAheadField(
                   textFieldConfiguration: TextFieldConfiguration(

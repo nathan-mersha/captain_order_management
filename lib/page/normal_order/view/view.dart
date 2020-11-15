@@ -2,6 +2,7 @@ import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/main.dart';
+import 'package:captain/page/normal_order/view/statistics_normal_order.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,19 +24,17 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   _NormalOrderDataSource _normalOrderDataSource;
 
   void _sort<T>(
-      Comparable<T> Function(NormalOrder d) getField,
-      int columnIndex,
-      bool ascending,
-      ) {
+    Comparable<T> Function(NormalOrder d) getField,
+    int columnIndex,
+    bool ascending,
+  ) {
     _normalOrderDataSource._sort<T>(getField, ascending);
     _sortColumnIndex = columnIndex;
     _sortAscending = ascending;
   }
 
   Future<List<NormalOrder>> getListOfNormalOrders() async {
-    print("here");
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
-    print('Normal orders list length : ${normalOrders.length}');
     return normalOrders;
   }
 
@@ -43,204 +42,203 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   Widget build(BuildContext context) {
     return Container(
       height: 615,
-      child: Scaffold(body: Scrollbar(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            FutureBuilder(
-              future: getListOfNormalOrders(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
-                  _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
-                    setState(() {
-                      // updating table here.
-                    });
-                  });
-                  _normalOrderDataSource = _normalOrderDataSourceVal;
-                } else {
-                  _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
-                    setState(() {
-                      // updating table here.
-                    });
-                  });
-                }
-
-                _rowsPerPage = 9;
-
-                return PaginatedDataTable(
-                    actions: [
-                      Container(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "search",
-                            hintText: "search",
-                          ),
-                          onChanged: (String searchInput) {
-                            _normalOrderDataSource._search(searchInput);
-                          },
-                        ),
-                        width: 120,
-                      ),
-                      IconButton(
-                          icon: Icon(
-                            Icons.refresh,
-                            color: Theme.of(context).accentColor,
-                          ),
-                          onPressed: () {
-                            setState(() {});
-                          })
-                    ],
-                    headingRowHeight: 70,
-                    header: snapshot.connectionState == ConnectionState.done
-                        ? Text(
-                      "List of normalOrders",
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
-                    )
-                        : Row(
-                      children: [
-                        SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          "Loading normalOrders",
-                          style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
-                        )
-                      ],
-                    ),
-                    rowsPerPage: _rowsPerPage,
-                    availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
-                    onRowsPerPageChanged: (value) {
-                      setState(() {
-                        _rowsPerPage = value;
+      child: Scaffold(
+        body: Column(children: [
+          StatisticsNormalOrderView(),
+          Scrollbar(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                FutureBuilder(
+                  future: getListOfNormalOrders(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
+                      _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
+                        setState(() {
+                          // updating table here.
+                        });
                       });
-                    },
-                    sortColumnIndex: _sortColumnIndex,
-                    sortAscending: _sortAscending,
-                    columnSpacing: 30,
-                    columns: [
-                      DataColumn(
-                        label: Text("Customer"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.customer.name, columnIndex, ascending);
-                        },
-                      ),
-                      DataColumn(
-                        label: Text("Orders"),
-                      ),
-                      DataColumn(
-                        label: Text("Ltrs"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => getLtrsCount(d), columnIndex, ascending);
-                        },
-                      ),
-                      DataColumn(
-                        label: Text("Pending"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => getPendingCount(d), columnIndex, ascending);
-                        },
-                      ),
-                      DataColumn(
-                        label: Text("Completed"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => getCompletedCount(d), columnIndex, ascending);
-                        },
-                      ),
-                      DataColumn(
-                        label: Text("Status"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
-                        },
-                      ),
+                      _normalOrderDataSource = _normalOrderDataSourceVal;
+                    } else {
+                      _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
+                        setState(() {
+                          // updating table here.
+                        });
+                      });
+                    }
 
-                      DataColumn(
-                        label: Text("Total(br)"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
-                        },
-                      ),
+                    _rowsPerPage = 9;
 
-                      DataColumn(
-                        label: Text("Advance(br)"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => d.advancePayment, columnIndex, ascending);
+                    return PaginatedDataTable(
+                        actions: [
+                          Container(
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: "search",
+                                hintText: "search",
+                              ),
+                              onChanged: (String searchInput) {
+                                _normalOrderDataSource._search(searchInput);
+                              },
+                            ),
+                            width: 120,
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.refresh,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              onPressed: () {
+                                setState(() {});
+                              })
+                        ],
+                        headingRowHeight: 70,
+                        header: snapshot.connectionState == ConnectionState.done
+                            ? Text(
+                          "List of normalOrders",
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        )
+                            : Row(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "Loading normalOrders",
+                              style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                            )
+                          ],
+                        ),
+                        rowsPerPage: _rowsPerPage,
+                        availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                        onRowsPerPageChanged: (value) {
+                          setState(() {
+                            _rowsPerPage = value;
+                          });
                         },
-                      ),
-
-                      DataColumn(
-                        label: Text("Remaining(br)"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
-                        },
-                      ),
-
-                      DataColumn(
-                        label: Text("Paid"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
-                        },
-                      ),
-                      DataColumn(
-                        label: Text("Notified"),
-                        onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
-                        },
-                      ),
-
-                      DataColumn(
-                        label: Text("Date"),
-                        onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
-                      ),
-
-                      DataColumn(
-                        label: Text(""),
-                      ),
-                    ],
-                    source: _normalOrderDataSource);
-              },
-            )
-          ],
+                        sortColumnIndex: _sortColumnIndex,
+                        sortAscending: _sortAscending,
+                        columnSpacing: 30,
+                        columns: [
+                          DataColumn(
+                            label: Text("Customer"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<String>((d) => d.customer.name, columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Orders"),
+                          ),
+                          DataColumn(
+                            label: Text("Ltrs"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => getLtrsCount(d), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Pending"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => getPendingCount(d), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Completed"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => getCompletedCount(d), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Status"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Total(br)"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Advance(br)"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => d.advancePayment, columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Remaining(br)"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Paid"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Notified"),
+                            onSort: (columnIndex, ascending) {
+                              return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
+                            },
+                          ),
+                          DataColumn(
+                            label: Text("Date"),
+                            onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                          ),
+                          DataColumn(
+                            label: Text(""),
+                          ),
+                        ],
+                        source: _normalOrderDataSource);
+                  },
+                )
+              ],
+            ),
+          )
+        ],),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.create),
+          onPressed: () {
+            // Empty Normal order
+            NormalOrder normalOrder =
+                NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
+            widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+          },
         ),
-      ),floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.create),
-        onPressed: (){
-
-          // Empty Normal order
-          widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER);
-
-
-      },),),
+      ),
     );
   }
 
-
-  static String getOrdersCount(NormalOrder normalOrder){
+  static String getOrdersCount(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     num paintCount = 0;
     num otherCount = 0;
 
     products.forEach((Product p) {
-      p.type == CreateProductViewState.PAINT ? paintCount +=1 : otherCount +=1;
+      p.type == CreateProductViewState.PAINT ? paintCount += 1 : otherCount += 1;
     });
 
     return "${paintCount.toStringAsFixed(0)} paints, ${otherCount.toStringAsFixed(0)} products";
   }
 
-  static num getLtrsCount(NormalOrder normalOrder){
+  static num getLtrsCount(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     num ltrsCount = 0;
 
     products.forEach((Product p) {
-      if(p.type == CreateProductViewState.PAINT){
+      if (p.type == CreateProductViewState.PAINT) {
         ltrsCount += p.quantityInCart;
       }
     });
@@ -248,42 +246,40 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     return ltrsCount;
   }
 
-  static num getPendingCount(NormalOrder normalOrder){
+  static num getPendingCount(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     num pendingCount = 0;
 
     products.forEach((Product p) {
-      if(p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.PENDING){
+      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.PENDING) {
         pendingCount += 1;
       }
     });
     return pendingCount;
   }
 
-  static num getCompletedCount(NormalOrder normalOrder){
+  static num getCompletedCount(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     num completedCount = 0;
 
     products.forEach((Product p) {
-      if(p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.COMPLETED){
+      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.COMPLETED) {
         completedCount += 1;
       }
     });
     return completedCount;
   }
 
-  static String getOverallStatus(NormalOrder normalOrder){
+  static String getOverallStatus(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     bool allCompleted = products.any((Product product) => product.status == NormalOrderMainPageState.PENDING);
     return allCompleted ? NormalOrderMainPageState.COMPLETED : NormalOrderMainPageState.PENDING;
   }
 
-  static String getPaidStatus(NormalOrder normalOrder){
+  static String getPaidStatus(NormalOrder normalOrder) {
     bool paidFully = normalOrder.totalAmount == normalOrder.advancePayment;
     return paidFully ? "Fully paid" : "Partially paid";
   }
-
-
 }
 
 class _NormalOrderDataSource extends DataTableSource {
@@ -322,31 +318,35 @@ class _NormalOrderDataSource extends DataTableSource {
       cells: [
         /// Customer
         DataCell(
-            Row(
-              children: [
-                normalOrder.customer.profileImage == null
-                    ? Icon(
-                  Icons.person,
-                  color: Colors.black12,
-                )
-                    : ClipOval(
-                  child: Image.memory(
-                    normalOrder.customer.profileImage,
-                    fit: BoxFit.cover,
-                    height: 30,
-                    width: 30,
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  normalOrder.customer.name ?? '-',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )
-              ],
+//            Row(
+//              children: [
+//                normalOrder.customer.profileImage == null
+//                    ? Icon(
+//                        Icons.person,
+//                        color: Colors.black12,
+//                      )
+//                    : ClipOval(
+//                        child: Image.memory(
+//                          normalOrder.customer.profileImage,
+//                          fit: BoxFit.cover,
+//                          height: 30,
+//                          width: 30,
+//                        ),
+//                      ),
+//                SizedBox(
+//                  width: 10,
+//                ),
+//                Text(
+//                  normalOrder.customer.name ?? '-',
+//                  style: TextStyle(color: Theme.of(context).primaryColor),
+//                )
+//              ],
+//            ),
+            Text(
+              normalOrder.customer.name ?? '-',
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-              // todo : open page for update
+          // todo : open page for update
 //          createNormalOrderKey.currentState.passForUpdate(normalOrders[index]);
         }),
 
@@ -366,13 +366,13 @@ class _NormalOrderDataSource extends DataTableSource {
         DataCell(Text(NormalOrderTablePageState.getOverallStatus(normalOrder) ?? '-')),
 
         /// Total (br)
-        DataCell(Text(normalOrder.totalAmount.toStringAsFixed(2)?? '-')),
+        DataCell(Text(normalOrder.totalAmount.toStringAsFixed(2) ?? '-')),
 
         /// Advance Payment (br)
-        DataCell(Text(normalOrder.advancePayment.toStringAsFixed(2)?? '-')),
+        DataCell(Text(normalOrder.advancePayment.toStringAsFixed(2) ?? '-')),
 
         /// Remaining payment (br)
-        DataCell(Text(normalOrder.remainingPayment.toStringAsFixed(2)?? '-')),
+        DataCell(Text(normalOrder.remainingPayment.toStringAsFixed(2) ?? '-')),
 
         /// Paid
         DataCell(Text(NormalOrderTablePageState.getPaidStatus(normalOrder) ?? '-')),
@@ -400,48 +400,48 @@ class _NormalOrderDataSource extends DataTableSource {
     return await showDialog<String>(
         context: context,
         builder: (context) => CDialog(
-          widgetYes: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Icon(
-                Icons.done,
-                size: 50,
-                color: Theme.of(context).primaryColor,
+              widgetYes: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.done,
+                    size: 50,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ],
               ),
-            ],
-          ),
-          widgetNo: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
-            ],
-          ),
-          message: "Are you sure you want to delete normalOrder of\n${normalOrder.customer.name}",
-          onYes: () async {
-            // Delete normalOrder here.
+              widgetNo: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                ],
+              ),
+              message: "Are you sure you want to delete normalOrder of\n${normalOrder.customer.name}",
+              onYes: () async {
+                // Delete normalOrder here.
 
-            String where = "${NormalOrder.ID} = ?";
-            List<String> whereArgs = [normalOrder.id]; // Querying only normalOrders
+                String where = "${NormalOrder.ID} = ?";
+                List<String> whereArgs = [normalOrder.id]; // Querying only normalOrders
 
-            List<NormalOrder> deleteNormalOrderList = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
+                List<NormalOrder> deleteNormalOrderList = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
 
-            await NormalOrderDAL.delete(where: where, whereArgs: whereArgs);
+                await NormalOrderDAL.delete(where: where, whereArgs: whereArgs);
 
-            NormalOrder deleteNormalOrder = deleteNormalOrderList.first;
-            if (deleteNormalOrder.idFS != null) {
-              Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
-            }
+                NormalOrder deleteNormalOrder = deleteNormalOrderList.first;
+                if (deleteNormalOrder.idFS != null) {
+                  Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
+                }
 
-            Navigator.pop(context);
-            return null;
-          },
-          onNo: () {
-            Navigator.pop(
-              context,
-            );
-            return null;
-          },
-        ));
+                Navigator.pop(context);
+                return null;
+              },
+              onNo: () {
+                Navigator.pop(
+                  context,
+                );
+                return null;
+              },
+            ));
   }
 
   @override

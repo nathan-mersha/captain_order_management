@@ -108,8 +108,8 @@ class Personnel {
     models == null
         ? []
         : models.forEach((Personnel model) {
-      mapList.add(toMap(model));
-    });
+            mapList.add(toMap(model));
+          });
     return mapList;
   }
 }
