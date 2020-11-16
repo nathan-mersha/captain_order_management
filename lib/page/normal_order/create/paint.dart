@@ -3,10 +3,12 @@ import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/message.dart';
 import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_snackbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -85,45 +87,50 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    return Container(
-        height: 645,
-        child: Card(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    child: Text(
-                      "Paint Order",
-                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+    return WillPopScope(
+        child: Container(
+            height: 645,
+            child: Card(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      margin: EdgeInsets.all(0),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        child: Text(
+                          "Paint Order",
+                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Container(
+                      height: 592,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            buildTable(),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              children: [Expanded(child: Container()), Expanded(flex: 2, child: buildForm())],
+                            ),
+                            buildCreateOrder()
+                          ],
+                        ),
+                      )),
+                ],
               ),
-              Container(
-                  height: 592,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        buildTable(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          children: [Expanded(child: Container()), Expanded(flex: 2, child: buildForm())],
-                        ),
-                        buildCreateOrder()
-                      ],
-                    ),
-                  )),
-            ],
-          ),
-        ));
+            )),
+        onWillPop: () {
+          widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
+          return Future.value(false);
+        });
   }
 
   TextStyle dataCellStyle() {
@@ -186,10 +193,21 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                       "Update",
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
                     ),
-                    onPressed: () {
-                      // todo : update order
-                      // todo : clear fields
-                      // todo : navigate to table page
+                    onPressed: () async {
+                      if (normalOrder.products.length == 0) {
+                        // No products added
+                        CNotifications.showSnackBar(context, "No products have been added in cart", "ok", () {}, backgroundColor: Colors.red);
+                      } else if (normalOrder.customer == null) {
+                        // No customer added
+                        CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
+                      } else {
+                        setState(() {
+                          _doingCRUD = true;
+                        });
+
+                        await updateNormalOrder(context);
+                        widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
+                      }
                     }),
                 OutlineButton(
                   child: Text(
@@ -197,12 +215,35 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
                   ),
                   onPressed: () {
-                    // todo : clear both form fields
+                    widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
                   },
                 ),
               ],
             ),
     );
+  }
+
+  Future updateNormalOrder(BuildContext context) async {
+    /// Query and update user
+    String where = "${NormalOrder.ID} = ?";
+    List<String> whereArgs = [normalOrder.id];
+    await NormalOrderDAL.update(
+      where: where,
+      whereArgs: whereArgs,
+      normalOrder: normalOrder,
+    );
+
+    /// Updating from fire store
+    normalOrder.customer.profileImage = null;
+    dynamic normalOrderMap = NormalOrder.toMap(normalOrder);
+
+    // Updating to fire store if fire store generated id is present in doc.
+    if (normalOrder.idFS != null) {
+      Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(normalOrder.idFS).updateData(normalOrderMap);
+    }
+
+    // Showing notification
+    CNotifications.showSnackBar(context, "Successfuly updated : ${normalOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   Widget noPaintAddedInNormalOrder() {
@@ -348,7 +389,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         List<String> whereArgs = [normalOrder.id];
         await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
 
-        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.red);
+        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
       }
     }
   }

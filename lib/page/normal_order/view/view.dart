@@ -61,14 +61,14 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                             setState(() {
                               // updating table here.
                             });
-                          });
+                          }, widget.navigateTo);
                           _normalOrderDataSource = _normalOrderDataSourceVal;
                         } else {
                           _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
                             setState(() {
                               // updating table here.
                             });
-                          });
+                          }, widget.navigateTo);
                         }
 
                         _rowsPerPage = 7;
@@ -303,9 +303,10 @@ class _NormalOrderDataSource extends DataTableSource {
   List<NormalOrder> normalOrders = [];
   List<NormalOrder> originalBatch = [];
   final Function updateTable;
+  final Function navigate;
   int _selectedCount = 0;
 
-  _NormalOrderDataSource(this.context, this.normalOrders, this.updateTable) {
+  _NormalOrderDataSource(this.context, this.normalOrders, this.updateTable, this.navigate) {
     originalBatch = List.from(normalOrders ?? []);
   }
 
@@ -339,7 +340,9 @@ class _NormalOrderDataSource extends DataTableSource {
               normalOrder.customer.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-          // todo : open page for update
+          navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+
+
 //          createNormalOrderKey.currentState.passForUpdate(normalOrders[index]);
         }),
 
