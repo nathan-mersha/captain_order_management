@@ -24,6 +24,7 @@ class CTheme {
     LELIT: {primaryColor: Color(0xff404040), primaryColorLight: Color(0xff808080), accentColor: Color(0xff6100b5)},
   };
 
+  static Color backGroundColor = Color(0xfff2f2f2);
   static ThemeData getTheme() {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     String currentTheme = cSP.currentTheme;
@@ -36,7 +37,7 @@ class CTheme {
       primaryColorLight: primaryLight,
       accentColor: accent,
       selectedRowColor: primaryLight,
-      backgroundColor: Color(0xfff2f2f2),
+      backgroundColor: backGroundColor,
       buttonColor: primary,
       inputDecorationTheme: InputDecorationTheme(
           focusColor: primary,

@@ -18,6 +18,7 @@ class NormalOrderTablePage extends StatefulWidget {
 }
 
 class NormalOrderTablePageState extends State<NormalOrderTablePage> {
+
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
@@ -41,187 +42,170 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 615,
-      child: Scaffold(
-        body: Column(children: [
-          StatisticsNormalOrderView(),
-          Scrollbar(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                FutureBuilder(
-                  future: getListOfNormalOrders(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
-                      _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
-                        setState(() {
-                          // updating table here.
-                        });
-                      });
-                      _normalOrderDataSource = _normalOrderDataSourceVal;
-                    } else {
-                      _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
-                        setState(() {
-                          // updating table here.
-                        });
-                      });
-                    }
-
-                    _rowsPerPage = 9;
-
-                    return PaginatedDataTable(
-                        actions: [
-                          Container(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: "search",
-                                hintText: "search",
-                              ),
-                              onChanged: (String searchInput) {
-                                _normalOrderDataSource._search(searchInput);
-                              },
-                            ),
-                            width: 120,
-                          ),
-                          IconButton(
-                              icon: Icon(
-                                Icons.refresh,
-                                color: Theme.of(context).accentColor,
-                              ),
-                              onPressed: () {
-                                setState(() {});
-                              })
-                        ],
-                        headingRowHeight: 70,
-                        header: snapshot.connectionState == ConnectionState.done
-                            ? Text(
-                          "List of normalOrders",
-                          style: TextStyle(
-                            fontSize: 13,
-                          ),
-                        )
-                            : Row(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "Loading normalOrders",
-                              style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
-                            )
-                          ],
-                        ),
-                        rowsPerPage: _rowsPerPage,
-                        availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
-                        onRowsPerPageChanged: (value) {
-                          setState(() {
-                            _rowsPerPage = value;
+      height: 645,
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              StatisticsNormalOrderView(),
+              Scrollbar(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    FutureBuilder(
+                      future: getListOfNormalOrders(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
+                          _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
+                            setState(() {
+                              // updating table here.
+                            });
                           });
-                        },
-                        sortColumnIndex: _sortColumnIndex,
-                        sortAscending: _sortAscending,
-                        columnSpacing: 30,
-                        columns: [
-                          DataColumn(
-                            label: Text("Customer"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<String>((d) => d.customer.name, columnIndex, ascending);
+                          _normalOrderDataSource = _normalOrderDataSourceVal;
+                        } else {
+                          _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
+                            setState(() {
+                              // updating table here.
+                            });
+                          });
+                        }
+
+                        _rowsPerPage = 7;
+
+                        return PaginatedDataTable(
+                            actions: [
+                              Container(
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: "search",
+                                    hintText: "search",
+                                  ),
+                                  onChanged: (String searchInput) {
+                                    _normalOrderDataSource._search(searchInput);
+                                  },
+                                ),
+                                width: 190,
+                              ),
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {});
+                                  })
+                            ],
+                            headingRowHeight: 70,
+                            header: snapshot.connectionState == ConnectionState.done
+                                ? Text(
+                                    "List of orders",
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        "Loading orders",
+                                        style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                                      )
+                                    ],
+                                  ),
+                            rowsPerPage: _rowsPerPage,
+                            availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                            onRowsPerPageChanged: (value) {
+                              setState(() {
+                                _rowsPerPage = value;
+                              });
                             },
-                          ),
-                          DataColumn(
-                            label: Text("Orders"),
-                          ),
-                          DataColumn(
-                            label: Text("Ltrs"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => getLtrsCount(d), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Pending"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => getPendingCount(d), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Completed"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => getCompletedCount(d), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Status"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Total(br)"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Advance(br)"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => d.advancePayment, columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Remaining(br)"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Paid"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Notified"),
-                            onSort: (columnIndex, ascending) {
-                              return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
-                            },
-                          ),
-                          DataColumn(
-                            label: Text("Date"),
-                            onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
-                          ),
-                          DataColumn(
-                            label: Text(""),
-                          ),
-                        ],
-                        source: _normalOrderDataSource);
-                  },
-                )
-              ],
+                            sortColumnIndex: _sortColumnIndex,
+                            sortAscending: _sortAscending,
+                            columnSpacing: 20,
+                            columns: [
+                              DataColumn(
+                                label: Text("Customer"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<String>((d) => d.customer.name, columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Orders"),
+                              ),
+                              DataColumn(
+                                label: Text("Total(br)"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Remaining(br)"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Paid"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Notified"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Status"),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
+                                },
+                              ),
+                              DataColumn(
+                                label: Text("Date"),
+                                onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                              ),
+                              DataColumn(
+                                label: Text(""),
+                              ),
+                            ],
+                            source: _normalOrderDataSource);
+                      },
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          Positioned(
+            child: FloatingActionButton(
+              child: Icon(Icons.create),
+              onPressed: () {
+                NormalOrder normalOrder =
+                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
+                widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+              },
             ),
+            bottom: 0,
+            left: 20,
           )
-        ],),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
-          onPressed: () {
-            // Empty Normal order
-            NormalOrder normalOrder =
-                NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
-            widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
-          },
-        ),
+        ],
       ),
     );
   }
 
-  static String getOrdersCount(NormalOrder normalOrder) {
+  static Widget getOrdersCount(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
     num paintCount = 0;
     num otherCount = 0;
@@ -230,7 +214,37 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
       p.type == CreateProductViewState.PAINT ? paintCount += 1 : otherCount += 1;
     });
 
-    return "${paintCount.toStringAsFixed(0)} paints, ${otherCount.toStringAsFixed(0)} products";
+    return Row(
+      children: [
+        Icon(
+          Icons.invert_colors,
+          color: Colors.black54,
+          size: 12,
+        ),
+        SizedBox(
+          width: 3,
+        ),
+        Text(
+          paintCount.toStringAsFixed(0),
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Icon(
+          Icons.shopping_basket,
+          color: Colors.black54,
+          size: 12,
+        ),
+        SizedBox(
+          width: 3,
+        ),
+        Text(
+          otherCount.toStringAsFixed(0),
+          style: TextStyle(fontSize: 12),
+        )
+      ],
+    );
   }
 
   static num getLtrsCount(NormalOrder normalOrder) {
@@ -272,17 +286,19 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
 
   static String getOverallStatus(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
-    bool allCompleted = products.any((Product product) => product.status == NormalOrderMainPageState.PENDING);
+    bool allCompleted = products.any((Product product) => product.status == NormalOrderMainPageState.COMPLETED);
     return allCompleted ? NormalOrderMainPageState.COMPLETED : NormalOrderMainPageState.PENDING;
   }
 
   static String getPaidStatus(NormalOrder normalOrder) {
-    bool paidFully = normalOrder.totalAmount == normalOrder.advancePayment;
-    return paidFully ? "Fully paid" : "Partially paid";
+     bool paidInFull = normalOrder.totalAmount == normalOrder.advancePayment;
+     return paidInFull.toString();
   }
 }
 
 class _NormalOrderDataSource extends DataTableSource {
+  final oCCy = NumberFormat("#,##0.00", "en_US");
+
   final BuildContext context;
   List<NormalOrder> normalOrders = [];
   List<NormalOrder> originalBatch = [];
@@ -316,32 +332,9 @@ class _NormalOrderDataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
+
         /// Customer
         DataCell(
-//            Row(
-//              children: [
-//                normalOrder.customer.profileImage == null
-//                    ? Icon(
-//                        Icons.person,
-//                        color: Colors.black12,
-//                      )
-//                    : ClipOval(
-//                        child: Image.memory(
-//                          normalOrder.customer.profileImage,
-//                          fit: BoxFit.cover,
-//                          height: 30,
-//                          width: 30,
-//                        ),
-//                      ),
-//                SizedBox(
-//                  width: 10,
-//                ),
-//                Text(
-//                  normalOrder.customer.name ?? '-',
-//                  style: TextStyle(color: Theme.of(context).primaryColor),
-//                )
-//              ],
-//            ),
             Text(
               normalOrder.customer.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
@@ -351,36 +344,27 @@ class _NormalOrderDataSource extends DataTableSource {
         }),
 
         /// Orders
-        DataCell(Text(NormalOrderTablePageState.getOrdersCount(normalOrder).toString() ?? '-')),
-
-        /// Liters
-        DataCell(Text(NormalOrderTablePageState.getLtrsCount(normalOrder).toString() ?? '-')),
-
-        /// Pending
-        DataCell(Text(NormalOrderTablePageState.getPendingCount(normalOrder).toString() ?? '-')),
-
-        /// Completed
-        DataCell(Text(NormalOrderTablePageState.getCompletedCount(normalOrder).toString() ?? '-')),
-
-        /// Status
-        DataCell(Text(NormalOrderTablePageState.getOverallStatus(normalOrder) ?? '-')),
+        DataCell(NormalOrderTablePageState.getOrdersCount(normalOrder)),
 
         /// Total (br)
-        DataCell(Text(normalOrder.totalAmount.toStringAsFixed(2) ?? '-')),
-
-        /// Advance Payment (br)
-        DataCell(Text(normalOrder.advancePayment.toStringAsFixed(2) ?? '-')),
+        DataCell(Text(oCCy.format(normalOrder.totalAmount) ?? '-')),
 
         /// Remaining payment (br)
-        DataCell(Text(normalOrder.remainingPayment.toStringAsFixed(2) ?? '-')),
+        DataCell(Text(oCCy.format(normalOrder.remainingPayment) ?? '-')),
 
         /// Paid
-        DataCell(Text(NormalOrderTablePageState.getPaidStatus(normalOrder) ?? '-')),
+        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true" ? Colors.green : Colors.black54,size: 17,)),
 
         /// Notified
-        DataCell(Text(normalOrder.userNotified.toString() ?? '-')),
+        DataCell(Icon(Icons.notifications_none, color: normalOrder.userNotified ? Colors.green : Colors.black54,size: 17,)),
 
+        /// Status
+        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getOverallStatus(normalOrder) == NormalOrderMainPageState.COMPLETED ? Colors.green : Colors.black54, size: 17,)),
+
+        /// First modified
         DataCell(Text(DateFormat.yMMMd().format(normalOrder.firstModified))),
+
+        /// Delete
         DataCell(IconButton(
           icon: Icon(
             Icons.delete_outline,
@@ -416,7 +400,7 @@ class _NormalOrderDataSource extends DataTableSource {
                   Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message: "Are you sure you want to delete normalOrder of\n${normalOrder.customer.name}",
+              message: "Are you sure you want to delete order of\n${normalOrder.customer.name}",
               onYes: () async {
                 // Delete normalOrder here.
 
