@@ -1,8 +1,9 @@
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Defines specialOrder db.model
-class SpecialOrder {
+class SpecialOrder with ChangeNotifier{
   static const String COLLECTION_NAME = "specialOrder";
 
   /// Defines key values to extract from a map
@@ -45,6 +46,34 @@ class SpecialOrder {
       this.note,
       this.firstModified,
       this.lastModified});
+
+
+
+  addProduct(Product product) {
+    products.add(product);
+    calculatePaymentInfo();
+  }
+
+  removeProduct(Product product) {
+    products.remove(product);
+    calculatePaymentInfo();
+  }
+
+  calculatePaymentInfo() {
+    num totalAmount = 0;
+    products.forEach((Product product) {
+      num subTotal = product.quantityInCart * product.unitPrice;
+      totalAmount += subTotal;
+    });
+    this.totalAmount = totalAmount;
+    this.remainingPayment = this.totalAmount - this.advancePayment;
+    if (remainingPayment == 0) {
+      this.paidInFull = true;
+      this.advancePayment = this.totalAmount;
+    }
+    notifyListeners();
+  }
+
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(SpecialOrder specialOrder) {

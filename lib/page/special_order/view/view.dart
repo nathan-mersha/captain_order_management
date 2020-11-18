@@ -1,42 +1,42 @@
-import 'package:captain/db/dal/normal_order.dart';
-import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/product.dart';
-import 'package:captain/page/normal_order/main.dart';
-import 'package:captain/page/normal_order/view/statistics_normal_order.dart';
+import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/page/special_order/main.dart';
+import 'package:captain/page/special_order/view/statistics_normal_order.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class NormalOrderTablePage extends StatefulWidget {
+class SpecialOrderTablePage extends StatefulWidget {
   final Function navigateTo;
-  NormalOrderTablePage({this.navigateTo});
+  SpecialOrderTablePage({this.navigateTo});
 
   @override
-  NormalOrderTablePageState createState() => NormalOrderTablePageState();
+  SpecialOrderTablePageState createState() => SpecialOrderTablePageState();
 }
 
-class NormalOrderTablePageState extends State<NormalOrderTablePage> {
+class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
 
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
-  _NormalOrderDataSource _normalOrderDataSource;
+  _SpecialOrderDataSource _specialOrderDataSource;
 
   void _sort<T>(
-    Comparable<T> Function(NormalOrder d) getField,
+    Comparable<T> Function(SpecialOrder d) getField,
     int columnIndex,
     bool ascending,
   ) {
-    _normalOrderDataSource._sort<T>(getField, ascending);
+    _specialOrderDataSource._sort<T>(getField, ascending);
     _sortColumnIndex = columnIndex;
     _sortAscending = ascending;
   }
 
-  Future<List<NormalOrder>> getListOfNormalOrders() async {
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
-    return normalOrders;
+  Future<List<SpecialOrder>> getListOfSpecialOrders() async {
+    List<SpecialOrder> specialOrders = await SpecialOrderDAL.find();
+    return specialOrders;
   }
 
   @override
@@ -47,24 +47,24 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
         children: [
           Column(
             children: [
-              StatisticsNormalOrderView(),
+              StatisticsSpecialOrderView(),
               Scrollbar(
                 child: ListView(
                   shrinkWrap: true,
                   children: [
                     FutureBuilder(
-                      future: getListOfNormalOrders(),
+                      future: getListOfSpecialOrders(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
-                          _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
+                          List<SpecialOrder> specialOrders = snapshot.data as List<SpecialOrder>;
+                          _SpecialOrderDataSource _specialOrderDataSourceVal = _SpecialOrderDataSource(context, specialOrders, () {
                             setState(() {
                               // updating table here.
                             });
                           }, widget.navigateTo);
-                          _normalOrderDataSource = _normalOrderDataSourceVal;
+                          _specialOrderDataSource = _specialOrderDataSourceVal;
                         } else {
-                          _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
+                          _specialOrderDataSource = _SpecialOrderDataSource(context, [], () {
                             setState(() {
                               // updating table here.
                             });
@@ -82,7 +82,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                     hintText: "search",
                                   ),
                                   onChanged: (String searchInput) {
-                                    _normalOrderDataSource._search(searchInput);
+                                    _specialOrderDataSource._search(searchInput);
                                   },
                                 ),
                                 width: 190,
@@ -160,12 +160,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                   return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
                                 },
                               ),
-                              DataColumn(
-                                label: Text("Notified",style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
-                                },
-                              ),
+
                               DataColumn(
                                 label: Text("Status",style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
@@ -180,7 +175,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                 label: Text(""),
                               ),
                             ],
-                            source: _normalOrderDataSource);
+                            source: _specialOrderDataSource);
                       },
                     )
                   ],
@@ -192,9 +187,9 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.create),
               onPressed: () {
-                NormalOrder normalOrder =
-                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
-                widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+                SpecialOrder specialOrder =
+                    SpecialOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, products: []);
+                widget.navigateTo(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
               },
             ),
             bottom: 0,
@@ -205,8 +200,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     );
   }
 
-  static Widget getOrdersCount(NormalOrder normalOrder) {
-    List<Product> products = normalOrder.products;
+  static Widget getOrdersCount(SpecialOrder specialOrder) {
+    List<Product> products = specialOrder.products;
     num paintCount = 0;
     num otherCount = 0;
 
@@ -247,8 +242,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     );
   }
 
-  static num getLtrsCount(NormalOrder normalOrder) {
-    List<Product> products = normalOrder.products;
+  static num getLtrsCount(SpecialOrder specialOrder) {
+    List<Product> products = specialOrder.products;
     num ltrsCount = 0;
 
     products.forEach((Product p) {
@@ -260,58 +255,58 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     return ltrsCount;
   }
 
-  static num getPendingCount(NormalOrder normalOrder) {
-    List<Product> products = normalOrder.products;
+  static num getPendingCount(SpecialOrder specialOrder) {
+    List<Product> products = specialOrder.products;
     num pendingCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.PENDING) {
+      if (p.type == CreateProductViewState.PAINT && p.status == SpecialOrderMainPageState.PENDING) {
         pendingCount += 1;
       }
     });
     return pendingCount;
   }
 
-  static num getCompletedCount(NormalOrder normalOrder) {
-    List<Product> products = normalOrder.products;
+  static num getCompletedCount(SpecialOrder specialOrder) {
+    List<Product> products = specialOrder.products;
     num completedCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.COMPLETED) {
+      if (p.type == CreateProductViewState.PAINT && p.status == SpecialOrderMainPageState.COMPLETED) {
         completedCount += 1;
       }
     });
     return completedCount;
   }
 
-  static String getOverallStatus(NormalOrder normalOrder) {
-    List<Product> products = normalOrder.products;
-    bool allCompleted = products.any((Product product) => product.status == NormalOrderMainPageState.COMPLETED);
-    return allCompleted ? NormalOrderMainPageState.COMPLETED : NormalOrderMainPageState.PENDING;
+  static String getOverallStatus(SpecialOrder specialOrder) {
+    List<Product> products = specialOrder.products;
+    bool allCompleted = products.any((Product product) => product.status == SpecialOrderMainPageState.COMPLETED);
+    return allCompleted ? SpecialOrderMainPageState.COMPLETED : SpecialOrderMainPageState.PENDING;
   }
 
-  static String getPaidStatus(NormalOrder normalOrder) {
-     bool paidInFull = normalOrder.totalAmount == normalOrder.advancePayment;
+  static String getPaidStatus(SpecialOrder specialOrder) {
+     bool paidInFull = specialOrder.totalAmount == specialOrder.advancePayment;
      return paidInFull.toString();
   }
 }
 
-class _NormalOrderDataSource extends DataTableSource {
+class _SpecialOrderDataSource extends DataTableSource {
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
   final BuildContext context;
-  List<NormalOrder> normalOrders = [];
-  List<NormalOrder> originalBatch = [];
+  List<SpecialOrder> specialOrders = [];
+  List<SpecialOrder> originalBatch = [];
   final Function updateTable;
   final Function navigate;
   int _selectedCount = 0;
 
-  _NormalOrderDataSource(this.context, this.normalOrders, this.updateTable, this.navigate) {
-    originalBatch = List.from(normalOrders ?? []);
+  _SpecialOrderDataSource(this.context, this.specialOrders, this.updateTable, this.navigate) {
+    originalBatch = List.from(specialOrders ?? []);
   }
 
-  void _sort<T>(Comparable<T> Function(NormalOrder d) getField, bool ascending) {
-    normalOrders.sort((a, b) {
+  void _sort<T>(Comparable<T> Function(SpecialOrder d) getField, bool ascending) {
+    specialOrders.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
       return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
@@ -320,16 +315,16 @@ class _NormalOrderDataSource extends DataTableSource {
   }
 
   void _search(String searchInput) {
-    normalOrders = List.from(originalBatch); // Restoring products from original batch
-    normalOrders.retainWhere((NormalOrder p) => p.customer.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    specialOrders = List.from(originalBatch); // Restoring products from original batch
+    specialOrders.retainWhere((SpecialOrder p) => p.customer.name.toLowerCase().startsWith(searchInput.toLowerCase()));
     notifyListeners();
   }
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= normalOrders.length) return null;
-    final normalOrder = normalOrders[index];
+    if (index >= specialOrders.length) return null;
+    final specialOrder = specialOrders[index];
     return DataRow.byIndex(
       index: index,
       cells: [
@@ -337,35 +332,33 @@ class _NormalOrderDataSource extends DataTableSource {
         /// Customer
         DataCell(
             Text(
-              normalOrder.customer.name ?? '-',
+              specialOrder.customer.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-          navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+          navigate(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
 
 
-//          createNormalOrderKey.currentState.passForUpdate(normalOrders[index]);
+//          createSpecialOrderKey.currentState.passForUpdate(specialOrders[index]);
         }),
 
         /// Orders
-        DataCell(NormalOrderTablePageState.getOrdersCount(normalOrder)),
+        DataCell(SpecialOrderTablePageState.getOrdersCount(specialOrder)),
 
         /// Total (br)
-        DataCell(Text(oCCy.format(normalOrder.totalAmount) ?? '-')),
+        DataCell(Text(oCCy.format(specialOrder.totalAmount) ?? '-')),
 
         /// Remaining payment (br)
-        DataCell(Text(oCCy.format(normalOrder.remainingPayment) ?? '-',)),
+        DataCell(Text(oCCy.format(specialOrder.remainingPayment) ?? '-',)),
 
         /// Paid
-        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true" ? Colors.green : Colors.black54,size: 17,)),
+        DataCell(Icon(Icons.check_circle, color: SpecialOrderTablePageState.getPaidStatus(specialOrder) == "true" ? Colors.green : Colors.black54,size: 17,)),
 
-        /// Notified
-        DataCell(Icon(Icons.notifications, color: normalOrder.userNotified ? Colors.green : Colors.black54,size: 17,)),
 
         /// Status
-        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getOverallStatus(normalOrder) == NormalOrderMainPageState.COMPLETED ? Colors.green : Colors.black54, size: 17,)),
+        DataCell(Icon(Icons.check_circle, color: SpecialOrderTablePageState.getOverallStatus(specialOrder) == SpecialOrderMainPageState.COMPLETED ? Colors.green : Colors.black54, size: 17,)),
 
         /// First modified
-        DataCell(Text(DateFormat.yMMMd().format(normalOrder.firstModified))),
+        DataCell(Text(DateFormat.yMMMd().format(specialOrder.firstModified))),
 
         /// Delete
         DataCell(IconButton(
@@ -375,15 +368,15 @@ class _NormalOrderDataSource extends DataTableSource {
             size: 15,
           ),
           onPressed: () {
-            // deleting normalOrder here.
-            deleteNormalOrder(normalOrders[index]).then((value) => updateTable());
+            // deleting specialOrder here.
+            deleteSpecialOrder(specialOrders[index]).then((value) => updateTable());
           },
         ))
       ],
     );
   }
 
-  Future<void> deleteNormalOrder(NormalOrder normalOrder) async {
+  Future<void> deleteSpecialOrder(SpecialOrder specialOrder) async {
     return await showDialog<String>(
         context: context,
         builder: (context) => CDialog(
@@ -403,20 +396,20 @@ class _NormalOrderDataSource extends DataTableSource {
                   Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message: "Are you sure you want to delete order of\n${normalOrder.customer.name}",
+              message: "Are you sure you want to delete order of\n${specialOrder.customer.name}",
               onYes: () async {
-                // Delete normalOrder here.
+                // Delete specialOrder here.
 
-                String where = "${NormalOrder.ID} = ?";
-                List<String> whereArgs = [normalOrder.id]; // Querying only normalOrders
+                String where = "${SpecialOrder.ID} = ?";
+                List<String> whereArgs = [specialOrder.id]; // Querying only specialOrders
 
-                List<NormalOrder> deleteNormalOrderList = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
+                List<SpecialOrder> deleteSpecialOrderList = await SpecialOrderDAL.find(where: where, whereArgs: whereArgs);
 
-                await NormalOrderDAL.delete(where: where, whereArgs: whereArgs);
+                await SpecialOrderDAL.delete(where: where, whereArgs: whereArgs);
 
-                NormalOrder deleteNormalOrder = deleteNormalOrderList.first;
-                if (deleteNormalOrder.idFS != null) {
-                  Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
+                SpecialOrder deleteSpecialOrder = deleteSpecialOrderList.first;
+                if (deleteSpecialOrder.idFS != null) {
+                  Firestore.instance.collection(SpecialOrder.COLLECTION_NAME).document(deleteSpecialOrder.idFS).delete();
                 }
 
                 Navigator.pop(context);
@@ -432,7 +425,7 @@ class _NormalOrderDataSource extends DataTableSource {
   }
 
   @override
-  int get rowCount => normalOrders == null ? 0 : normalOrders.length;
+  int get rowCount => specialOrders == null ? 0 : specialOrders.length;
 
   @override
   bool get isRowCountApproximate => false;
