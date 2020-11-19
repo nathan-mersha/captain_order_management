@@ -56,7 +56,7 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                   // Other product
                   /// Not visible when focus
                   Visibility(
-                    child: Expanded(flex: 2, child: CreateSpecialOrderOtherProductPage()),
+                    child: Expanded(flex: 3, child: CreateSpecialOrderOtherProductPage()),
                     visible: !focusOnLowerElements,
                   ),
 

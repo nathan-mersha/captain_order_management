@@ -48,13 +48,6 @@ class _SpecialOrderCustomerInformationPageState extends State<SpecialOrderCustom
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Customer Information",
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
-            ),
-            SizedBox(
-              height: 18,
-            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

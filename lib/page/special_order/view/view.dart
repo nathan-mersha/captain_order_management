@@ -18,7 +18,6 @@ class SpecialOrderTablePage extends StatefulWidget {
 }
 
 class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
-
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
@@ -99,7 +98,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                             headingRowHeight: 70,
                             header: snapshot.connectionState == ConnectionState.done
                                 ? Text(
-                                    "List of orders",
+                                    "List of special orders",
                                     style: TextStyle(
                                       fontSize: 13,
                                     ),
@@ -131,44 +130,30 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                             },
                             sortColumnIndex: _sortColumnIndex,
                             sortAscending: _sortAscending,
-                            columnSpacing: 20,
                             columns: [
                               DataColumn(
-                                label: Text("Customer",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<String>((d) => d.customer.name, columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Orders",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Address", style: TextStyle(fontWeight: FontWeight.w800)),
+                                onSort: (columnIndex, ascending) {
+                                  return _sort<String>((d) => d.customer.address, columnIndex, ascending);
+                                },
                               ),
                               DataColumn(
-                                label: Text("Total(br)",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Orders", style: TextStyle(fontWeight: FontWeight.w800)),
+                              ),
+                              DataColumn(
+                                label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Remaining(br)",style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) {
-                                  return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
-                                },
-                              ),
-                              DataColumn(
-                                label: Text("Paid",style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
-                                },
-                              ),
-
-                              DataColumn(
-                                label: Text("Status",style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
-                                },
-                              ),
-                              DataColumn(
-                                label: Text("Date",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
                               ),
                               DataColumn(
@@ -187,8 +172,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.create),
               onPressed: () {
-                SpecialOrder specialOrder =
-                    SpecialOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, products: []);
+                SpecialOrder specialOrder = SpecialOrder(totalAmount: 0, products: []);
                 widget.navigateTo(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
               },
             ),
@@ -213,7 +197,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
       children: [
         Icon(
           Icons.invert_colors,
-          color: Colors.black54,
+          color: Colors.deepPurpleAccent,
           size: 12,
         ),
         SizedBox(
@@ -221,14 +205,14 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
         ),
         Text(
           paintCount.toStringAsFixed(0),
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         SizedBox(
-          width: 5,
+          width: 8,
         ),
         Icon(
           Icons.shopping_basket,
-          color: Colors.black54,
+          color: Colors.blue,
           size: 12,
         ),
         SizedBox(
@@ -236,7 +220,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
         ),
         Text(
           otherCount.toStringAsFixed(0),
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         )
       ],
     );
@@ -284,11 +268,6 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
     bool allCompleted = products.any((Product product) => product.status == SpecialOrderMainPageState.COMPLETED);
     return allCompleted ? SpecialOrderMainPageState.COMPLETED : SpecialOrderMainPageState.PENDING;
   }
-
-  static String getPaidStatus(SpecialOrder specialOrder) {
-     bool paidInFull = specialOrder.totalAmount == specialOrder.advancePayment;
-     return paidInFull.toString();
-  }
 }
 
 class _SpecialOrderDataSource extends DataTableSource {
@@ -328,7 +307,6 @@ class _SpecialOrderDataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-
         /// Customer
         DataCell(
             Text(
@@ -336,26 +314,20 @@ class _SpecialOrderDataSource extends DataTableSource {
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           navigate(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
-
-
-//          createSpecialOrderKey.currentState.passForUpdate(specialOrders[index]);
         }),
+
+        /// Address
+        DataCell(
+          Text(
+            specialOrder.customer.address ?? '-',
+          ),
+        ),
 
         /// Orders
         DataCell(SpecialOrderTablePageState.getOrdersCount(specialOrder)),
 
         /// Total (br)
-        DataCell(Text(oCCy.format(specialOrder.totalAmount) ?? '-')),
-
-        /// Remaining payment (br)
-        DataCell(Text(oCCy.format(specialOrder.remainingPayment) ?? '-',)),
-
-        /// Paid
-        DataCell(Icon(Icons.check_circle, color: SpecialOrderTablePageState.getPaidStatus(specialOrder) == "true" ? Colors.green : Colors.black54,size: 17,)),
-
-
-        /// Status
-        DataCell(Icon(Icons.check_circle, color: SpecialOrderTablePageState.getOverallStatus(specialOrder) == SpecialOrderMainPageState.COMPLETED ? Colors.green : Colors.black54, size: 17,)),
+        DataCell(Text("${oCCy.format(specialOrder.totalAmount)} br" ?? '-')),
 
         /// First modified
         DataCell(Text(DateFormat.yMMMd().format(specialOrder.firstModified))),

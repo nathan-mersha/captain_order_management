@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
@@ -9,19 +13,17 @@ class SpecialOrderDAL {
   static String createTable = "CREATE TABLE $TABLE_NAME (" +
       "${SpecialOrder.ID} TEXT," +
       "${SpecialOrder.ID_FS} TEXT," +
-      "${SpecialOrder.EMPLOYEE} BLOB," +
-      "${SpecialOrder.CUSTOMER} BLOB," +
-      "${SpecialOrder.PRODUCTS} BLOB," +
+      "${SpecialOrder.EMPLOYEE} TEXT," +
+      "${SpecialOrder.CUSTOMER} TEXT," +
+      "${SpecialOrder.PRODUCTS} TEXT," +
       "${SpecialOrder.TOTAL_AMOUNT} REAL," +
-      "${SpecialOrder.ADVANCE_PAYMENT} REAL," +
-      "${SpecialOrder.REMAINING_PAYMENT} REAL," +
-      "${SpecialOrder.PAID_IN_FULL} BLOB," +
       "${SpecialOrder.NOTE} TEXT," +
       "${SpecialOrder.FIRST_MODIFIED} TEXT," +
       "${SpecialOrder.LAST_MODIFIED} TEXT" +
       ")";
 
   static Future<SpecialOrder> create(SpecialOrder specialOrder) async {
+    print("Create here special order ");
     // updating first and last modified stamps.
     var uuid = Uuid();
     specialOrder.id = uuid.hashCode.toString();
@@ -44,13 +46,10 @@ class SpecialOrderDAL {
       return SpecialOrder(
         id: maps[i][SpecialOrder.ID],
         idFS: maps[i][SpecialOrder.ID_FS],
-        employee: maps[i][SpecialOrder.EMPLOYEE],
-        customer: maps[i][SpecialOrder.CUSTOMER],
-        products: maps[i][SpecialOrder.PRODUCTS],
+        employee: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.EMPLOYEE])),
+        customer: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.CUSTOMER])),
+        products: Product.toModelList(jsonDecode(maps[i][SpecialOrder.PRODUCTS])),
         totalAmount: maps[i][SpecialOrder.TOTAL_AMOUNT],
-        advancePayment: maps[i][SpecialOrder.ADVANCE_PAYMENT],
-        remainingPayment: maps[i][SpecialOrder.REMAINING_PAYMENT],
-        paidInFull: maps[i][SpecialOrder.PAID_IN_FULL],
         note: maps[i][SpecialOrder.NOTE],
         firstModified: DateTime.parse(maps[i][SpecialOrder.FIRST_MODIFIED]),
         lastModified: DateTime.parse(maps[i][SpecialOrder.LAST_MODIFIED]),

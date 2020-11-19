@@ -15,7 +15,6 @@ class SpecialOrderPaymentInformationPage extends StatefulWidget {
 
 class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPaymentInformationPage> {
   SpecialOrder specialOrder;
-  TextEditingController _advanceController = TextEditingController();
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
   @override
@@ -37,6 +36,7 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
             ),
             Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // total amount value
                   Row(
@@ -61,21 +61,9 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
                         "advance",
                         style: getTitleStyle(),
                       ),
-
-                      /// Volume controller
-                      SizedBox(
-                        width: 100,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: _advanceController,
-                          focusNode: widget.focus,
-                          onChanged: (advanceValue) {
-                            setState(() {
-                              specialOrder.advancePayment = num.parse(advanceValue);
-                              specialOrder.calculatePaymentInfo();
-                            });
-                          },
-                        ),
+                      Text(
+                        "-",
+                        style: getTitleStyle(),
                       ),
                     ],
                   ),
@@ -89,36 +77,9 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
                         style: getTitleStyle(),
                       ),
                       Text(
-                        "${oCCy.format(specialOrder.remainingPayment)} br",
-                        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 14),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "paid in full",
+                        "-",
                         style: getTitleStyle(),
                       ),
-                      Switch(
-                        value: specialOrder.paidInFull,
-                        onChanged: (bool changed) {
-                          setState(() {
-                            if (changed) {
-                              specialOrder.paidInFull = true;
-                              specialOrder.advancePayment = specialOrder.totalAmount;
-                              specialOrder.calculatePaymentInfo();
-                            } else {
-                              specialOrder.paidInFull = false;
-                              specialOrder.advancePayment = 0; // Reset advance payment to 0
-                              specialOrder.calculatePaymentInfo();
-                            }
-                            _advanceController.text = oCCy.format(specialOrder.advancePayment);
-                          });
-                        },
-                      )
                     ],
                   ),
                 ],

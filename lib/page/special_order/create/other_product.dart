@@ -2,11 +2,11 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
-import 'package:captain/page/special_order/main.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +25,7 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
   // Text editing controllers
   TextEditingController _otherProductsController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
+  TextEditingController _unitPriceController = TextEditingController();
 
   // Lists required for view to be build
   List<Product> _otherProducts = [];
@@ -47,6 +48,8 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
   Map<String, String> measurementTypesValues;
 
   bool _keyboardIsVisible = false;
+
+  final oCCy = NumberFormat("#,##0.00", "en_US");
 
   @override
   void initState() {
@@ -96,7 +99,7 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
                 ),
               ),
               Container(
-                  height: 375,
+                  height: 400,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -166,7 +169,7 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
               : ListView(
                   children: [
                     DataTable(
-                      columnSpacing: 10,
+//                      columnSpacing: 10,
                       columns: [
                         DataColumn(
                             label: Text(
@@ -178,9 +181,10 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
                           width: 30,
                           child: Text("Qnt", style: dataColumnStyle()),
                         )), // Defines the paint type, auto-cryl/metalic
-                        DataColumn(label: Text("Unit Price", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
+                        DataColumn(
+                          label: Text("Unit Price", style: dataColumnStyle()),
+                        ), // Defines volume of the paint in ltr
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
-                        DataColumn(label: Text("Delivered", style: dataColumnStyle())),
                       ],
                       rows: specialOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
                         return DataRow(cells: [
@@ -200,16 +204,8 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
                             width: 20,
                             child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
                           )),
-                          DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
-                          DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
-                          DataCell(Switch(
-                            value: otherProduct.status == SpecialOrderMainPageState.DELIVERED,
-                            onChanged: (bool changed) {
-                              setState(() {
-                                otherProduct.status = changed ? SpecialOrderMainPageState.DELIVERED : SpecialOrderMainPageState.PENDING;
-                              });
-                            },
-                          )),
+                          DataCell(Text("${oCCy.format(otherProduct.unitPrice)} br", style: dataCellStyle())),
+                          DataCell(Text("${oCCy.format(otherProduct.calculateSubTotal())} br", style: dataCellStyle())),
                         ]);
                       }).toList(),
                     )
@@ -292,6 +288,32 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
                 SizedBox(
                   height: 10,
                 ),
+
+                /// Unit price controller
+                TextFormField(
+                  validator: (unitPriceValue) {
+                    if (unitPriceValue.isEmpty) {
+                      return "Unit price must not be empty";
+                    } else if (num.tryParse(unitPriceValue) == null) {
+                      return "Unit price is not valid format";
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  controller: _unitPriceController,
+                  onChanged: (unitPriceValue) {
+                    currentOnEditProduct.unitPrice = num.parse(unitPriceValue);
+                  },
+                  onFieldSubmitted: (unitPriceValue) {
+                    currentOnEditProduct.unitPrice = num.parse(unitPriceValue);
+                  },
+                  decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br")),
+                ),
+
+                SizedBox(
+                  height: 10,
+                ),
                 Align(
                   alignment: Alignment.topRight,
                   child: OutlineButton(
@@ -336,6 +358,7 @@ class CreateSpecialOrderOtherProductPageState extends State<CreateSpecialOrderOt
     setState(() {
       _otherProductsController.clear();
       _quantityController.clear();
+      _unitPriceController.clear();
     });
   }
 }

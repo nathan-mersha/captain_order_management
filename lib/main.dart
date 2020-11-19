@@ -100,8 +100,7 @@ class MyAppState extends State<MyApp> {
             manufacturer: paintValue["Car"].toLowerCase(),
             note: "Measure id is ${paintValue["MeasureID"]}",
             unitPrice: metalicUnitPrice,
-            colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString()
-        );
+            colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString());
         await createPaint(paint);
       });
       cSP.paintProductSeeded = true;

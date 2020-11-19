@@ -1,7 +1,5 @@
-import 'package:captain/db/dal/message.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/special_order.dart';
-import 'package:captain/db/model/message.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
-import 'package:sms/sms.dart';
 
 class CreateSpecialOrderPaintPage extends StatefulWidget {
   final Function navigateTo;
@@ -33,6 +30,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
   // Text editing controllers
   TextEditingController _paintController = TextEditingController();
   TextEditingController _volumeController = TextEditingController();
+  TextEditingController _unitPriceController = TextEditingController();
 
   // Lists required for view to be build
   List<Product> _paints = [];
@@ -114,7 +112,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                           children: [
                             buildTable(),
                             SizedBox(
-                              height: 30,
+                              height: 15,
                             ),
                             Row(
                               children: [Expanded(child: Container()), Expanded(flex: 2, child: buildForm())],
@@ -270,7 +268,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     return Visibility(
         visible: !_keyboardIsVisible,
         child: Container(
-          height: 240,
+          height: 200,
           child: !paintInSpecialOrderAvailable()
               ? noPaintAddedInSpecialOrder()
               : ListView(
@@ -284,9 +282,11 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                           style: dataColumnStyle(),
                         )),
                         DataColumn(label: Text("Type", style: dataColumnStyle())), // Defines the paint type, auto-cryl/metalic
-                        DataColumn(label: Text("Ltr", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
+                        DataColumn(
+                          label: Text("Ltr", style: dataColumnStyle()),
+                        ), // Defines volume of the paint in ltr
+                        DataColumn(label: Text("Unit Price", style: dataColumnStyle())),
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
-                        DataColumn(label: Text("Status", style: dataColumnStyle())),
                       ],
                       rows: specialOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
                         return DataRow(cells: [
@@ -316,79 +316,14 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                           )),
                           DataCell(Text(paintProduct.paintType ?? "-", style: dataCellStyle())),
                           DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
-                          DataCell(Text(paintProduct.calculateSubTotal().toString(), style: dataCellStyle())),
-                          DataCell(
-                            SizedBox(
-                              width: double.infinity,
-                              child: DropdownButton(
-                                  value: paintProduct.status,
-                                  isExpanded: true,
-                                  iconSize: 16,
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: getStatusColor(paintProduct.status),
-                                  ),
-                                  items: statusTypes.map<DropdownMenuItem<String>>((String statusValue) {
-                                    return DropdownMenuItem(
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            statusTypeValues[statusValue],
-                                            style: TextStyle(fontSize: 12, color: getStatusColor(statusValue)),
-                                          ),
-                                        ],
-                                      ),
-                                      value: statusValue,
-                                    );
-                                  }).toList(),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      paintProduct.status = newValue;
-                                      notifyUserViaSMS(specialOrder);
-                                    });
-                                  }),
-                            ),
-                          ),
+                          DataCell(Text("${oCCy.format(paintProduct.unitPrice)} br", style: dataCellStyle())),
+                          DataCell(Text("${oCCy.format(paintProduct.calculateSubTotal())} br", style: dataCellStyle())),
                         ]);
                       }).toList(),
                     )
                   ],
                 ),
         ));
-  }
-
-  notifyUserViaSMS(SpecialOrder specialOrder) async {
-    if (specialOrder.customer != null && specialOrder.customer.phoneNumber != null) {
-      bool allPaintsCompleted = specialOrder.products.every((Product product) {
-        if (product.type == CreateProductViewState.PAINT) {
-          return product.status == SpecialOrderMainPageState.COMPLETED;
-        } else {
-          return true;
-        }
-      });
-
-      if (allPaintsCompleted) {
-        String smsMessage = "Hello ${specialOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(specialOrder.firstModified ?? DateTime.now())}, has been completed."
-            "\n Your outstanding is : "
-            "\n Total amount ${oCCy.format(specialOrder.totalAmount)}br "
-            "\n Advance payment ${oCCy.format(specialOrder.advancePayment)}br"
-            "\n Remaining payment ${oCCy.format(specialOrder.remainingPayment)}br"
-            "\n Kapci Paints";
-
-        SmsSender sender = SmsSender();
-        SmsMessage message = SmsMessage(specialOrder.customer.phoneNumber, smsMessage);
-        sender.sendSms(message);
-
-        Message sentMessage = Message(recipient: specialOrder.customer.name, body: smsMessage);
-        MessageDAL.create(sentMessage);
-
-        String where = "${Product.ID} = ?";
-        List<String> whereArgs = [specialOrder.id];
-        await SpecialOrderDAL.update(where: where, whereArgs: whereArgs, specialOrder: specialOrder);
-
-        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${specialOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
-      }
-    }
   }
 
   Color getStatusColor(String status) {
@@ -485,7 +420,33 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                 ),
 
                 SizedBox(
-                  height: 16,
+                  height: 10,
+                ),
+
+                /// Unit price controller
+                TextFormField(
+                  validator: (unitPriceValue) {
+                    if (unitPriceValue.isEmpty) {
+                      return "Unit price must not be empty";
+                    } else if (num.tryParse(unitPriceValue) == null) {
+                      return "Unit price is not valid format";
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  controller: _unitPriceController,
+                  onChanged: (unitPriceValue) {
+                    _currentOnEditPaint.unitPrice = num.parse(unitPriceValue);
+                  },
+                  onFieldSubmitted: (unitPriceValue) {
+                    _currentOnEditPaint.unitPrice = num.parse(unitPriceValue);
+                  },
+                  decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br")),
+                ),
+
+                SizedBox(
+                  height: 8,
                 ),
                 Align(
                   alignment: Alignment.topRight,
@@ -534,6 +495,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     setState(() {
       _paintController.clear();
       _volumeController.clear();
+      _unitPriceController.clear();
     });
   }
 }

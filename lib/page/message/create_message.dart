@@ -188,7 +188,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
     List<String> recipients = await getRecipientPhoneNumbers();
 
     /// open sms dialog here send sms here.
-    if(recipients.isNotEmpty){
+    if (recipients.isNotEmpty) {
       sendSMS(message: message.body, recipients: recipients);
       Message createdMessage = await MessageDAL.create(message);
       createInFSAndUpdateLocally(createdMessage);
@@ -232,7 +232,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
       personnels = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
     }
 
-    if(personnels != null && personnels.length > 0){
+    if (personnels != null && personnels.length > 0) {
       personnels.forEach((Personnel personnel) {
         recipients.add(personnel.phoneNumber);
       });
