@@ -18,7 +18,6 @@ class NormalOrderTablePage extends StatefulWidget {
 }
 
 class NormalOrderTablePageState extends State<NormalOrderTablePage> {
-
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
@@ -134,46 +133,46 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                             columnSpacing: 20,
                             columns: [
                               DataColumn(
-                                label: Text("Customer",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<String>((d) => d.customer.name, columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Orders",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Orders", style: TextStyle(fontWeight: FontWeight.w800)),
                               ),
                               DataColumn(
-                                label: Text("Total(br)",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Remaining(br)",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Remaining(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Paid",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Paid", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Notified",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Notified", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Status",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Status", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Date",style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
                               ),
                               DataColumn(
@@ -218,7 +217,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
       children: [
         Icon(
           Icons.invert_colors,
-          color: Colors.black54,
+          color: Colors.deepPurpleAccent,
           size: 12,
         ),
         SizedBox(
@@ -226,14 +225,14 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
         ),
         Text(
           paintCount.toStringAsFixed(0),
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         SizedBox(
-          width: 5,
+          width: 8,
         ),
         Icon(
           Icons.shopping_basket,
-          color: Colors.black54,
+          color: Colors.blue,
           size: 12,
         ),
         SizedBox(
@@ -241,7 +240,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
         ),
         Text(
           otherCount.toStringAsFixed(0),
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         )
       ],
     );
@@ -286,13 +285,30 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
 
   static String getOverallStatus(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
-    bool allCompleted = products.any((Product product) => product.status == NormalOrderMainPageState.COMPLETED);
-    return allCompleted ? NormalOrderMainPageState.COMPLETED : NormalOrderMainPageState.PENDING;
+    bool allCompleted = products.every((Product product) => product.status == NormalOrderMainPageState.COMPLETED);
+    bool allDelivered = products.every((Product product) => product.status == NormalOrderMainPageState.DELIVERED);
+    if (allCompleted) {
+      return NormalOrderMainPageState.COMPLETED;
+    } else if (allDelivered) {
+      return NormalOrderMainPageState.DELIVERED;
+    } else {
+      return NormalOrderMainPageState.PENDING;
+    }
+  }
+
+  static Color getStatusColor(String status) {
+    if (status == NormalOrderMainPageState.COMPLETED) {
+      return Colors.green;
+    } else if (status == NormalOrderMainPageState.DELIVERED) {
+      return Colors.blue;
+    } else {
+      return Colors.black26;
+    }
   }
 
   static String getPaidStatus(NormalOrder normalOrder) {
-     bool paidInFull = normalOrder.totalAmount == normalOrder.advancePayment;
-     return paidInFull.toString();
+    bool paidInFull = normalOrder.totalAmount == normalOrder.advancePayment;
+    return paidInFull.toString();
   }
 }
 
@@ -333,7 +349,6 @@ class _NormalOrderDataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-
         /// Customer
         DataCell(
             Text(
@@ -341,9 +356,6 @@ class _NormalOrderDataSource extends DataTableSource {
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
-
-
-//          createNormalOrderKey.currentState.passForUpdate(normalOrders[index]);
         }),
 
         /// Orders
@@ -353,16 +365,30 @@ class _NormalOrderDataSource extends DataTableSource {
         DataCell(Text(oCCy.format(normalOrder.totalAmount) ?? '-')),
 
         /// Remaining payment (br)
-        DataCell(Text(oCCy.format(normalOrder.remainingPayment) ?? '-',)),
+        DataCell(Text(
+          oCCy.format(normalOrder.remainingPayment) ?? '-',
+        )),
 
         /// Paid
-        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true" ? Colors.green : Colors.black54,size: 17,)),
+        DataCell(Icon(
+          Icons.check_circle,
+          color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true" ? Colors.green : Colors.black26,
+          size: 17,
+        )),
 
         /// Notified
-        DataCell(Icon(Icons.notifications, color: normalOrder.userNotified ? Colors.green : Colors.black54,size: 17,)),
+        DataCell(Icon(
+          Icons.notifications,
+          color: normalOrder.userNotified ? Colors.green : Colors.black26,
+          size: 17,
+        )),
 
         /// Status
-        DataCell(Icon(Icons.check_circle, color: NormalOrderTablePageState.getOverallStatus(normalOrder) == NormalOrderMainPageState.COMPLETED ? Colors.green : Colors.black54, size: 17,)),
+        DataCell(Icon(
+          Icons.check_circle,
+          color: NormalOrderTablePageState.getStatusColor(NormalOrderTablePageState.getOverallStatus(normalOrder)),
+          size: 17,
+        )),
 
         /// First modified
         DataCell(Text(DateFormat.yMMMd().format(normalOrder.firstModified))),

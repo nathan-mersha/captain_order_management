@@ -38,7 +38,7 @@ class CustomerTableState extends State<CustomerTable> {
   Future<List<Personnel>> getListOfCustomers() async {
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
-    List<Personnel> customers = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+    List<Personnel> customers = await PersonnelDAL.find(where: where, whereArgs: whereArgs,);
     return customers;
   }
 

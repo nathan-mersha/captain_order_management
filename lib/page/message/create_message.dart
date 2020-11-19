@@ -188,14 +188,16 @@ class CreateMessageViewState extends State<CreateMessageView> {
     List<String> recipients = await getRecipientPhoneNumbers();
 
     /// open sms dialog here send sms here.
-    sendSMS(message: message.body, recipients: recipients);
-    Message createdMessage = await MessageDAL.create(message);
-    createInFSAndUpdateLocally(createdMessage);
+    if(recipients.isNotEmpty){
+      sendSMS(message: message.body, recipients: recipients);
+      Message createdMessage = await MessageDAL.create(message);
+      createInFSAndUpdateLocally(createdMessage);
 
-    /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created message to ${message.recipient}", "success", () {}, backgroundColor: Colors.green);
-    // cleaning fields if device is able to send message
-    cleanFields();
+      /// Showing notification
+      CNotifications.showSnackBar(context, "Successfuly created message to ${message.recipient}", "success", () {}, backgroundColor: Colors.green);
+      // cleaning fields if device is able to send message
+      cleanFields();
+    }
   }
 
   Future createInFSAndUpdateLocally(Message message) async {
@@ -217,26 +219,30 @@ class CreateMessageViewState extends State<CreateMessageView> {
 
   Future<List<String>> getRecipientPhoneNumbers() async {
     List<String> recipients = [];
-    List<Personnel> customers;
+    List<Personnel> personnels;
     if (message.recipient == ALL) {
-      customers = await PersonnelDAL.find();
+      personnels = await PersonnelDAL.find();
     } else if (message.recipient == CUSTOMERS) {
       String where = "${Personnel.TYPE} = ?";
       List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
-      customers = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+      personnels = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
     } else if (message.recipient == EMPLOYEES) {
       String where = "${Personnel.TYPE} = ?";
       List<String> whereArgs = [Personnel.EMPLOYEE]; // Querying only employees
-      customers = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+      personnels = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
     }
 
-    customers.forEach((Personnel personnel) {
-      recipients.add(personnel.phoneNumber);
-    });
+    if(personnels != null && personnels.length > 0){
+      personnels.forEach((Personnel personnel) {
+        recipients.add(personnel.phoneNumber);
+      });
+    }
+
     return recipients;
   }
 
   void passForView(Message passedMessage) async {
+    passedMessage.recipient = null;
     setState(() {
       message = passedMessage;
       _bodyController.text = passedMessage.body;

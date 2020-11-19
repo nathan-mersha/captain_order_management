@@ -42,9 +42,7 @@ class NormalOrderDAL {
   /// whereArgs : [2]
   static Future<List<NormalOrder>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(
-            TABLE_NAME,
-          )
+        ? await global.db.query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {

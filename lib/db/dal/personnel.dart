@@ -38,9 +38,7 @@ class PersonnelDAL {
   /// whereArgs : [2]
   static Future<List<Personnel>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(
-            TABLE_NAME,
-          )
+        ? await global.db.query(TABLE_NAME, orderBy: "${Personnel.LAST_MODIFIED} DESC")
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Personnel.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {

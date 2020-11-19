@@ -3,7 +3,6 @@ import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/message.dart';
 import 'package:captain/db/model/normal_order.dart';
-import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
