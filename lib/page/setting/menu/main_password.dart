@@ -23,10 +23,11 @@ class _MainPasswordSettingsState extends State<MainPasswordSettings> {
         Container(
           width: double.infinity,
           child: Text(
-            "Change main password",
+            "Change Main Password",
             style: TextStyle(
               color: Colors.white,
               fontSize: 12,
+              fontWeight: FontWeight.w800
             ),
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
