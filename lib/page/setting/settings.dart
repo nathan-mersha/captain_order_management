@@ -29,12 +29,12 @@ class _SettingsPageState extends State<SettingsPage> {
   static const int IMPORT = 6;
   static const int DEVELOPER = 7;
 
-  int selectedMenuIndex = THEME;
+  int selectedMenuIndex = MAIN_PASSWORD;
 
   List menus = [
     {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
     {NAME: "Theme", ICON: Icons.style, DESCRIPTION: "change styling of your application", CHILD: ThemeSettings()},
-    {NAME: "Main Password", ICON: Icons.lock_open, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
+    {NAME: "Main Password", ICON: Icons.lock_rounded, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
     {NAME: "Admin Password", ICON: Icons.admin_panel_settings, DESCRIPTION: "lock the features available only for admin", CHILD: AdminPasswordSettings()},
     {NAME: "Customer Notification", ICON: Icons.notification_important, DESCRIPTION: "Notify customer customers when order is completed", CHILD: CustomerNotificationSettings()},
     {NAME: "Export", ICON: Icons.arrow_forward, DESCRIPTION: "Export your database for future restore", CHILD: ExportSettings()},
