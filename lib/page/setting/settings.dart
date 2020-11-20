@@ -1,5 +1,6 @@
 import 'package:captain/page/setting/menu/admin_password.dart';
 import 'package:captain/page/setting/menu/customer_notification.dart';
+import 'package:captain/page/setting/menu/default_paint_price.dart';
 import 'package:captain/page/setting/menu/developer.dart';
 import 'package:captain/page/setting/menu/export.dart';
 import 'package:captain/page/setting/menu/import.dart';
@@ -25,11 +26,12 @@ class _SettingsPageState extends State<SettingsPage> {
   static const int MAIN_PASSWORD = 2;
   static const int ADMIN_PASSWORD = 3;
   static const int CUSTOMER_NOTIFICATION = 4;
-  static const int EXPORT = 5;
-  static const int IMPORT = 6;
-  static const int DEVELOPER = 7;
+  static const int DEFAULT_PAINT_PRICE = 5;
+  static const int EXPORT = 6;
+  static const int IMPORT = 7;
+  static const int DEVELOPER = 8;
 
-  int selectedMenuIndex = ADMIN_PASSWORD;
+  int selectedMenuIndex = DEFAULT_PAINT_PRICE;
 
   List menus = [
     {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
@@ -37,6 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
     {NAME: "Main Password", ICON: Icons.lock_rounded, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
     {NAME: "Admin Password", ICON: Icons.admin_panel_settings, DESCRIPTION: "lock the features available only for admin", CHILD: AdminPasswordSettings()},
     {NAME: "Customer Notification", ICON: Icons.notification_important, DESCRIPTION: "Notify customer customers when order is completed", CHILD: CustomerNotificationSettings()},
+    {NAME: "Paint Price", ICON: Icons.format_paint, DESCRIPTION: "Setup default price for paint", CHILD: DefaultPaintPriceSettings()},
     {NAME: "Export", ICON: Icons.arrow_forward, DESCRIPTION: "Export your database for future restore", CHILD: ExportSettings()},
     {NAME: "Import", ICON: Icons.arrow_back, DESCRIPTION: "Import your database and restore your content", CHILD: ImportSettings()},
     {NAME: "Developer", ICON: Icons.code, DESCRIPTION: "Who was the software developed by", CHILD: DeveloperSettings()},
@@ -67,16 +70,11 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             title: Text(
                               menus[index][NAME],
-                              style: TextStyle(color: Colors.black87, fontSize: selectedMenuIndex == index ? 15 : 14, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                              style: TextStyle(color: Colors.black87, fontSize: selectedMenuIndex == index ? 14 : 15, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                             ),
-                            subtitle: Text(menus[index][DESCRIPTION], style: TextStyle(fontSize: selectedMenuIndex == index ? 12 : 11),),
-                            trailing: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.navigate_next,
-                                color: Colors.black54,
-                                size: selectedMenuIndex == index ? 16 : 13,
-                              ),
+                            subtitle: Text(
+                              menus[index][DESCRIPTION],
+                              style: TextStyle(fontSize: selectedMenuIndex == index ? 12 : 11),
                             ),
                             onTap: () {
                               setState(() {
@@ -92,7 +90,11 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               width: 10,
             ),
-            Expanded(flex: 2, child: Card(child: menus[selectedMenuIndex][CHILD],)),
+            Expanded(
+                flex: 2,
+                child: Card(
+                  child: menus[selectedMenuIndex][CHILD],
+                )),
           ],
         ));
   }
