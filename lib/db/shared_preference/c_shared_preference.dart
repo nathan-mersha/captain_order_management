@@ -83,7 +83,7 @@ class CSharedPreference {
   num get autoCrylPricePerLitter => pref.getDouble(AUTO_CRYL_PRICE_PER_LITTER) ?? 950;
   num get metalicPricePerLitter => pref.getDouble(METALIC_PRICE_PER_LITTER) ?? 800;
 
-  bool get featureAdminOnlyOrder => pref.getBool(FEATURE_ADMIN_ONLY_ORDER) ?? false;
+  bool get featureAdminOnlyOrder => pref.getBool(FEATURE_ADMIN_ONLY_ORDER) ?? true;
   bool get featureAdminOnlyProduct => pref.getBool(FEATURE_ADMIN_ONLY_PRODUCT) ?? false;
   bool get featureAdminOnlyEmployees => pref.getBool(FEATURE_ADMIN_ONLY_EMPLOYEES) ?? false;
   bool get featureAdminOnlyCustomers => pref.getBool(FEATURE_ADMIN_ONLY_CUSTOMERS) ?? false;

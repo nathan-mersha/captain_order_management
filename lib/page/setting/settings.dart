@@ -1,4 +1,3 @@
-import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/setting/menu/admin_password.dart';
 import 'package:captain/page/setting/menu/customer_notification.dart';
 import 'package:captain/page/setting/menu/developer.dart';
@@ -21,19 +20,19 @@ class _SettingsPageState extends State<SettingsPage> {
   static const String DESCRIPTION = "DESCRIPTION";
   static const String CHILD = "CHILD";
 
-  static const int LOCK_FEATURES = 1;
-  static const int THEME = 2;
-  static const int MAIN_PASSWORD = 3;
-  static const int ADMIN_PASSWORD = 4;
-  static const int CUSTOMER_NOTIFICATION = 5;
-  static const int EXPORT = 6;
-  static const int IMPORT = 7;
-  static const int DEVELOPER = 8;
+  static const int LOCK_FEATURES = 0;
+  static const int THEME = 1;
+  static const int MAIN_PASSWORD = 2;
+  static const int ADMIN_PASSWORD = 3;
+  static const int CUSTOMER_NOTIFICATION = 4;
+  static const int EXPORT = 5;
+  static const int IMPORT = 6;
+  static const int DEVELOPER = 7;
 
   int selectedMenuIndex = LOCK_FEATURES;
 
   List menus = [
-    {NAME: "Lock Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
+    {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
     {NAME: "Theme", ICON: Icons.style, DESCRIPTION: "change styling of your application", CHILD: ThemeSettings()},
     {NAME: "Main Password", ICON: Icons.lock_open, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
     {NAME: "Admin Password", ICON: Icons.admin_panel_settings, DESCRIPTION: "lock the features available only for admin", CHILD: AdminPasswordSettings()},
@@ -68,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             title: Text(
                               menus[index][NAME],
-                              style: TextStyle(color: Colors.black54, fontSize: selectedMenuIndex == index ? 14 : 13, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                              style: TextStyle(color: Colors.black87, fontSize: selectedMenuIndex == index ? 15 : 14, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                             ),
                             subtitle: Text(menus[index][DESCRIPTION], style: TextStyle(fontSize: selectedMenuIndex == index ? 12 : 11),),
                             trailing: Container(

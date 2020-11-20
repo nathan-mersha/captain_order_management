@@ -21,6 +21,12 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardPageState extends State<DashboardPage> {
+  // Defining keys
+  static const String NAME = "NAME";
+  static const String ICON_DATA = "ICON_DATA";
+  static const String CHILD = "CHILD";
+
+  
   static const int OVERVIEW_PAGE = 1;
   static const int ORDERS_PAGE = 2;
   static const int SPECIAL_ORDER_PAGE = 3;
@@ -40,21 +46,21 @@ class DashboardPageState extends State<DashboardPage> {
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
     {
-      "name": "Captain",
-      "child": OverviewPage(),
+      NAME: "Captain",
+      CHILD: OverviewPage(),
     },
-    {"name": "Overview", "iconData": Icons.bubble_chart, "child": OverviewPage()},
-    {"name": "Orders", "iconData": Icons.palette, "child": NormalOrderMainPage()},
-    {"name": "Special Order", "iconData": Icons.star, "child": SpecialOrderMainPage()},
-    {"name": "Products", "iconData": Icons.business_center, "child": HomeProductPage()},
-    {"name": "Customers", "iconData": Icons.supervisor_account, "child": HomeCustomerPage()},
-    {"name": "Returned Orders", "iconData": Icons.assignment_return, "child": HomeReturnedOrderPage()},
-    {"name": "Employees", "iconData": Icons.person, "child": HomeEmployeePage()},
-    {"name": "Punch", "iconData": Icons.call_split, "child": HomePunchPage()},
-    {"name": "Analysis", "iconData": Icons.pie_chart_outlined, "child": AnalysisPage()},
-    {"name": "Messages", "iconData": Icons.question_answer, "child": HomeMessagePage()},
-    {"name": "Settings", "iconData": Icons.settings, "child": SettingsPage()},
-    {"name": "Developer", "iconData": Icons.code, "child": DeveloperPage()},
+    {NAME: "Overview", ICON_DATA: Icons.bubble_chart, CHILD: OverviewPage()},
+    {NAME: "Orders", ICON_DATA: Icons.palette, CHILD: NormalOrderMainPage()},
+    {NAME: "Special Order", ICON_DATA: Icons.star, CHILD: SpecialOrderMainPage()},
+    {NAME: "Products", ICON_DATA: Icons.business_center, CHILD: HomeProductPage()},
+    {NAME: "Customers", ICON_DATA: Icons.supervisor_account, CHILD: HomeCustomerPage()},
+    {NAME: "Returned Orders", ICON_DATA: Icons.assignment_return, CHILD: HomeReturnedOrderPage()},
+    {NAME: "Employees", ICON_DATA: Icons.person, CHILD: HomeEmployeePage()},
+    {NAME: "Punch", ICON_DATA: Icons.call_split, CHILD: HomePunchPage()},
+    {NAME: "Analysis", ICON_DATA: Icons.pie_chart_outlined, CHILD: AnalysisPage()},
+    {NAME: "Messages", ICON_DATA: Icons.question_answer, CHILD: HomeMessagePage()},
+    {NAME: "Settings", ICON_DATA: Icons.settings, CHILD: SettingsPage()},
+    {NAME: "Developer", ICON_DATA: Icons.code, CHILD: DeveloperPage()},
   ];
 
   @override
@@ -103,13 +109,13 @@ class DashboardPageState extends State<DashboardPage> {
                               leading: Container(
                                 padding: EdgeInsets.only(left: 10),
                                 child: Icon(
-                                  menus[index]["iconData"],
+                                  menus[index][ICON_DATA],
                                   color: Colors.white,
                                   size: selectedMenuIndex == index ? 20 : 16,
                                 ),
                               ),
                               title: Text(
-                                menus[index]["name"],
+                                menus[index][NAME],
                                 style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                               ),
                               trailing: Container(
@@ -142,7 +148,7 @@ class DashboardPageState extends State<DashboardPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            menus[selectedMenuIndex]["name"],
+                            menus[selectedMenuIndex][NAME],
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800),
                           ),
                           Text(
@@ -152,7 +158,7 @@ class DashboardPageState extends State<DashboardPage> {
                         ],
                       ),
                     ),
-                    Container(child: menus[selectedMenuIndex]["child"], padding: EdgeInsets.all(8))
+                    Container(child: menus[selectedMenuIndex][CHILD], padding: EdgeInsets.all(8))
                   ],
                 ),
               )
