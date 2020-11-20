@@ -24,14 +24,10 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
           width: double.infinity,
           child: Text(
             "Change Admin Password",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w800
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-          color: Theme.of(context).primaryColor,
+          color: Colors.black45,
         ),
         SizedBox(
           height: 40,
@@ -62,7 +58,6 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
                     if (nameValue.isEmpty) {
                       return "Please enter password again";
                     } else if (_mainPasswordController.text != _confirmPasswordController.text) {
-
                       clearInputs();
                       return "Password do not match";
                     } else {
@@ -73,7 +68,6 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(labelText: "Confirm password", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                 ),
-
                 SizedBox(
                   height: 35,
                 ),
@@ -88,11 +82,9 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-
                         cSharedPreference.adminPassword = _mainPasswordController.text;
                         clearInputs();
                         CNotifications.showSnackBar(context, "Successfuly changed admin password", "success", () {}, backgroundColor: Colors.green);
-
                       }
                     },
                   ),
@@ -105,8 +97,7 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
     );
   }
 
-
-  void clearInputs(){
+  void clearInputs() {
     _mainPasswordController.clear();
     _confirmPasswordController.clear();
   }

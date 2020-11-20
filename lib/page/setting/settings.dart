@@ -1,7 +1,8 @@
+import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/setting/menu/admin_password.dart';
 import 'package:captain/page/setting/menu/customer_notification.dart';
 import 'package:captain/page/setting/menu/default_paint_price.dart';
-import 'package:captain/page/setting/menu/developer.dart';
 import 'package:captain/page/setting/menu/export.dart';
 import 'package:captain/page/setting/menu/import.dart';
 import 'package:captain/page/setting/menu/lock_features.dart';
@@ -31,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
   static const int IMPORT = 7;
   static const int DEVELOPER = 8;
 
-  int selectedMenuIndex = DEFAULT_PAINT_PRICE;
+  int selectedMenuIndex = CUSTOMER_NOTIFICATION; // todo : change to LOCK_FEATURES
 
   List menus = [
     {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
@@ -42,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
     {NAME: "Paint Price", ICON: Icons.format_paint, DESCRIPTION: "Setup default price for paint", CHILD: DefaultPaintPriceSettings()},
     {NAME: "Export", ICON: Icons.arrow_forward, DESCRIPTION: "Export your database for future restore", CHILD: ExportSettings()},
     {NAME: "Import", ICON: Icons.arrow_back, DESCRIPTION: "Import your database and restore your content", CHILD: ImportSettings()},
-    {NAME: "Developer", ICON: Icons.code, DESCRIPTION: "Who was the software developed by", CHILD: DeveloperSettings()},
+    {NAME: "Developer", ICON: Icons.code, DESCRIPTION: "Who was the software developed by", CHILD: DeveloperPage()},
   ];
   @override
   Widget build(BuildContext context) {

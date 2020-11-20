@@ -29,7 +29,7 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
             style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-          color: Theme.of(context).primaryColor,
+          color: Colors.black45,
         ),
         SizedBox(
           height: 40,

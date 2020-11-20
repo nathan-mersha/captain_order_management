@@ -26,7 +26,6 @@ class DashboardPageState extends State<DashboardPage> {
   static const String ICON_DATA = "ICON_DATA";
   static const String CHILD = "CHILD";
 
-  
   static const int OVERVIEW_PAGE = 1;
   static const int ORDERS_PAGE = 2;
   static const int SPECIAL_ORDER_PAGE = 3;

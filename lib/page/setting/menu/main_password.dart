@@ -24,14 +24,10 @@ class _MainPasswordSettingsState extends State<MainPasswordSettings> {
           width: double.infinity,
           child: Text(
             "Change Main Password",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w800
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-          color: Theme.of(context).primaryColor,
+          color: Colors.black45,
         ),
         SizedBox(
           height: 40,
@@ -62,7 +58,6 @@ class _MainPasswordSettingsState extends State<MainPasswordSettings> {
                     if (nameValue.isEmpty) {
                       return "Please enter password again";
                     } else if (_mainPasswordController.text != _confirmPasswordController.text) {
-
                       clearInputs();
                       return "Password do not match";
                     } else {
@@ -105,11 +100,9 @@ class _MainPasswordSettingsState extends State<MainPasswordSettings> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-
                         cSharedPreference.mainPassword = _mainPasswordController.text;
                         clearInputs();
                         CNotifications.showSnackBar(context, "Successfuly changed main password", "success", () {}, backgroundColor: Colors.green);
-
                       }
                     },
                   ),
@@ -122,8 +115,7 @@ class _MainPasswordSettingsState extends State<MainPasswordSettings> {
     );
   }
 
-
-  void clearInputs(){
+  void clearInputs() {
     _mainPasswordController.clear();
     _confirmPasswordController.clear();
   }
