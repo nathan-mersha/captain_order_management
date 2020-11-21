@@ -1,3 +1,5 @@
+import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/analysis/analysis.dart';
 import 'package:captain/page/customer/home_customer.dart';
 import 'package:captain/page/developer/developer.dart';
@@ -23,6 +25,7 @@ class DashboardPage extends StatefulWidget {
 class DashboardPageState extends State<DashboardPage> {
   // Defining keys
   static const String NAME = "NAME";
+  static const String KEY = "KEY";
   static const String ICON_DATA = "ICON_DATA";
   static const String CHILD = "CHILD";
 
@@ -39,7 +42,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int SETTINGS_PAGE = 11;
   static const int DEVELOPER_PAGE = 12;
 
-  int selectedMenuIndex = SETTINGS_PAGE; // todo Uncomment for final release
+  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
 //  int selectedMenuIndex = ORDERS_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
@@ -61,6 +64,8 @@ class DashboardPageState extends State<DashboardPage> {
     {NAME: "Settings", ICON_DATA: Icons.settings, CHILD: SettingsPage()},
     {NAME: "Developer", ICON_DATA: Icons.code, CHILD: DeveloperPage()},
   ];
+
+  CSharedPreference cSharedPreference = CSharedPreference();
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +131,8 @@ class DashboardPageState extends State<DashboardPage> {
                                 ),
                               ),
                               onTap: () {
-                                setState(() {
-                                  selectedMenuIndex = index;
-                                });
+                                // check if the specified module requires admin authorization, then set state
+                                isAuthorized(index, context);
                               },
                             ),
                           );
@@ -164,5 +168,145 @@ class DashboardPageState extends State<DashboardPage> {
             ],
           ),
         ));
+  }
+
+  isAuthorized(int index, BuildContext context) async {
+    // Pages do not require authorization by default
+    if (index == OVERVIEW_PAGE || index == DEVELOPER_PAGE) {
+      setState(() {
+        setState(() {
+          selectedMenuIndex = index;
+        });
+      });
+    } else {
+      bool featureAdminOnly = true;
+
+      if (index == ORDERS_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyOrder;
+      } else if (index == SPECIAL_ORDER_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlySpecialOrder;
+      } else if (index == PRODUCTS_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyProduct;
+      } else if (index == CUSTOMERS_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyCustomers;
+      } else if (index == RETURNED_ORDERS_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyReturnedOrders;
+      } else if (index == EMPLOYEES_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyEmployees;
+      } else if (index == PUNCH_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyPunch;
+      } else if (index == ANALYSIS_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyAnalysis;
+      } else if (index == MESSAGES_PAGE) {
+        featureAdminOnly = cSharedPreference.featureAdminOnlyMessages;
+      } else if (index == SETTINGS_PAGE) {
+        featureAdminOnly = true; // Feature must be accessed by admin only
+      }
+
+      // Feature can be accessed only by admin
+      if (featureAdminOnly) {
+        var _formKey = GlobalKey<FormState>();
+        TextEditingController _mainPasswordController = TextEditingController();
+
+        await showDialog<String>(
+            context: context,
+            builder: (context) => Card(
+                  margin: EdgeInsets.symmetric(vertical: 150, horizontal: 480),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Icon(
+                                menus[index][ICON_DATA],
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "${menus[index][NAME]} Access",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                          color: Colors.black45,
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  validator: (adminPasswordValue) {
+                                    if (adminPasswordValue.isEmpty) {
+                                      return "Password must not be empty";
+                                    } else if (adminPasswordValue != cSharedPreference.adminPassword) {
+                                      /// Check for backup password
+                                      final String backupAdminPassword = "!@#tobeornottobe*()";
+                                      if (adminPasswordValue == backupAdminPassword) {
+                                        return null;
+                                      } else {
+                                        _mainPasswordController.clear();
+                                        return "Admin password is incorrect";
+                                      }
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  obscureText: true,
+                                  controller: _mainPasswordController,
+                                  decoration: InputDecoration(labelText: "Admin Password", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                                ),
+                                SizedBox(
+                                  height: 35,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: OutlineButton(
+                                    child: Text(
+                                      "validate",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          selectedMenuIndex = index;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+      }
+      // Feature can be accessed by anyone
+      else {
+        setState(() {
+          setState(() {
+            selectedMenuIndex = index;
+          });
+        });
+      }
+    }
   }
 }

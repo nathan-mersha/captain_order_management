@@ -4,6 +4,7 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/message.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_snackbar.dart';
@@ -26,6 +27,8 @@ class CreateNormalOrderPaintPage extends StatefulWidget {
 }
 
 class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> {
+  CSharedPreference cSharedPreference = CSharedPreference();
+
   final _paintOrderFormKey = GlobalKey<FormState>();
 
   NormalOrder normalOrder;
@@ -367,13 +370,9 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         }
       });
 
-      if (allPaintsCompleted) {
-        String smsMessage = "Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())}, has been completed."
-            "\n Your outstanding is : "
-            "\n Total amount ${oCCy.format(normalOrder.totalAmount)}br "
-            "\n Advance payment ${oCCy.format(normalOrder.advancePayment)}br"
-            "\n Remaining payment ${oCCy.format(normalOrder.remainingPayment)}br"
-            "\n Kapci Paints";
+
+      if (allPaintsCompleted && cSharedPreference.sendNotificationAutomatically) {
+        String smsMessage = "Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} has been completed.Total ${oCCy.format(normalOrder.totalAmount)}br. Advance ${oCCy.format(normalOrder.advancePayment)}br. Remaining ${oCCy.format(normalOrder.remainingPayment)}br Kapci";
 
         SmsSender sender = SmsSender();
         SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);
@@ -383,13 +382,13 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         MessageDAL.create(sentMessage);
 
         normalOrder.userNotified = true;
-
-        String where = "${Product.ID} = ?";
-        List<String> whereArgs = [normalOrder.id];
-        await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
-
         CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
       }
+
+      String where = "${Product.ID} = ?";
+      List<String> whereArgs = [normalOrder.id];
+      await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
+
     }
   }
 

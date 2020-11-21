@@ -1,4 +1,3 @@
-import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/page/developer/developer.dart';
 import 'package:captain/page/setting/menu/admin_password.dart';
 import 'package:captain/page/setting/menu/customer_notification.dart';
