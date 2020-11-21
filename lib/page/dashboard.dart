@@ -42,8 +42,8 @@ class DashboardPageState extends State<DashboardPage> {
   static const int SETTINGS_PAGE = 11;
   static const int DEVELOPER_PAGE = 12;
 
-  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-//  int selectedMenuIndex = ORDERS_PAGE;
+//  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
+  int selectedMenuIndex = ORDERS_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
@@ -273,9 +273,9 @@ class DashboardPageState extends State<DashboardPage> {
                                 ),
                                 Align(
                                   alignment: Alignment.centerRight,
-                                  child: OutlineButton(
+                                  child: RaisedButton(
                                     child: Text(
-                                      "validate",
+                                      "unlock",
                                       style: TextStyle(
                                         fontSize: 11,
                                       ),
@@ -289,7 +289,12 @@ class DashboardPageState extends State<DashboardPage> {
                                       }
                                     },
                                   ),
-                                )
+                                ),
+
+                                SizedBox(height: 140,),
+                                Text("module requires admin access", style: TextStyle(fontSize: 11, color: Theme.of(context).accentColor),)
+
+
                               ],
                             ),
                           ),

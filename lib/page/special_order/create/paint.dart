@@ -4,6 +4,7 @@ import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/special_order/main.dart';
+import 'package:captain/rsr/export/pdf_exporter.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -97,10 +98,37 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       color: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                        child: Text(
-                          "Paint Order",
-                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Paint Order",
+                              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                            ),
+                            SizedBox(
+                              height: 25,
+                              child: IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: Icon(
+                                  Icons.picture_as_pdf,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Exporter exporter = Exporter();
+                                  exporter.toPdf(
+                                      customer: specialOrder.customer,
+                                      products: specialOrder.products,
+                                      totalAmount: specialOrder.totalAmount,
+                                      advanceAmount: 0,
+                                      remainingAmount: 0,
+                                      lastModified: specialOrder.lastModified,
+                                      context: context);
+                                },
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
