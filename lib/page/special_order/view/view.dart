@@ -170,7 +170,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
           ),
           Positioned(
             child: FloatingActionButton(
-              child: Icon(Icons.create),
+              child: Icon(Icons.add),
               onPressed: () {
                 SpecialOrder specialOrder = SpecialOrder(totalAmount: 0, products: []);
                 widget.navigateTo(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);

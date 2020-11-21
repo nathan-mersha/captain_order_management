@@ -36,7 +36,15 @@ class _ExportSettingsState extends State<ExportSettings> {
               child: Column(
                 children: [
                   OutlineButton(
-                      child: _exporting ? CircularProgressIndicator() : Text("Export"),
+                      child: _exporting
+                          ? SizedBox(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text("Export"),
                       onPressed: () async {
                         setState(() {
                           _exporting = true;
@@ -44,18 +52,30 @@ class _ExportSettingsState extends State<ExportSettings> {
                         String path = await getDatabasesPath();
                         File sourceFile = File("$path/${global.DB_NAME}"); // source file
                         Directory dir = await getExternalStorageDirectory();
-                        String newPath = "${dir.path}/${DateTime.now()}.db";
+
+                        String newPath = "${dir.path}/../../../../Download/${DateTime.now()}.db";
                         await copyFile(sourceFile, newPath);
                         CNotifications.showSnackBar(context, "Successfuly exported database to $newPath", "success", () {}, backgroundColor: Colors.green);
                         setState(() {
                           _exporting = false;
                         });
                       }),
-
-                  SizedBox(height: 40,),
-                  Text("Your files will be stored in", style: TextStyle(fontSize: 12, color: Colors.black54),textAlign: TextAlign.center,),
-                  SizedBox(height: 10,),
-                  Text("Internal storage / Android / data / com.awramarket.captain_order_management /", style: TextStyle(fontSize: 12, color: Colors.black87),textAlign: TextAlign.center,)
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Text(
+                    "Your files will be stored in",
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Internal storage / Download /",
+                    style: TextStyle(fontSize: 12, color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),

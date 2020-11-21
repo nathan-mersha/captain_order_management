@@ -189,7 +189,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
           ),
           Positioned(
             child: FloatingActionButton(
-              child: Icon(Icons.create),
+              child: Icon(Icons.add),
               onPressed: () {
                 NormalOrder normalOrder =
                     NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
