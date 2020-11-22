@@ -234,29 +234,9 @@ class _PunchDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-            Row(
-              children: [
-                punch.employee.profileImage == null
-                    ? Icon(
-                        Icons.person,
-                        color: Colors.black12,
-                      )
-                    : ClipOval(
-                        child: Image.memory(
-                          punch.employee.profileImage,
-                          fit: BoxFit.cover,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  punch.employee.name ?? '-',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )
-              ],
+            Text(
+              punch.employee.name ?? '-',
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           createPunchKey.currentState.passForUpdate(punchs[index]);
         }),

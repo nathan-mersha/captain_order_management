@@ -233,29 +233,9 @@ class _ReturnedOrderDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-            Row(
-              children: [
-                returnedOrder.employee.profileImage == null
-                    ? Icon(
-                        Icons.person,
-                        color: Colors.black12,
-                      )
-                    : ClipOval(
-                        child: Image.memory(
-                          returnedOrder.employee.profileImage,
-                          fit: BoxFit.cover,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  returnedOrder.employee.name ?? '-',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )
-              ],
+            Text(
+              returnedOrder.employee.name ?? '-',
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           createReturnedOrderKey.currentState.passForUpdate(returnedOrders[index]);
         }),

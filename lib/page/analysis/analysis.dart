@@ -1,3 +1,5 @@
+import 'package:captain/db/dal/returned_order.dart';
+import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/page/analysis/stats/color.dart';
 import 'package:captain/page/analysis/stats/customer.dart';
 import 'package:captain/page/analysis/stats/employee.dart';
@@ -29,29 +31,29 @@ class _AnalysisPageState extends State<AnalysisPage> {
   static const int PUNCH = 6;
   static const int SALES = 7;
 
-  int selectedMenuIndex = RETURNED_ORDER;
+  int selectedMenuIndex = RETURNED_ORDER; // todo : change analysis index to color index.
 
   List menus = [
-    {NAME: "Returned", DESCRIPTION: "Which product is being returned", ICON: Icons.assignment_return, CHILD: ReturnedOrderAnalysis()},
+    {NAME: "Returned", DESCRIPTION: "Return counts of product", ICON: Icons.assignment_return, CHILD: ReturnedOrderAnalysis()},
     {NAME: "Color", DESCRIPTION: "Color codes by sale", ICON: Icons.color_lens, CHILD: ColorAnalysis()},
     {NAME: "Product", DESCRIPTION: "Which product is being sold", ICON: Icons.business_center, CHILD: ProductAnalysis()},
-    {NAME: "Employee", DESCRIPTION: "Returned orders by employee", ICON: Icons.person, CHILD: EmployeeAnalysis()},
+    {NAME: "Employee", DESCRIPTION: "Employees grade by returns", ICON: Icons.person, CHILD: EmployeeAnalysis()},
     {NAME: "Maker", DESCRIPTION: "Sales by manufacturer", ICON: Icons.precision_manufacturing_outlined, CHILD: ManufacturerAnalysis()},
     {NAME: "Customer", DESCRIPTION: "Customers by address", ICON: Icons.supervisor_account, CHILD: CustomerAnalysis()},
-    {NAME: "Punch", DESCRIPTION: "Punch in and out by employee", ICON: Icons.call_split, CHILD: PunchAnalysis()},
+    {NAME: "Punch", DESCRIPTION: "Punch in/out by employee", ICON: Icons.call_split, CHILD: PunchAnalysis()},
     {NAME: "Sales", DESCRIPTION: "Customers are buying products", ICON: Icons.supervisor_account, CHILD: SalesAnalysis()},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 650,
+      height: 645,
       child: Column(
         children: [
           // Menus section
           Expanded(
               flex: 1,
-              child: GridView.builder(
+              child: Container(child: GridView.builder(
                 scrollDirection: Axis.vertical,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
                 itemCount: menus.length,
@@ -70,31 +72,31 @@ class _AnalysisPageState extends State<AnalysisPage> {
                           children: [
                             Expanded(
                                 child: Column(
-                              children: [
-                                Text(
-                                  menus[index][NAME],
-                                  style: TextStyle(
-                                      fontSize: isSelected(index) ? 13 : 12,
-                                      color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
-                                      fontWeight: isSelected(index) ? FontWeight.w800 : FontWeight.w200),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      menus[index][DESCRIPTION],
-                                      style: TextStyle(fontSize: 10, color: isSelected(index) ? Colors.white : Colors.black54),
-                                      textAlign: TextAlign.left,
+                                      menus[index][NAME],
+                                      style: TextStyle(
+                                          fontSize: isSelected(index) ? 13 : 12,
+                                          color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
+                                          fontWeight: isSelected(index) ? FontWeight.w800 : FontWeight.w200),
                                     ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          menus[index][DESCRIPTION],
+                                          style: TextStyle(fontSize: 10, color: isSelected(index) ? Colors.white : Colors.black54),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            )),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                )),
                             Icon(
                               menus[index][ICON],
-                              size: isSelected(index) ? 16 : 15,
+                              size: isSelected(index) ? 21 : 15,
                               color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
                             )
                           ],
@@ -104,13 +106,15 @@ class _AnalysisPageState extends State<AnalysisPage> {
                     ),
                   );
                 },
-              )),
+              ),)),
 
-          Expanded(flex: 3, child: menus[selectedMenuIndex][CHILD])
+          Expanded(flex: 4, child: menus[selectedMenuIndex][CHILD])
         ],
       ),
     );
   }
 
+
   bool isSelected(int index) => selectedMenuIndex == index;
 }
+

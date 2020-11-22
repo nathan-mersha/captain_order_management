@@ -202,29 +202,9 @@ class _CustomerDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-            Row(
-              children: [
-                customer.profileImage == null
-                    ? Icon(
-                        Icons.person,
-                        color: Colors.black12,
-                      )
-                    : ClipOval(
-                        child: Image.memory(
-                          customer.profileImage,
-                          fit: BoxFit.cover,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  customer.name ?? '-',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )
-              ],
+            Text(
+              customer.name ?? '-',
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           createCustomerKey.currentState.passForUpdate(customers[index]);
         }),
