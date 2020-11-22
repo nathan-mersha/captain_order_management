@@ -18,24 +18,27 @@ class StatisticsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     statistics.title,
                     style: TextStyle(color: _randomColor.randomColor(colorHue: ColorHue.purple, colorBrightness: ColorBrightness.dark), fontSize: 11, fontWeight: FontWeight.w800),
                   ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Text(
-                    statistics.stat,
-                    style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black87, fontSize: 21),
-                  ),
-                  Text(
-                    statistics.subTitle,
-                    style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.orange)),
-                  )
+
+                 SizedBox(height: 20,),
+                 Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                   Text(
+                     statistics.stat,
+                     style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black87, fontSize: 17),
+                   ),
+                   Text(
+                     statistics.subTitle,
+                     style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.orange)),
+                   )
+                 ],)
                 ],
               ),
               Align(

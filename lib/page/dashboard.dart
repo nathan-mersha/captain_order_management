@@ -43,7 +43,7 @@ class DashboardPageState extends State<DashboardPage> {
   static const int DEVELOPER_PAGE = 12;
 
 //  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-  int selectedMenuIndex = ORDERS_PAGE;
+  int selectedMenuIndex = ANALYSIS_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [

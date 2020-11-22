@@ -69,7 +69,9 @@ class CreateProductViewState extends State<CreateProductView> {
   Widget build(BuildContext context) {
     setPaintTypeUnitPrice();
 
-    return Card(
+    return
+
+      Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
