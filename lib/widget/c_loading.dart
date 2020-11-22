@@ -22,8 +22,8 @@ class CLoading extends StatelessWidget {
         Text(
           message,
           style: TextStyle(
-            fontSize: 13,
-            color: Colors.black38,
+            fontSize: 14,
+            color: Colors.black54,
           ),
         ),
       ],

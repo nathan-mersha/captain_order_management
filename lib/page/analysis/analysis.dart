@@ -1,5 +1,3 @@
-import 'package:captain/db/dal/returned_order.dart';
-import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/page/analysis/stats/color.dart';
 import 'package:captain/page/analysis/stats/customer.dart';
 import 'package:captain/page/analysis/stats/employee.dart';
@@ -31,7 +29,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
   static const int PUNCH = 6;
   static const int SALES = 7;
 
-  int selectedMenuIndex = RETURNED_ORDER; // todo : change analysis index to color index.
+  int selectedMenuIndex = PUNCH; // todo : change analysis index to color index.
 
   List menus = [
     {NAME: "Returned", DESCRIPTION: "Return counts of product", ICON: Icons.assignment_return, CHILD: ReturnedOrderAnalysis()},
@@ -65,6 +63,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                       });
                     },
                     child: Card(
+                      elevation: isSelected(index) ? 3 : 0.5,
                       color: isSelected(index) ? Theme.of(context).primaryColor : Colors.white,
                       child: Container(
                         child: Row(
@@ -78,7 +77,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                                       style: TextStyle(
                                           fontSize: isSelected(index) ? 13 : 12,
                                           color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
-                                          fontWeight: isSelected(index) ? FontWeight.w800 : FontWeight.w200),
+                                          fontWeight: isSelected(index) ? FontWeight.w600 : FontWeight.w200),
                                     ),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
