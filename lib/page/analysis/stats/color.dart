@@ -126,8 +126,14 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("sold ${paintsData[index].count.toStringAsFixed(0)} times", style: TextStyle(fontSize: 11, color: Colors.black38),),
-                          Text("${paintsData[index].totalLitter.toStringAsFixed(0)} ltrs", style: TextStyle(fontSize: 12, color: Colors.black87),),
+                          Text(
+                            "sold ${paintsData[index].count.toStringAsFixed(0)} times",
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
+                          ),
+                          Text(
+                            "${paintsData[index].totalLitter.toStringAsFixed(0)} ltrs",
+                            style: TextStyle(fontSize: 12, color: Colors.black87),
+                          ),
                         ],
                       ),
                       dense: true,
@@ -166,8 +172,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
 
           /// Product already exists in the analysis data
           else {
-            ColorAnalysisModel colorAnalysisModelNew =
-                ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
 
             // Removing and re-inserting data
             paintsData.removeAt(index);

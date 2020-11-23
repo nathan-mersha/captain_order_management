@@ -42,16 +42,15 @@ class DashboardPageState extends State<DashboardPage> {
   static const int SETTINGS_PAGE = 11;
   static const int DEVELOPER_PAGE = 12;
 
-//  int selectedMenuIndex = OVERVIEW_PAGE; // todo Uncomment for final release
-  int selectedMenuIndex = ANALYSIS_PAGE;
+  int selectedMenuIndex = OVERVIEW_PAGE;
 
   final String captainIcon = "assets/images/captain_icon.png";
   List menus = [
     {
       NAME: "Captain",
-      CHILD: OverviewPage(),
+      CHILD: OverViewPage(),
     },
-    {NAME: "Overview", ICON_DATA: Icons.bubble_chart, CHILD: OverviewPage()},
+    {NAME: "Overview", ICON_DATA: Icons.bubble_chart, CHILD: OverViewPage()},
     {NAME: "Orders", ICON_DATA: Icons.palette, CHILD: NormalOrderMainPage()},
     {NAME: "Special Order", ICON_DATA: Icons.star, CHILD: SpecialOrderMainPage()},
     {NAME: "Products", ICON_DATA: Icons.business_center, CHILD: HomeProductPage()},
@@ -290,11 +289,13 @@ class DashboardPageState extends State<DashboardPage> {
                                     },
                                   ),
                                 ),
-
-                                SizedBox(height: 140,),
-                                Text("module requires admin access", style: TextStyle(fontSize: 11, color: Theme.of(context).accentColor),)
-
-
+                                SizedBox(
+                                  height: 140,
+                                ),
+                                Text(
+                                  "module requires admin access",
+                                  style: TextStyle(fontSize: 11, color: Theme.of(context).accentColor),
+                                )
                               ],
                             ),
                           ),

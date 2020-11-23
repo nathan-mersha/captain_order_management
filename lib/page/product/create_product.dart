@@ -34,10 +34,11 @@ class CreateProductViewState extends State<CreateProductView> {
 
   // Unit of measurements types
   static const String LITER = "Liter"; // values not translatables
+  static const String GALLON = "Gallon"; // values not translatables
   static const String GRAM = "Gram"; // values not translatables
   static const String PIECE = "Piece"; // values not translatables
   static const String PACKAGE = "Package"; // values not translatables
-  List<String> measurementTypes = [LITER, GRAM, PIECE, PACKAGE];
+  List<String> measurementTypes = [LITER, GRAM, PIECE, PACKAGE, GALLON];
   Map<String, String> measurementTypesValues;
 
   // Paint type
@@ -61,7 +62,7 @@ class CreateProductViewState extends State<CreateProductView> {
     // Separating keys to values for translatable.
     // translatable values
     productTypesValues = {PAINT: "paint", OTHER_PRODUCTS: "others"};
-    measurementTypesValues = {LITER: "liter", GRAM: "gram", PIECE: "piece", PACKAGE: "package"};
+    measurementTypesValues = {LITER: "liter", GRAM: "gram", PIECE: "piece", PACKAGE: "package", GALLON: "gallon"};
     paintTypesValues = {METALIC: "Metalic", AUTO_CRYL: "Auto-Cryl"};
   }
 
@@ -69,9 +70,7 @@ class CreateProductViewState extends State<CreateProductView> {
   Widget build(BuildContext context) {
     setPaintTypeUnitPrice();
 
-    return
-
-      Card(
+    return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),

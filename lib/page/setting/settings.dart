@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
   static const int IMPORT = 7;
   static const int DEVELOPER = 8;
 
-  int selectedMenuIndex = IMPORT; // todo : change to LOCK_FEATURES
+  int selectedMenuIndex = LOCK_FEATURES;
 
   List menus = [
     {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},

@@ -120,7 +120,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                         salesData[index].personnel.name,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
                       ),
-                      subtitle:  Text(
+                      subtitle: Text(
                         "${salesData[index].personnel.phoneNumber}",
                         style: TextStyle(fontSize: 11, color: Colors.black38),
                       ),
@@ -128,16 +128,16 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
-                        Text(
-                          "${salesData[index].count.toStringAsFixed(0)} times",
-                          style: TextStyle(fontSize: 11, color: Colors.black38),
-                        ),
-                        Text(
-                          "${oCCy.format(salesData[index].totalAmount)} br",
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ],),
+                          Text(
+                            "${salesData[index].count.toStringAsFixed(0)} times",
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
+                          ),
+                          Text(
+                            "${oCCy.format(salesData[index].totalAmount)} br",
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
                       leading: salesData[index].personnel.profileImage == null
                           ? Icon(
                               Icons.person_outline_rounded,

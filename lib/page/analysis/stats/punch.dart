@@ -58,7 +58,9 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(),),
+        domainAxis: charts.OrdinalAxisSpec(
+          renderSpec: new charts.NoneRenderSpec(),
+        ),
       ),
     ));
   }
@@ -97,7 +99,6 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
         displayName: "Analysis In",
         data: punchData.where((element) => element.type == CreatePunchViewState.PUNCH_IN).toList(),
       ),
-
       charts.Series<PunchAnalysisModel, String>(
         id: 'Punch Out',
         colorFn: (_, __) {
@@ -135,31 +136,34 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
                         "${punchData[index].weight.toStringAsFixed(2)} gm",
                         style: TextStyle(fontSize: 11),
                       ),
-
                       leading: punchData[index].employee.profileImage == null
                           ? Icon(
-                        Icons.person_outline_rounded,
-                        color: Colors.black54,
-                      )
+                              Icons.person_outline_rounded,
+                              color: Colors.black54,
+                            )
                           : ClipOval(
-                        child: Image.memory(
-                          punchData[index].employee.profileImage,
-                          fit: BoxFit.cover,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
+                              child: Image.memory(
+                                punchData[index].employee.profileImage,
+                                fit: BoxFit.cover,
+                                height: 30,
+                                width: 30,
+                              ),
+                            ),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-
-                        Icon(punchData[index].type == CreatePunchViewState.PUNCH_IN ? Icons.arrow_back : Icons.arrow_forward, size: 14,color: punchData[index].type == CreatePunchViewState.PUNCH_IN ? Colors.red : Colors.green,),
-                        SizedBox(height: 3,),
-                        Text("${punchData[index].count.toString()} qnt", style : TextStyle(fontSize: 10, color: Colors.black54))
-                      ],),
-
-
+                          Icon(
+                            punchData[index].type == CreatePunchViewState.PUNCH_IN ? Icons.arrow_back : Icons.arrow_forward,
+                            size: 14,
+                            color: punchData[index].type == CreatePunchViewState.PUNCH_IN ? Colors.red : Colors.green,
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text("${punchData[index].count.toString()} qnt", style: TextStyle(fontSize: 10, color: Colors.black54))
+                        ],
+                      ),
                       dense: true,
                     );
                   },

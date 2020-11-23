@@ -1,77 +1,58 @@
+import 'package:captain/db/dal/normal_order.dart';
+import 'package:captain/db/dal/personnel.dart';
+import 'package:captain/db/dal/returned_order.dart';
+import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/db/model/statistics.dart';
+import 'package:captain/page/analysis/stats/color.dart';
 import 'package:captain/widget/statistics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class OverviewPage extends StatefulWidget {
+class OverViewPage extends StatefulWidget {
   @override
-  _OverviewPageState createState() => _OverviewPageState();
+  _OverViewPageState createState() => _OverViewPageState();
 }
 
-class _OverviewPageState extends State<OverviewPage> {
+class _OverViewPageState extends State<OverViewPage> {
+  num totalOrders = 0;
+  num totalCustomers = 0;
+  num totalReturnedOrders = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 645,
-      child: Column(children: [
+        height: 645,
+        child: Column(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    StatisticsCard(Statistics(stat: totalOrders.toString(), title: "Orders", subTitle: "total order", iconData: Icons.color_lens)),
+                    StatisticsCard(Statistics(stat: totalCustomers.toString(), title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account)),
+                    StatisticsCard(Statistics(stat: totalReturnedOrders.toString(), title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return)),
+                  ],
+                )),
+            Expanded(flex: 4, child: ColorAnalysis())
+          ],
+        ));
+  }
 
-      Expanded(
-          flex: 1,
-          child: Row(children: [
-        StatisticsCard(Statistics(stat: "1234")),
-        StatisticsCard(Statistics(stat: "1234")),
-        StatisticsCard(Statistics(stat: "1234")),
+  Future getStat() async {
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    String where = "${Personnel.TYPE} = ?";
+    List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
+    List<Personnel> customers = await PersonnelDAL.find(
+      where: where,
+      whereArgs: whereArgs,
+    );
+    List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
 
-      ],)),
+    totalOrders = normalOrders.length;
+    totalCustomers = customers.length;
+    totalReturnedOrders = returnOrders.length;
 
-        Expanded(flex : 4, child: Row(children: [
-
-          Expanded(flex : 1, child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-            child: Container(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(
-                    width: double.infinity,
-                    child: Card(
-                      margin: EdgeInsets.all(0),
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        child: Text(
-                          "Recently completed",
-                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                      height: 445,
-                      padding: EdgeInsets.only(right: 20, left: 20, top: 15),
-                      child:Container()),
-
-                ],
-              ),
-            ),
-          )),
-
-          Expanded(flex : 2, child: Column(children: [
-
-            Expanded(flex : 2, child: Card()),
-            Expanded(child: Row(children: [
-              StatisticsCard(Statistics(stat: "1234")),
-              StatisticsCard(Statistics(stat: "1234")),
-            ],))
-
-          ],),)
-
-
-
-        ],),)
-
-    ],),);
+    return true;
   }
 }

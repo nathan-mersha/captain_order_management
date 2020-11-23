@@ -25,14 +25,14 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
               return manufacturerData.length == 0
                   ? buildDataNotFound()
                   : Row(
-                children: [
-                  Expanded(flex: 1, child: buildAnalysisList()),
-                  Expanded(
-                    flex: 2,
-                    child: buildAnalysisGraph(),
-                  )
-                ],
-              );
+                      children: [
+                        Expanded(flex: 1, child: buildAnalysisList()),
+                        Expanded(
+                          flex: 2,
+                          child: buildAnalysisGraph(),
+                        )
+                      ],
+                    );
             } else {
               return CLoading(
                 message: "Analyzing Manufacturers",
@@ -49,17 +49,17 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
   Widget buildAnalysisGraph() {
     return Card(
         child: ClipRect(
-          child: charts.BarChart(
-            refactorData(),
-            animate: true,
-            barRendererDecorator: new charts.BarLabelDecorator<String>(),
-            behaviors: [
-              charts.SlidingViewport(),
-              charts.PanAndZoomBehavior(),
-            ],
-            domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(manufacturerData[0].manufacturer, manufacturerData[0].count)),
-          ),
-        ));
+      child: charts.BarChart(
+        refactorData(),
+        animate: true,
+        barRendererDecorator: new charts.BarLabelDecorator<String>(),
+        behaviors: [
+          charts.SlidingViewport(),
+          charts.PanAndZoomBehavior(),
+        ],
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(manufacturerData[0].manufacturer, manufacturerData[0].count)),
+      ),
+    ));
   }
 
   Center buildDataNotFound() {
@@ -118,7 +118,10 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
                         manufacturerData[index].manufacturer,
                         style: TextStyle(fontSize: 12),
                       ),
-                      subtitle: Text("sold ${manufacturerData[index].count.toStringAsFixed(0)} times", style: TextStyle(fontSize: 11, color: Colors.black38),),
+                      subtitle: Text(
+                        "sold ${manufacturerData[index].count.toStringAsFixed(0)} times",
+                        style: TextStyle(fontSize: 11, color: Colors.black38),
+                      ),
                       dense: true,
                     );
                   },
@@ -144,14 +147,19 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
 
           /// Product does not exist
           if (index == -1) {
-            ManufacturerAnalysisModel colorAnalysisModelNew = ManufacturerAnalysisModel(manufacturer: product.manufacturer, count: 1,);
+            ManufacturerAnalysisModel colorAnalysisModelNew = ManufacturerAnalysisModel(
+              manufacturer: product.manufacturer,
+              count: 1,
+            );
             manufacturerData.add(colorAnalysisModelNew);
           }
 
           /// Product already exists in the analysis data
           else {
-            ManufacturerAnalysisModel colorAnalysisModelNew =
-            ManufacturerAnalysisModel(manufacturer: product.manufacturer, count: manufacturerData[index].count + 1,);
+            ManufacturerAnalysisModel colorAnalysisModelNew = ManufacturerAnalysisModel(
+              manufacturer: product.manufacturer,
+              count: manufacturerData[index].count + 1,
+            );
 
             // Removing and re-inserting data
             manufacturerData.removeAt(index);
@@ -171,5 +179,8 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
 class ManufacturerAnalysisModel {
   String manufacturer;
   int count;
-  ManufacturerAnalysisModel({this.manufacturer, this.count,});
+  ManufacturerAnalysisModel({
+    this.manufacturer,
+    this.count,
+  });
 }

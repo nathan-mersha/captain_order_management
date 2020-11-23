@@ -29,8 +29,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
   static const int PUNCH = 6;
   static const int SALES = 7;
 
-  int selectedMenuIndex = PUNCH; // todo : change analysis index to color index.
-
+  int selectedMenuIndex = PRODUCT;
   List menus = [
     {NAME: "Returned", DESCRIPTION: "Return counts of product", ICON: Icons.assignment_return, CHILD: ReturnedOrderAnalysis()},
     {NAME: "Color", DESCRIPTION: "Color codes by sale", ICON: Icons.color_lens, CHILD: ColorAnalysis()},
@@ -51,61 +50,63 @@ class _AnalysisPageState extends State<AnalysisPage> {
           // Menus section
           Expanded(
               flex: 1,
-              child: Container(child: GridView.builder(
-                scrollDirection: Axis.vertical,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
-                itemCount: menus.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedMenuIndex = index;
-                      });
-                    },
-                    child: Card(
-                      elevation: isSelected(index) ? 3 : 0.5,
-                      color: isSelected(index) ? Theme.of(context).primaryColor : Colors.white,
-                      child: Container(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      menus[index][NAME],
-                                      style: TextStyle(
-                                          fontSize: isSelected(index) ? 13 : 12,
-                                          color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
-                                          fontWeight: isSelected(index) ? FontWeight.w600 : FontWeight.w200),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          menus[index][DESCRIPTION],
-                                          style: TextStyle(fontSize: 10, color: isSelected(index) ? Colors.white : Colors.black54),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                )),
-                            Icon(
-                              menus[index][ICON],
-                              size: isSelected(index) ? 21 : 15,
-                              color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
-                            )
-                          ],
+              child: Container(
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
+                  itemCount: menus.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedMenuIndex = index;
+                        });
+                      },
+                      child: Card(
+                        elevation: isSelected(index) ? 3 : 0.5,
+                        color: isSelected(index) ? Theme.of(context).primaryColor : Colors.white,
+                        child: Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Column(
+                                children: [
+                                  Text(
+                                    menus[index][NAME],
+                                    style: TextStyle(
+                                        fontSize: isSelected(index) ? 13 : 12,
+                                        color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
+                                        fontWeight: isSelected(index) ? FontWeight.w600 : FontWeight.w200),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        menus[index][DESCRIPTION],
+                                        style: TextStyle(fontSize: 10, color: isSelected(index) ? Colors.white : Colors.black54),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              )),
+                              Icon(
+                                menus[index][ICON],
+                                size: isSelected(index) ? 21 : 15,
+                                color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
+                              )
+                            ],
+                          ),
+                          padding: EdgeInsets.all(8),
                         ),
-                        padding: EdgeInsets.all(8),
                       ),
-                    ),
-                  );
-                },
-              ),)),
+                    );
+                  },
+                ),
+              )),
 
           Expanded(flex: 4, child: menus[selectedMenuIndex][CHILD])
         ],
@@ -113,7 +114,5 @@ class _AnalysisPageState extends State<AnalysisPage> {
     );
   }
 
-
   bool isSelected(int index) => selectedMenuIndex == index;
 }
-

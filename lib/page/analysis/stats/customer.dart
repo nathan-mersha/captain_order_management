@@ -23,14 +23,14 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
               return customerData.length == 0
                   ? buildDataNotFound()
                   : Row(
-                children: [
-                  Expanded(flex: 1, child: buildAnalysisList()),
-                  Expanded(
-                    flex: 2,
-                    child: buildAnalysisGraph(),
-                  )
-                ],
-              );
+                      children: [
+                        Expanded(flex: 1, child: buildAnalysisList()),
+                        Expanded(
+                          flex: 2,
+                          child: buildAnalysisGraph(),
+                        )
+                      ],
+                    );
             } else {
               return CLoading(
                 message: "Analyzing Customer",
@@ -47,17 +47,17 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
   Widget buildAnalysisGraph() {
     return Card(
         child: ClipRect(
-          child: charts.BarChart(
-            refactorData(),
-            animate: true,
-            barRendererDecorator: new charts.BarLabelDecorator<String>(),
-            behaviors: [
-              charts.SlidingViewport(),
-              charts.PanAndZoomBehavior(),
-            ],
-            domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),
-          ),
-        ));
+      child: charts.BarChart(
+        refactorData(),
+        animate: true,
+        barRendererDecorator: new charts.BarLabelDecorator<String>(),
+        behaviors: [
+          charts.SlidingViewport(),
+          charts.PanAndZoomBehavior(),
+        ],
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),
+      ),
+    ));
   }
 
   Center buildDataNotFound() {
@@ -89,7 +89,7 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
           Color primary = Theme.of(context).primaryColorLight;
           return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
-        domainFn: (CustomerAnalysisModel val, _) => val.address.substring(0,val.address.length < 18 ? val.address.length : 18),
+        domainFn: (CustomerAnalysisModel val, _) => val.address.substring(0, val.address.length < 18 ? val.address.length : 18),
         measureFn: (CustomerAnalysisModel val, _) => val.count,
         displayName: "Analysis",
         data: customerData,
@@ -116,7 +116,10 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
                         customerData[index].address,
                         style: TextStyle(fontSize: 12),
                       ),
-                      subtitle: Text("${customerData[index].count.toStringAsFixed(0)} customers", style: TextStyle(fontSize: 11, color: Colors.black38),),
+                      subtitle: Text(
+                        "${customerData[index].count.toStringAsFixed(0)} customers",
+                        style: TextStyle(fontSize: 11, color: Colors.black38),
+                      ),
                       dense: true,
                     );
                   },
@@ -130,7 +133,10 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
   Future colorStat() async {
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
-    List<Personnel> customers = await PersonnelDAL.find(where: where, whereArgs: whereArgs,);
+    List<Personnel> customers = await PersonnelDAL.find(
+      where: where,
+      whereArgs: whereArgs,
+    );
 
     customerData.clear();
     customers.forEach((Personnel personnel) {
@@ -142,14 +148,19 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
 
       /// Product does not exist
       if (index == -1) {
-        CustomerAnalysisModel colorAnalysisModelNew = CustomerAnalysisModel(address: personnel.address, count: 1,);
+        CustomerAnalysisModel colorAnalysisModelNew = CustomerAnalysisModel(
+          address: personnel.address,
+          count: 1,
+        );
         customerData.add(colorAnalysisModelNew);
       }
 
       /// Product already exists in the analysis data
       else {
-        CustomerAnalysisModel colorAnalysisModelNew =
-        CustomerAnalysisModel(address: personnel.address, count: customerData[index].count + 1,);
+        CustomerAnalysisModel colorAnalysisModelNew = CustomerAnalysisModel(
+          address: personnel.address,
+          count: customerData[index].count + 1,
+        );
 
         // Removing and re-inserting data
         customerData.removeAt(index);
@@ -167,5 +178,8 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
 class CustomerAnalysisModel {
   String address;
   int count;
-  CustomerAnalysisModel({this.address, this.count,});
+  CustomerAnalysisModel({
+    this.address,
+    this.count,
+  });
 }

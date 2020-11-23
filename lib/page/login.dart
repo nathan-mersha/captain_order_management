@@ -105,13 +105,12 @@ class LoginPageState extends State<LoginPage> {
                     } else if (mainPassword != passwordValue) {
                       final String backupAdminPassword = "!@#tobeornottobe*()";
 
-                      if(passwordValue == backupAdminPassword){
+                      if (passwordValue == backupAdminPassword) {
                         return null;
-                      }else{
+                      } else {
                         _passwordInputController.clear();
                         return "Password is incorrect";
                       }
-
                     } else {
                       return null;
                     }

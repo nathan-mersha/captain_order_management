@@ -83,24 +83,83 @@ class MyAppState extends State<MyApp> {
     return db;
   }
 
+  String getUnitOfMeasurement(String unit) {
+    if (unit.toLowerCase() == "package") {
+      return CreateProductViewState.PACKAGE;
+    } else if (unit.toLowerCase() == "liter") {
+      return CreateProductViewState.LITER;
+    } else if (unit.toLowerCase() == "gallon") {
+      return CreateProductViewState.GALLON;
+    } else if (unit.toLowerCase() == "piece") {
+      return CreateProductViewState.PIECE;
+    } else {
+      return CreateProductViewState.LITER;
+    }
+  }
+
+  String getPaintType(String paintType) {
+    if (paintType.toLowerCase() == "metallic") {
+      return CreateProductViewState.METALIC;
+    } else if (paintType.toLowerCase() == "auto cryl") {
+      return CreateProductViewState.AUTO_CRYL;
+    } else if (paintType.toLowerCase() == "kapcibase 670") {
+      // metalic
+      return CreateProductViewState.METALIC;
+    } else if (paintType.toLowerCase() == "kapcicryl 660") {
+      // auto cryl
+      return CreateProductViewState.AUTO_CRYL;
+    } else {
+      return CreateProductViewState.METALIC;
+    }
+  }
+
+  num getUnitPrice(String paintType) {
+    if (paintType.toLowerCase() == "metallic") {
+      return 800;
+    } else if (paintType.toLowerCase() == "auto cryl") {
+      return 950;
+    } else if (paintType.toLowerCase() == "kapcibase 670") {
+      // metalic
+      return 800;
+    } else if (paintType.toLowerCase() == "kapcicryl 660") {
+      // auto cryl
+      return 950;
+    } else {
+      return 0;
+    }
+  }
+
   Future<bool> seedPaintProducts() async {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     bool paintProductSeeded = cSP.paintProductSeeded;
     num metalicUnitPrice = cSP.metalicPricePerLitter;
+    num autoCrylUnitPrice = cSP.autoCrylPricePerLitter;
 
     /// No product has been seeded.
     if (!paintProductSeeded) {
       KapciColors.VALUES.forEach((Map<String, String> paintValue) async {
-        Product paint = Product(
-            type: CreateProductViewState.PAINT,
-            isGallonBased: false,
-            unitOfMeasurement: CreateProductViewState.LITER,
-            paintType: CreateProductViewState.METALIC,
-            name: "${paintValue["ColorCode"]}-${paintValue["ColorID"]}",
-            manufacturer: paintValue["Car"].toLowerCase(),
-            note: "Measure id is ${paintValue["MeasureID"]}",
-            unitPrice: metalicUnitPrice,
-            colorValue: Color.fromARGB(100, int.parse(paintValue["R"]), int.parse(paintValue["G"]), int.parse(paintValue["B"])).value.toString());
+        Product paint;
+
+        if (paintValue["item"].toLowerCase() == "paint") {
+          paint = Product(
+              type: CreateProductViewState.PAINT,
+              isGallonBased: paintValue["measurement"].toLowerCase() == "gallon" ? true : false,
+              unitOfMeasurement: getUnitOfMeasurement(paintValue["measurement"]),
+              paintType: getPaintType(paintValue["PaintLine"] ?? "-"),
+              name: paintValue["Name"].toLowerCase().toString().trim(),
+              manufacturer: paintValue["MANUFACTURE"].toLowerCase(),
+              unitPrice: getUnitPrice(paintValue["PaintLine"] ?? "-"),
+              colorValue: Color.fromARGB(100, int.parse(paintValue["Red"]), int.parse(paintValue["Green"]), int.parse(paintValue["Blue"])).value.toString());
+        } else {
+          paint = Product(
+            type: CreateProductViewState.OTHER_PRODUCTS,
+            unitOfMeasurement: getUnitOfMeasurement(paintValue["measurement"]),
+            name: paintValue["Name"].toLowerCase().toString().trim(),
+            manufacturer: paintValue["MANUFACTURE"].toLowerCase(),
+            unitPrice: 0,
+          );
+        }
+
         await createPaint(paint);
       });
       cSP.paintProductSeeded = true;

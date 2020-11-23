@@ -121,15 +121,19 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Exporter exporter = Exporter();
-                                  exporter.toPdf(
-                                      customer: normalOrder.customer,
-                                      products: normalOrder.products,
-                                      totalAmount: normalOrder.totalAmount,
-                                      advanceAmount: normalOrder.advancePayment,
-                                      remainingAmount: normalOrder.remainingPayment,
-                                      lastModified: normalOrder.lastModified,
-                                      context: context);
+                                  if (normalOrder.customer != null) {
+                                    Exporter exporter = Exporter();
+                                    exporter.toPdf(
+                                        customer: normalOrder.customer,
+                                        products: normalOrder.products,
+                                        totalAmount: normalOrder.totalAmount,
+                                        advanceAmount: normalOrder.advancePayment,
+                                        remainingAmount: normalOrder.remainingPayment,
+                                        lastModified: normalOrder.lastModified,
+                                        context: context);
+                                  } else {
+                                    CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
+                                  }
                                 },
                               ),
                             )

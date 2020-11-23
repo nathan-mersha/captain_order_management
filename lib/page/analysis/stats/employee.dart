@@ -16,55 +16,70 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(future: returnedOrderStat(),builder: (BuildContext context, AsyncSnapshot snapshot){
-
-        if(snapshot.connectionState == ConnectionState.done){
-          if(snapshot.data == true){
-            return returnsData.length == 0 ? buildDataNotFound() : Row(
-              children: [
-                Expanded(flex: 1, child: buildAnalysisList()),
-                Expanded(
-                  flex: 2,
-                  child: buildAnalysisGraph(),
-                )
-              ],
-            );
-          }else{
-            return CLoading(message: "Analyzing Employee",);
+      child: FutureBuilder(
+        future: returnedOrderStat(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == true) {
+              return returnsData.length == 0
+                  ? buildDataNotFound()
+                  : Row(
+                      children: [
+                        Expanded(flex: 1, child: buildAnalysisList()),
+                        Expanded(
+                          flex: 2,
+                          child: buildAnalysisGraph(),
+                        )
+                      ],
+                    );
+            } else {
+              return CLoading(
+                message: "Analyzing Employee",
+              );
+            }
+          } else {
+            return CLoading(message: "Analyzing Employee");
           }
-
-        }else{
-          return CLoading(message: "Analyzing Employee");
-        }
-      },),
+        },
+      ),
     );
   }
 
   Widget buildAnalysisGraph() {
     return Card(
-        child:  ClipRect(
-          child: charts.BarChart(
-            refactorData(),
-            animate: true,
-            barRendererDecorator: new charts.BarLabelDecorator<String>(),
-            behaviors: [
-              charts.SlidingViewport(),
-              charts.PanAndZoomBehavior(),
-            ],
-            domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport:charts.OrdinalViewport(returnsData[0].employee.name, returnsData[0].count) ),
-          ),
-        ));
+        child: ClipRect(
+      child: charts.BarChart(
+        refactorData(),
+        animate: true,
+        barRendererDecorator: new charts.BarLabelDecorator<String>(),
+        behaviors: [
+          charts.SlidingViewport(),
+          charts.PanAndZoomBehavior(),
+        ],
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].employee.name, returnsData[0].count)),
+      ),
+    ));
   }
 
   Center buildDataNotFound() {
-    return Center(child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-
-        Icon(Icons.hourglass_empty, color: Theme.of(context).accentColor,),
-        SizedBox(height: 10,),
-        Text("No Returned orders found", style: TextStyle(color: Colors.black54, fontSize: 12),)
-      ],),);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.hourglass_empty,
+            color: Theme.of(context).accentColor,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "No Returned orders found",
+            style: TextStyle(color: Colors.black54, fontSize: 12),
+          )
+        ],
+      ),
+    );
   }
 
   List<charts.Series<EmployeeAnalysisModel, String>> refactorData() {
@@ -109,23 +124,26 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("${returnsData[index].count.toStringAsFixed(0)} returns", style: TextStyle(fontSize: 12,color: Colors.black87),),
+                          Text(
+                            "${returnsData[index].count.toStringAsFixed(0)} returns",
+                            style: TextStyle(fontSize: 12, color: Colors.black87),
+                          ),
                         ],
                       ),
                       dense: true,
                       leading: returnsData[index].employee.profileImage == null
-                      ? Icon(
-                        Icons.person_outline_rounded,
-                        color: Colors.black54,
-                      )
+                          ? Icon(
+                              Icons.person_outline_rounded,
+                              color: Colors.black54,
+                            )
                           : ClipOval(
-                        child: Image.memory(
-                          returnsData[index].employee.profileImage,
-                          fit: BoxFit.cover,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
+                              child: Image.memory(
+                                returnsData[index].employee.profileImage,
+                                fit: BoxFit.cover,
+                                height: 30,
+                                width: 30,
+                              ),
+                            ),
                     );
                   },
                 )),

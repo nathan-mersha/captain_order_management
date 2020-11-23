@@ -70,12 +70,12 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
                             Expanded(
                                 child: NormalOrderCustomerInformationPage(
                               focus: _focusCustomer,
-                            )), // todo : pass Normal order model.
+                            )),
                             // Payment information
                             Expanded(
                                 child: NormalOrderPaymentInformationPage(
                               focus: _focusPayment,
-                            )) // todo : pass Normal order model.
+                            ))
                           ],
                         ),
                       )),

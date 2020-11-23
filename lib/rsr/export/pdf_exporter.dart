@@ -34,7 +34,6 @@ class Exporter {
     ByteData data = await rootBundle.load('assets/fonts/Nunito-Bold.ttf');
     var ttf = Font.ttf(data);
 
-
     pdf.addPage(Page(
         pageFormat: PdfPageFormat.a4,
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -68,7 +67,7 @@ class Exporter {
 
                 Divider(),
                 SizedBox(height: 20),
-                Align(child: Text("Customer", textAlign: TextAlign.right,style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
+                Align(child: Text("Customer", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
                 Table(children: [
@@ -80,22 +79,19 @@ class Exporter {
                 ]),
 
                 SizedBox(height: 28),
-                Align(child: Text("Products", textAlign: TextAlign.right,style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
+                Align(child: Text("Products", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
                 Table(border: TableBorder(color: PdfColor.fromInt(0xffbfbfbf)), children: createProductRow(products, ttf)),
                 SizedBox(height: 28),
-                Align(child: Text("Payment", textAlign: TextAlign.right,style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
+                Align(child: Text("Payment", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)), alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
-                Table(
-
-                    children: [
-                  TableRow(children: [Text("Total"), Text("${oCCy.format(totalAmount)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
-                  TableRow(children: [Text("Advance"), Text("${oCCy.format(advanceAmount)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
-                  TableRow(children: [Text("Remaining"), Text("${oCCy.format(remainingAmount)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
+                Table(children: [
+                  TableRow(children: [Text("Total"), Text("${oCCy.format(totalAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
+                  TableRow(children: [Text("Advance"), Text("${oCCy.format(advanceAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
+                  TableRow(children: [Text("Remaining"), Text("${oCCy.format(remainingAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]),
                 ]),
-
 
                 // Content
               ],

@@ -116,15 +116,19 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Exporter exporter = Exporter();
-                                  exporter.toPdf(
-                                      customer: specialOrder.customer,
-                                      products: specialOrder.products,
-                                      totalAmount: specialOrder.totalAmount,
-                                      advanceAmount: 0,
-                                      remainingAmount: 0,
-                                      lastModified: specialOrder.lastModified,
-                                      context: context);
+                                  if (specialOrder.customer != null) {
+                                    Exporter exporter = Exporter();
+                                    exporter.toPdf(
+                                        customer: specialOrder.customer,
+                                        products: specialOrder.products,
+                                        totalAmount: specialOrder.totalAmount,
+                                        advanceAmount: 0,
+                                        remainingAmount: 0,
+                                        lastModified: specialOrder.lastModified,
+                                        context: context);
+                                  } else {
+                                    CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
+                                  }
                                 },
                               ),
                             )

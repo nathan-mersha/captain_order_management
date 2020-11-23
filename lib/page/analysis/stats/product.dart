@@ -25,14 +25,14 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
               return paintsData.length == 0
                   ? buildDataNotFound()
                   : Row(
-                children: [
-                  Expanded(flex: 1, child: buildAnalysisList()),
-                  Expanded(
-                    flex: 2,
-                    child: buildAnalysisGraph(),
-                  )
-                ],
-              );
+                      children: [
+                        Expanded(flex: 1, child: buildAnalysisList()),
+                        Expanded(
+                          flex: 2,
+                          child: buildAnalysisGraph(),
+                        )
+                      ],
+                    );
             } else {
               return CLoading(
                 message: "Analyzing Products",
@@ -49,17 +49,17 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
   Widget buildAnalysisGraph() {
     return Card(
         child: ClipRect(
-          child: charts.BarChart(
-            refactorData(),
-            animate: true,
-            barRendererDecorator: new charts.BarLabelDecorator<String>(),
-            behaviors: [
-              charts.SlidingViewport(),
-              charts.PanAndZoomBehavior(),
-            ],
-            domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].count)),
-          ),
-        ));
+      child: charts.BarChart(
+        refactorData(),
+        animate: true,
+        barRendererDecorator: new charts.BarLabelDecorator<String>(),
+        behaviors: [
+          charts.SlidingViewport(),
+          charts.PanAndZoomBehavior(),
+        ],
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].count)),
+      ),
+    ));
   }
 
   Center buildDataNotFound() {
@@ -126,8 +126,14 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("sold ${paintsData[index].count.toStringAsFixed(0)} times", style: TextStyle(fontSize: 11, color: Colors.black38),),
-                          Text("${paintsData[index].totalLitter.toStringAsFixed(0)} ${paintsData[index].product.unitOfMeasurement.toLowerCase()} sold", style: TextStyle(fontSize: 12, color: Colors.black87),),
+                          Text(
+                            "sold ${paintsData[index].count.toStringAsFixed(0)} times",
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
+                          ),
+                          Text(
+                            "${paintsData[index].totalLitter.toStringAsFixed(0)} ${paintsData[index].product.unitOfMeasurement.toLowerCase()} sold",
+                            style: TextStyle(fontSize: 12, color: Colors.black87),
+                          ),
                         ],
                       ),
                       dense: true,
@@ -161,8 +167,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
 
           /// Product already exists in the analysis data
           else {
-            ColorAnalysisModel colorAnalysisModelNew =
-            ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
 
             // Removing and re-inserting data
             paintsData.removeAt(index);

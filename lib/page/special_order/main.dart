@@ -12,7 +12,7 @@ class SpecialOrderMainPageState extends State<SpecialOrderMainPage> {
   static const String PAGE_CREATE_SPECIAL_ORDER = "PAGE_CREATE_SPECIAL_ORDER";
   static const String PAGE_VIEW_SPECIAL_ORDER = "PAGE_VIEW_SPECIAL_ORDER";
 
-  String currentPage = PAGE_VIEW_SPECIAL_ORDER; // TODO : default page change to PAGE_VIEW_SPECIAL_ORDER on release
+  String currentPage = PAGE_VIEW_SPECIAL_ORDER;
 
   static const String PENDING = "Pending"; // values not translatables
   static const String COMPLETED = "Completed"; // value not translatable

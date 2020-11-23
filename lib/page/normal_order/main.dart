@@ -12,7 +12,7 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
   static const String PAGE_CREATE_NORMAL_ORDER = "PAGE_CREATE_NORMAL_ORDER";
   static const String PAGE_VIEW_NORMAL_ORDER = "PAGE_VIEW_NORMAL_ORDER";
 
-  String currentPage = PAGE_VIEW_NORMAL_ORDER; // TODO : default page change to PAGE_VIEW_NORMAL_ORDER on release
+  String currentPage = PAGE_VIEW_NORMAL_ORDER;
 
   static const String PENDING = "Pending"; // values not translatables
   static const String COMPLETED = "Completed"; // value not translatable
