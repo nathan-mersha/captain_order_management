@@ -176,8 +176,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                             return ListTile(
                               dense: true,
                               leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
-                              title: Text(suggestedPaint.name),
-                              subtitle: Text(suggestedPaint.colorValue),
+                              title: Text(suggestedPaint.name, style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),),
                             );
                           },
                           onSuggestionSelected: (Product selectedPaint) {
