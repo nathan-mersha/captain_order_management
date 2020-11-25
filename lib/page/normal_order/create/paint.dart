@@ -268,13 +268,14 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     );
 
     /// Updating from fire store
-    normalOrder.customer.profileImage = null;
+//    normalOrder.customer.profileImage = null;
+//    normalOrder.employee.profileImage = null;
     dynamic normalOrderMap = NormalOrder.toMap(normalOrder);
 
-    // Updating to fire store if fire store generated id is present in doc.
-    if (normalOrder.idFS != null) {
-      Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(normalOrder.idFS).updateData(normalOrderMap);
-    }
+    // todo Updating to fire store if fire store generated id is present in doc.
+//    if (normalOrder.idFS != null) {
+//      Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(normalOrder.idFS).updateData(normalOrderMap);
+//    }
 
     // Showing notification
     CNotifications.showSnackBar(context, "Successfuly updated : ${normalOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
@@ -471,7 +472,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                       dense: true,
                       leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
                       title: Text(suggestedPaint.name),
-                      subtitle: Text(suggestedPaint.colorValue),
+//                      subtitle: Text(suggestedPaint.colorValue),
                     );
                   },
                   onSuggestionSelected: (Product selectedPaint) {

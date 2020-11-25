@@ -23,10 +23,10 @@ class CreateCustomerView extends StatefulWidget {
 }
 
 class CreateCustomerViewState extends State<CreateCustomerView> {
-  final picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   bool _absorbInputProfileImg = false;
   Personnel customer = Personnel(type: Personnel.CUSTOMER);
+  final ImagePicker picker = ImagePicker();
 
   // Text editing controllers
   TextEditingController _nameController = TextEditingController();
@@ -351,49 +351,10 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   }
 
   void _pickImage() async {
-    final imageSource = await showDialog<ImageSource>(
-        context: context,
-        builder: (context) => CDialog(
-              widgetYes: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(
-                    Icons.camera_alt,
-                    size: 50,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Text(
-                    "Camera",
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-              widgetNo: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(Icons.photo, size: 50, color: Theme.of(context).accentColor),
-                  Text(
-                    "Gallery",
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-              message: "Please selecte image source",
-              onYes: () {
-                Navigator.pop(context, ImageSource.camera);
-              },
-              onNo: () {
-                Navigator.pop(context, ImageSource.gallery);
-              },
-            ));
-
-    if (imageSource != null) {
-      final PickedFile file = await picker.getImage(source: imageSource, imageQuality: 10);
-
-      if (file != null) {
-        customer.profileImage = await file.readAsBytes();
-        setState(() {}); // not assigning profile image in set state to reduce lag.
-      }
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 60);
+    if (file != null) {
+      customer.profileImage = await file.readAsBytes();
+      setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
 
@@ -440,12 +401,12 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   @override
   void dispose() {
     super.dispose();
-    _nameController.dispose();
-    _phoneNumberController.dispose();
-    _emailController.dispose();
-    _addressController.dispose();
-    _addressDetailController.dispose();
-    _noteController.dispose();
+    _nameController?.dispose();
+    _phoneNumberController?.dispose();
+    _emailController?.dispose();
+    _addressController?.dispose();
+    _addressDetailController?.dispose();
+    _noteController?.dispose();
   }
 
   void passForUpdate(Personnel customerUpdateData) async {

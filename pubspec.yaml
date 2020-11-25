@@ -15,7 +15,8 @@ dependencies:
   firebase_core: ^0.4.5
   cloud_firestore: ^0.13.6
   random_color: ^1.0.5
-  image_picker: ^0.6.7+12
+  image_picker: 0.6.7+14
+  camera: ^0.5.8+11
   intl: ^0.16.1
   find_dropdown: ^0.2.2
   autocomplete_textfield: ^1.7.3

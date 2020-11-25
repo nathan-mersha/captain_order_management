@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class ColorAnalysis extends StatefulWidget {
+  final Widget noDataFound;
+
+  ColorAnalysis({this.noDataFound});
   @override
   _ColorAnalysisState createState() => _ColorAnalysisState();
 }
@@ -23,7 +26,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == true) {
               return paintsData.length == 0
-                  ? buildDataNotFound()
+                  ? widget.noDataFound == null ? buildDataNotFound() : widget.noDataFound
                   : Row(
                       children: [
                         Expanded(flex: 1, child: buildAnalysisList()),

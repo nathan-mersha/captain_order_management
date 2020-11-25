@@ -351,49 +351,10 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   }
 
   void _pickImage() async {
-    final imageSource = await showDialog<ImageSource>(
-        context: context,
-        builder: (context) => CDialog(
-              widgetYes: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(
-                    Icons.camera_alt,
-                    size: 50,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Text(
-                    "Camera",
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-              widgetNo: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(Icons.photo, size: 50, color: Theme.of(context).accentColor),
-                  Text(
-                    "Gallery",
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-              message: "Please selecte image source",
-              onYes: () {
-                Navigator.pop(context, ImageSource.camera);
-              },
-              onNo: () {
-                Navigator.pop(context, ImageSource.gallery);
-              },
-            ));
-
-    if (imageSource != null) {
-      final PickedFile file = await picker.getImage(source: imageSource, imageQuality: 50);
-
-      if (file != null) {
-        employee.profileImage = await file.readAsBytes();
-        setState(() {}); // not assigning profile image in set state to reduce lag.
-      }
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 60);
+    if (file != null) {
+      employee.profileImage = await file.readAsBytes();
+      setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
 

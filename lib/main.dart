@@ -54,7 +54,7 @@ class MyAppState extends State<MyApp> {
   }
 
   requestPermissions() async {
-    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage, PermissionGroup.sms]);
+    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage, PermissionGroup.sms, PermissionGroup.camera]);
   }
 
   Future initializeSharedPreference() async {
@@ -132,9 +132,6 @@ class MyAppState extends State<MyApp> {
   Future<bool> seedPaintProducts() async {
     CSharedPreference cSP = GetCSPInstance.cSharedPreference;
     bool paintProductSeeded = cSP.paintProductSeeded;
-    num metalicUnitPrice = cSP.metalicPricePerLitter;
-    num autoCrylUnitPrice = cSP.autoCrylPricePerLitter;
-
     /// No product has been seeded.
     if (!paintProductSeeded) {
       KapciColors.VALUES.forEach((Map<String, String> paintValue) async {

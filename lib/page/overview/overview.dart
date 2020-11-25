@@ -15,9 +15,6 @@ class OverViewPage extends StatefulWidget {
 }
 
 class _OverViewPageState extends State<OverViewPage> {
-  num totalOrders = 0;
-  num totalCustomers = 0;
-  num totalReturnedOrders = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,30 +26,47 @@ class _OverViewPageState extends State<OverViewPage> {
                 flex: 1,
                 child: Row(
                   children: [
-                    StatisticsCard(Statistics(stat: totalOrders.toString(), title: "Orders", subTitle: "total order", iconData: Icons.color_lens)),
-                    StatisticsCard(Statistics(stat: totalCustomers.toString(), title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account)),
-                    StatisticsCard(Statistics(stat: totalReturnedOrders.toString(), title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return)),
+                    StatisticsCard(Statistics(title: "Orders", subTitle: "total order", iconData: Icons.color_lens,), getStat: getTotalOrderCount(),),
+                    StatisticsCard(Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account), getStat: getCustomerCount(),),
+                    StatisticsCard(Statistics(title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return), getStat: getTotalReturnedOrdersCount(),),
                   ],
                 )),
-            Expanded(flex: 4, child: ColorAnalysis())
+            Expanded(flex: 4, child: ColorAnalysis(noDataFound: noDataFound(),))
           ],
         ));
   }
 
-  Future getStat() async {
+
+  Widget noDataFound(){
+    return Card(
+      elevation: 0,
+      child: Center(child: Column(mainAxisAlignment : MainAxisAlignment.center, children: [
+      Icon(Icons.color_lens, color: Theme.of(context).accentColor,size: 70,),
+      SizedBox(height: 20,),
+      Text("No orders has been created", style: TextStyle(color: Colors.black54, fontSize: 16),)
+    ],),),);
+  }
+
+  Future<num> getTotalOrderCount() async{
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    return normalOrders.length;
+  }
+
+  Future<num> getTotalReturnedOrdersCount() async{
+    List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
+    return returnOrders.length;
+  }
+
+  Future<num> getCustomerCount() async{
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
     List<Personnel> customers = await PersonnelDAL.find(
       where: where,
       whereArgs: whereArgs,
     );
-    List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
 
-    totalOrders = normalOrders.length;
-    totalCustomers = customers.length;
-    totalReturnedOrders = returnOrders.length;
-
-    return true;
+    return customers.length;
   }
+
+
 }

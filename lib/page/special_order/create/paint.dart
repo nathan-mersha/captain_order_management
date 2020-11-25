@@ -263,12 +263,12 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     );
 
     /// Updating from fire store
-    specialOrder.customer.profileImage = null;
+//    specialOrder.customer.profileImage = null;
     dynamic specialOrderMap = SpecialOrder.toMap(specialOrder);
 
-    // Updating to fire store if fire store generated id is present in doc.
+    // todo Updating to fire store if fire store generated id is present in doc. nullify image
     if (specialOrder.idFS != null) {
-      Firestore.instance.collection(SpecialOrder.COLLECTION_NAME).document(specialOrder.idFS).updateData(specialOrderMap);
+//      Firestore.instance.collection(SpecialOrder.COLLECTION_NAME).document(specialOrder.idFS).updateData(specialOrderMap);
     }
 
     // Showing notification
@@ -406,7 +406,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       dense: true,
                       leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
                       title: Text(suggestedPaint.name),
-                      subtitle: Text(suggestedPaint.colorValue),
+//                      subtitle: Text(suggestedPaint.colorValue),
                     );
                   },
                   onSuggestionSelected: (Product selectedPaint) {

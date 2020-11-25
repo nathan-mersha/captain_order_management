@@ -408,13 +408,13 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     ReturnedOrderDAL.find(where: where, whereArgs: whereArgs).then((List<ReturnedOrder> returnedOrder) async {
       ReturnedOrder queriedReturnedOrder = returnedOrder.first;
 
-      /// Creating data to fire store
-      dynamic returnedOrderMap = ReturnedOrder.toMap(queriedReturnedOrder);
-      DocumentReference docRef = await Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).add(returnedOrderMap);
-      queriedReturnedOrder.idFS = docRef.documentID;
-      String where = "${ReturnedOrder.ID} = ?";
-      List<String> whereArgs = [queriedReturnedOrder.id]; // Querying only returnedOrders
-      ReturnedOrderDAL.update(where: where, whereArgs: whereArgs, returnedOrder: queriedReturnedOrder);
+      /// todo Creating data to fire store nullify image
+//      dynamic returnedOrderMap = ReturnedOrder.toMap(queriedReturnedOrder);
+//      DocumentReference docRef = await Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).add(returnedOrderMap);
+//      queriedReturnedOrder.idFS = docRef.documentID;
+//      String where = "${ReturnedOrder.ID} = ?";
+//      List<String> whereArgs = [queriedReturnedOrder.id]; // Querying only returnedOrders
+//      ReturnedOrderDAL.update(where: where, whereArgs: whereArgs, returnedOrder: queriedReturnedOrder);
     });
   }
 
@@ -426,9 +426,12 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
 
     /// Updating from fire store
     dynamic returnedOrderMap = ReturnedOrder.toMap(returnedOrder);
+    returnedOrder.employee.profileImage = null;
+    returnedOrder.customer.profileImage = null;
     // Updating to fire store if fire store generated id is present in doc.
     if (returnedOrder.idFS != null) {
-      Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(returnedOrder.idFS).updateData(returnedOrderMap);
+      // todo : nullify image
+//      Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(returnedOrder.idFS).updateData(returnedOrderMap);
     }
     // Showing notification
     CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);

@@ -393,13 +393,13 @@ class CreatePunchViewState extends State<CreatePunchView> {
     PunchDAL.find(where: where, whereArgs: whereArgs).then((List<Punch> punch) async {
       Punch queriedPunch = punch.first;
 
-      /// Creating data to fire store
+      /// todo Creating data to fire store, nullify image
       dynamic punchMap = Punch.toMap(queriedPunch);
-      DocumentReference docRef = await Firestore.instance.collection(Punch.COLLECTION_NAME).add(punchMap);
-      queriedPunch.idFS = docRef.documentID;
-      String where = "${Punch.ID} = ?";
-      List<String> whereArgs = [queriedPunch.id]; // Querying only punchs
-      PunchDAL.update(where: where, whereArgs: whereArgs, punch: queriedPunch);
+//      DocumentReference docRef = await Firestore.instance.collection(Punch.COLLECTION_NAME).add(punchMap);
+//      queriedPunch.idFS = docRef.documentID;
+//      String where = "${Punch.ID} = ?";
+//      List<String> whereArgs = [queriedPunch.id]; // Querying only punchs
+//      PunchDAL.update(where: where, whereArgs: whereArgs, punch: queriedPunch);
     });
   }
 
@@ -413,7 +413,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
     dynamic punchMap = Punch.toMap(punch);
     // Updating to fire store if fire store generated id is present in doc.
     if (punch.idFS != null) {
-      Firestore.instance.collection(Punch.COLLECTION_NAME).document(punch.idFS).updateData(punchMap);
+      // todo : nullify image
+//      Firestore.instance.collection(Punch.COLLECTION_NAME).document(punch.idFS).updateData(punchMap);
     }
     // Showing notification
     CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${punch.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
