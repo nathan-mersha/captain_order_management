@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/analysis/analysis.dart';
 import 'package:captain/page/customer/home_customer.dart';
@@ -12,8 +17,10 @@ import 'package:captain/page/punch/home_punch.dart';
 import 'package:captain/page/returned_order/home_returned_order.dart';
 import 'package:captain/page/setting/settings.dart';
 import 'package:captain/page/special_order/main.dart';
+import 'package:captain/rsr/kapci/personnels.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -68,6 +75,9 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    createPersonnels();
+
     return SafeArea(
         top: true,
         child: Scaffold(
@@ -169,6 +179,42 @@ class DashboardPageState extends State<DashboardPage> {
         ));
   }
 
+  Future<String> get _localPath async {
+
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    print("Path is :---------------------------- $path");
+    return File('$path/personnnels.txt');
+  }
+
+  Future<File> writePersonnel(String data) async {
+    final file = await _localFile;
+    return file.writeAsString(data);
+  }
+
+  refactorPathName() async{
+    Directory dir = await getExternalStorageDirectory();
+    String newPath = "${dir.parent.parent.parent.parent.path}/DCIM/Camera";
+    print("new path ---------------------- $newPath");
+  }
+
+
+
+  writePersonnelToFile() async{
+    List<Personnel> personnels = await PersonnelDAL.find();
+    String data = "";
+    personnels.forEach((Personnel personnel) {
+      personnel.profileImage = null;
+      data = data + ",\n" + jsonEncode(Personnel.toMap(personnel));
+    });
+
+    print(data);
+    writePersonnel(data);
+  }
   isAuthorized(int index, BuildContext context) async {
     // Pages do not require authorization by default
     if (index == OVERVIEW_PAGE || index == DEVELOPER_PAGE) {
