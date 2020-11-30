@@ -6,11 +6,21 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/db/model/message.dart';
+import 'package:captain/db/model/normal_order.dart';
+import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/model/punch.dart';
+import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/route.dart';
 import 'package:captain/rsr/kapci/colors.dart';
+import 'package:captain/rsr/kapci/messages.dart';
+import 'package:captain/rsr/kapci/normal_order.dart';
+import 'package:captain/rsr/kapci/personnels.dart';
+import 'package:captain/rsr/kapci/punch.dart';
+import 'package:captain/rsr/kapci/returned_order.dart';
 import 'package:captain/rsr/theme/c_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +70,7 @@ class MyAppState extends State<MyApp> {
   Future initializeSharedPreference() async {
     global.cSP = await SharedPreferences.getInstance();
     global.db = await createTable();
-    await seedPaintProducts();
+    seed();
     return true;
   }
 
@@ -83,95 +93,117 @@ class MyAppState extends State<MyApp> {
     return db;
   }
 
-  String getUnitOfMeasurement(String unit) {
-    if (unit.toLowerCase() == "package") {
-      return CreateProductViewState.PACKAGE;
-    } else if (unit.toLowerCase() == "liter") {
-      return CreateProductViewState.LITER;
-    } else if (unit.toLowerCase() == "gallon") {
-      return CreateProductViewState.GALLON;
-    } else if (unit.toLowerCase() == "piece") {
-      return CreateProductViewState.PIECE;
-    } else {
-      return CreateProductViewState.LITER;
-    }
+  seed() async {
+//    await seedMessages();
+//    await seedNormalOrder();
+//    await seedPersonnel();
+//    await seedPunch();
+    await seedReturnedOrder();
+//    await seedProducts();
   }
 
-  String getPaintType(String paintType) {
-    if (paintType.toLowerCase() == "metallic") {
-      return CreateProductViewState.METALIC;
-    } else if (paintType.toLowerCase() == "auto cryl") {
-      return CreateProductViewState.AUTO_CRYL;
-    } else if (paintType.toLowerCase() == "kapcibase 670") {
-      // metalic
-      return CreateProductViewState.METALIC;
-    } else if (paintType.toLowerCase() == "kapcicryl 660") {
-      // auto cryl
-      return CreateProductViewState.AUTO_CRYL;
-    } else {
-      return CreateProductViewState.METALIC;
+  // todo delete after seed and export
+  Future<bool> seedMessages() async {
+    List datas = await MessageDAL.find();
+    if (datas.length == 0) {
+      MessagesSeed.VALUES.forEach((Map<String, String> element) {
+        Message message = Message.toModel(element);
+        MessageDAL.create(message);
+      });
     }
+    return true;
   }
 
-  num getUnitPrice(String paintType) {
-    if (paintType.toLowerCase() == "metallic") {
-      return 800;
-    } else if (paintType.toLowerCase() == "auto cryl") {
-      return 950;
-    } else if (paintType.toLowerCase() == "kapcibase 670") {
-      // metalic
-      return 800;
-    } else if (paintType.toLowerCase() == "kapcicryl 660") {
-      // auto cryl
-      return 950;
-    } else {
-      return 0;
+  // todo delete after seed and export
+  Future<bool> seedNormalOrder() async {
+    List datas = await NormalOrderDAL.find();
+    if (datas.length == 0) {
+      NormalOrderSeed.VALUES.forEach((Map<String, dynamic> element) {
+        NormalOrder normalOrder = NormalOrder.toModel(element);
+        NormalOrderDAL.create(normalOrder);
+      });
     }
+
+    return true;
   }
 
-  Future<bool> seedPaintProducts() async {
-    CSharedPreference cSP = GetCSPInstance.cSharedPreference;
-    bool paintProductSeeded = cSP.paintProductSeeded;
-    /// No product has been seeded.
-    if (!paintProductSeeded) {
-      KapciColors.VALUES.forEach((Map<String, String> paintValue) async {
-        Product paint;
+  // todo delete after seed and export
+  Future<bool> seedPersonnel() async {
+    List datas = await PersonnelDAL.find();
+    if (datas.length == 0) {
+      PersonnelSeed.VALUES.forEach((Map<String, dynamic> element) {
+        Personnel personnel = Personnel.toModel(element);
+        PersonnelDAL.create(personnel);
+      });
+    }
 
-        if (paintValue["item"].toLowerCase() == "paint") {
-          paint = Product(
-              type: CreateProductViewState.PAINT,
-              isGallonBased: paintValue["measurement"].toLowerCase() == "gallon" ? true : false,
-              unitOfMeasurement: getUnitOfMeasurement(paintValue["measurement"]),
-              paintType: getPaintType(paintValue["PaintLine"] ?? "-"),
-              name: paintValue["Name"].toLowerCase().toString().trim(),
-              manufacturer: paintValue["MANUFACTURE"].toLowerCase(),
-              unitPrice: getUnitPrice(paintValue["PaintLine"] ?? "-"),
-              colorValue: Color.fromARGB(100, int.parse(paintValue["Red"]), int.parse(paintValue["Green"]), int.parse(paintValue["Blue"])).value.toString());
+    return true;
+  }
+
+  // todo delete after seed and export
+  Future<bool> seedPunch() async {
+    List datas = await PunchDAL.find();
+    if (datas.length == 0) {
+      PunchSeed.VALUES.forEach((Map<String, dynamic> element) {
+        Punch punch = Punch.toModel(element);
+        PunchDAL.create(punch);
+      });
+    }
+
+    return true;
+  }
+
+  // todo delete after seed and export
+  Future<bool> seedReturnedOrder() async {
+    await ReturnedOrderDAL.delete();
+    List datas = await ReturnedOrderDAL.find();
+
+    if (datas.length == 0) {
+      ReturnedOrderSeed.VALUES.forEach((Map<String, dynamic> element) {
+        ReturnedOrder returnedOrder = ReturnedOrder.toModel(element);
+        ReturnedOrderDAL.create(returnedOrder);
+      });
+    }
+    return true;
+  }
+
+  // todo delete after seed and export
+  Future<bool> seedProducts() async {
+    List datas = await ProductDAL.find();
+
+    if (datas.length == 0) {
+      KapciColors.VALUES.forEach((Map<String, dynamic> element) {
+        Product product;
+        if (element["item"] == "paint") {
+          product = Product(
+              name: element["product"],
+              type: "Paint",
+              unitPrice: num.parse(element["price"]),
+              colorValue: Color.fromARGB(100, int.parse(element["red"]), int.parse(element["green"]), int.parse(element["blue"])).value.toString(),
+              manufacturer: element["manufacture"],
+              paintType: element["paint line"] == "metallic" ? "Metalic" : "Auto-Cryl",
+              unitOfMeasurement: element["measurment"],
+              lastModified: DateTime.now(),
+              firstModified: DateTime.now(),
+              isGallonBased: element["measurment"] == "gallon" ? true : false);
         } else {
-          paint = Product(
-            type: CreateProductViewState.OTHER_PRODUCTS,
-            unitOfMeasurement: getUnitOfMeasurement(paintValue["measurement"]),
-            name: paintValue["Name"].toLowerCase().toString().trim(),
-            manufacturer: paintValue["MANUFACTURE"].toLowerCase(),
-            unitPrice: 0,
-          );
+          product = Product(
+              name: element["product"],
+              type: "others",
+              unitPrice: 0,
+              colorValue: "-",
+              manufacturer: element["manufacture"],
+              paintType: "-",
+              unitOfMeasurement: element["measurment"],
+              lastModified: DateTime.now(),
+              firstModified: DateTime.now(),
+              isGallonBased: element["measurment"] == "gallon" ? true : false);
         }
 
-        await createPaint(paint);
+        ProductDAL.create(product);
       });
-      cSP.paintProductSeeded = true;
-      return true;
     }
 
-    /// Paint product already seeded.
-    else {
-      return true;
-    }
-  }
-
-  Future<bool> createPaint(Product product) async {
-    // Create product local db
-    await ProductDAL.create(product);
     return true;
   }
 }
@@ -195,32 +227,10 @@ class LoadingApp extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 1,
-              backgroundColor: Colors.white,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
           Text(
             "initializing captain",
             textDirection: TextDirection.ltr,
             style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            "populating db ...",
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 9,
-            ),
           ),
         ],
       ),

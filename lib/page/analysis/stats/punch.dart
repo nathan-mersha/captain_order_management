@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/punch.dart';
@@ -142,12 +144,12 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
                               color: Colors.black54,
                             )
                           : ClipOval(
-                              child: Image.memory(
-                                punchData[index].employee.profileImage,
+                              child: Image.file(
+                                File(punchData[index].employee.profileImage),
                                 fit: BoxFit.cover,
                                 height: 30,
                                 width: 30,
-                              ),
+                              )
                             ),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

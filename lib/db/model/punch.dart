@@ -54,7 +54,7 @@ class Punch {
         : Punch(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
+            employee: Personnel.toModel(map[EMPLOYEE]),
             product: Product.toModel(jsonDecode(map[PRODUCT])),
             type: map[TYPE],
             weight: map[WEIGHT],

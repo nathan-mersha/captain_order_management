@@ -195,6 +195,7 @@ class _ReturnedOrderDataSource extends DataTableSource {
   }
 
   Widget buildProductView(Product product) {
+    print(product);
     if (product.type == CreateProductViewState.PAINT) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,

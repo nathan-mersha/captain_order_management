@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/customer/statistics_customer.dart';
 import 'package:captain/page/customer/view_customer.dart';
 import 'package:captain/rsr/regions.dart';
-import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -284,7 +285,6 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
       phones: [Item(value: customer.phoneNumber)],
       emails: [Item(value: customer.email)],
       jobTitle: Personnel.CUSTOMER,
-      avatar: customer.profileImage,
       note: customer.note,
     );
 
@@ -331,7 +331,6 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
         phones: [Item(value: customer.phoneNumber)],
         emails: [Item(value: customer.email)],
         jobTitle: Personnel.CUSTOMER,
-        avatar: customer.profileImage,
         note: customer.note,
         identifier: customer.contactIdentifier);
 
@@ -351,9 +350,11 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   }
 
   void _pickImage() async {
-    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 60);
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
-      customer.profileImage = await file.readAsBytes();
+      customer.profileImage = file.path;
+      print("File path : ${file.path}");
+      // /storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures/scaled_image_picker5090651803202677501.jpg
       setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
@@ -363,6 +364,8 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     double iconSize = 45;
     EdgeInsets padding = EdgeInsets.only(top: 20);
 
+    print("Customer profile image : ${customer.profileImage}");
+    // /storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures/20201124_154051.jpg
     if (customer.profileImage == null) {
       return Container(
         margin: padding,
@@ -378,13 +381,12 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
         height: imageSize,
         width: imageSize,
         child: ClipOval(
-          child: Image.memory(
-            customer.profileImage,
-            fit: BoxFit.cover,
-            height: 30,
-            width: 30,
-          ),
-        ),
+            child: Image.file(
+          File(customer.profileImage),
+          fit: BoxFit.cover,
+          height: 30,
+          width: 30,
+        )),
       );
     }
   }

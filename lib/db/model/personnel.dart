@@ -32,7 +32,7 @@ class Personnel {
   String address;
   String addressDetail;
   String type;
-  Uint8List profileImage;
+  String profileImage;
   String note;
   DateTime firstModified;
   DateTime lastModified;
@@ -75,7 +75,8 @@ class Personnel {
 
   /// Converts Map to Model
   static Personnel toModel(dynamic map) {
-    return map == null
+
+    return map == null || map == "null"
         ? null
         : Personnel(
             id: map[ID],
@@ -87,7 +88,7 @@ class Personnel {
             address: map[ADDRESS],
             addressDetail: map[ADDRESS_DETAIL],
             type: map[TYPE],
-            profileImage: map[PROFILE_IMAGE] != null ? Uint8List.fromList(List.castFrom(map[PROFILE_IMAGE])) : null,
+            profileImage: map[PROFILE_IMAGE],
             note: map[NOTE],
             firstModified: DateTime.parse(map[FIRST_MODIFIED]),
             lastModified: DateTime.parse(map[LAST_MODIFIED]));

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/returned_order.dart';
@@ -103,12 +105,12 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                           size: 30,
                                         )
                                       : ClipOval(
-                                          child: Image.memory(
-                                            returnedOrder.employee.profileImage,
+                                          child: Image.file(
+                                            File(returnedOrder.employee.profileImage),
                                             fit: BoxFit.cover,
                                             height: 30,
                                             width: 30,
-                                          ),
+                                          )
                                         ))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
@@ -124,12 +126,12 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                       color: Colors.black12,
                                     )
                                   : ClipOval(
-                                      child: Image.memory(
-                                        suggestedEmployee.profileImage,
+                                      child: Image.file(
+                                        File(suggestedEmployee.profileImage),
                                         fit: BoxFit.cover,
                                         height: 30,
                                         width: 30,
-                                      ),
+                                      )
                                     ),
                               title: Text(suggestedEmployee.name),
                               subtitle: Text(suggestedEmployee.phoneNumber),
@@ -210,12 +212,12 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                           size: 30,
                                         )
                                       : ClipOval(
-                                          child: Image.memory(
-                                            returnedOrder.customer.profileImage,
+                                          child: Image.file(
+                                            File(returnedOrder.customer.profileImage),
                                             fit: BoxFit.cover,
                                             height: 30,
                                             width: 30,
-                                          ),
+                                          )
                                         ))),
                           suggestionsCallback: (pattern) async {
                             return _customers.where((Personnel customer) {
@@ -231,12 +233,12 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                       color: Colors.black12,
                                     )
                                   : ClipOval(
-                                      child: Image.memory(
-                                        suggestedCustomer.profileImage,
+                                      child: Image.file(
+                                        File(suggestedCustomer.profileImage),
                                         fit: BoxFit.cover,
                                         height: 30,
                                         width: 30,
-                                      ),
+                                      )
                                     ),
                               title: Text(suggestedCustomer.name),
                               subtitle: Text(suggestedCustomer.phoneNumber),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
@@ -144,12 +146,12 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                               color: Colors.black54,
                             )
                           : ClipOval(
-                              child: Image.memory(
-                                salesData[index].personnel.profileImage,
+                              child: Image.file(
+                                File(salesData[index].personnel.profileImage),
                                 fit: BoxFit.cover,
                                 height: 30,
                                 width: 30,
-                              ),
+                              )
                             ),
                       dense: true,
                     );

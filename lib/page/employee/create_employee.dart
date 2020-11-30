@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
@@ -284,7 +286,6 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
       phones: [Item(value: employee.phoneNumber)],
       emails: [Item(value: employee.email)],
       jobTitle: Personnel.EMPLOYEE,
-      avatar: employee.profileImage,
       note: employee.note,
     );
 
@@ -331,7 +332,6 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
         phones: [Item(value: employee.phoneNumber)],
         emails: [Item(value: employee.email)],
         jobTitle: Personnel.EMPLOYEE,
-        avatar: employee.profileImage,
         note: employee.note,
         identifier: employee.contactIdentifier);
 
@@ -351,9 +351,9 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   }
 
   void _pickImage() async {
-    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 60);
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
-      employee.profileImage = await file.readAsBytes();
+      employee.profileImage = file.path;
       setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
@@ -378,12 +378,12 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
         height: imageSize,
         width: imageSize,
         child: ClipOval(
-          child: Image.memory(
-            employee.profileImage,
+          child: Image.file(
+            File(employee.profileImage),
             fit: BoxFit.cover,
             height: 30,
             width: 30,
-          ),
+          )
         ),
       );
     }

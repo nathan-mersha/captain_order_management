@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
+
 
 class ExportSettings extends StatefulWidget {
   @override
@@ -49,13 +52,35 @@ class _ExportSettingsState extends State<ExportSettings> {
                         setState(() {
                           _exporting = true;
                         });
+
+                        /// Create export directory
+                        Directory dir = await getExternalStorageDirectory();
+                        String exportDirectory = "${DateTime.now().toString()}_kapci_backup";
+                        Directory exportFile = await Directory("${dir.parent.parent.parent.parent.path}/Download/$exportDirectory").create();
+                        Directory exportPictureFile = await Directory("${dir.parent.parent.parent.parent.path}/Download/$exportDirectory/Pictures").create();
+
+                        /// Copy Images directory
+                        Directory imageDirectory = Directory("/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures");
+                        if(imageDirectory.existsSync()){
+                          copyDirectory(imageDirectory, exportPictureFile);
+                        }
+
+                        /// Copy Database file
                         String path = await getDatabasesPath();
                         File sourceFile = File("$path/${global.DB_NAME}"); // source file
-                        Directory dir = await getExternalStorageDirectory();
-
-                        String newPath = "${dir.path}/../../../../Download/${DateTime.now()}.db";
+                        String newPath = "${exportFile.path}/${global.DB_NAME}";
                         await copyFile(sourceFile, newPath);
-                        CNotifications.showSnackBar(context, "Successfuly exported database to $newPath", "success", () {}, backgroundColor: Colors.green);
+
+                        /// Compress File
+                        var encoder = ZipFileEncoder();
+                        encoder.create("${exportFile.path}.zip");
+                        encoder.addDirectory(exportFile);
+                        encoder.close();
+
+                        /// Delete Original file
+                        exportFile.deleteSync(recursive: true);
+
+                        CNotifications.showSnackBar(context, "Successfuly exported data", "success", () {}, backgroundColor: Colors.green);
                         setState(() {
                           _exporting = false;
                         });
@@ -89,4 +114,15 @@ class _ExportSettingsState extends State<ExportSettings> {
     final newFile = await sourceFile.copy(newPath);
     return newFile;
   }
+
+  void copyDirectory(Directory source, Directory destination) => source.listSync(recursive: false).forEach((var entity) {
+        if (entity is Directory) {
+          var newDirectory = Directory(path.join(destination.absolute.path, path.basename(entity.path)));
+          newDirectory.createSync();
+
+          copyDirectory(entity.absolute, newDirectory);
+        } else if (entity is File) {
+          entity.copySync(path.join(destination.path, path.basename(entity.path)));
+        }
+      });
 }

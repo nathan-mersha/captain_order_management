@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
@@ -70,8 +72,8 @@ class _SpecialOrderCustomerInformationPageState extends State<SpecialOrderCustom
                                       size: 30,
                                     )
                                   : ClipOval(
-                                      child: Image.memory(
-                                        specialOrder.customer.profileImage,
+                                      child: Image.file(
+                                        File(specialOrder.customer.profileImage),
                                         fit: BoxFit.cover,
                                         height: 30,
                                         width: 30,
@@ -91,12 +93,12 @@ class _SpecialOrderCustomerInformationPageState extends State<SpecialOrderCustom
                                   color: Colors.black12,
                                 )
                               : ClipOval(
-                                  child: Image.memory(
-                                    suggestedCustomer.profileImage,
+                                  child: Image.file(
+                                    File(suggestedCustomer.profileImage,),
                                     fit: BoxFit.cover,
                                     height: 30,
                                     width: 30,
-                                  ),
+                                  )
                                 ),
                           title: Text(suggestedCustomer.name),
                           subtitle: Text(suggestedCustomer.phoneNumber),

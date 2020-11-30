@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:archive/archive.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as path;
 import 'package:captain/global.dart' as global;
 
 class ImportSettings extends StatefulWidget {
@@ -22,7 +25,7 @@ class _ImportSettingsState extends State<ImportSettings> {
         Container(
             width: double.infinity,
             child: Text(
-              "Import Database",
+              "Restore Database",
               style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
             ),
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -38,16 +41,18 @@ class _ImportSettingsState extends State<ImportSettings> {
               child: Column(
                 children: [
                   OutlineButton(
-                      child: Text(restoreFile == null ? "Pick a file" : restoreFile.path.split("/").last),
+                      child: Text(restoreFile == null ? "Pick a file" : restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", "")),
                       onPressed: () async {
                         setState(() {
                           _importing = true;
                         });
 
-                        FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["db"]);
+                        FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
 
-                        if (result != null) {
+                        if (result.files.single.path.endsWith("_kapci_backup.zip")) {
                           restoreFile = File(result.files.single.path);
+                        } else {
+                          restoreFile = null;
                         }
 
                         setState(() {
@@ -65,13 +70,7 @@ class _ImportSettingsState extends State<ImportSettings> {
                   SizedBox(
                     height: 10,
                   ),
-                  restoreFile != null
-                      ? Text(
-                          DateFormat.yMMMd().format(DateTime.parse(restoreFile.path.split("/").last.replaceAll(".db", ""))),
-                          style: TextStyle(fontSize: 13, color: Colors.black87),
-                          textAlign: TextAlign.center,
-                        )
-                      : Container(),
+                  restoreFile != null ? buildRestoreDate() : Container(),
                   SizedBox(
                     height: 10,
                   ),
@@ -80,24 +79,69 @@ class _ImportSettingsState extends State<ImportSettings> {
                   ),
                   restoreFile != null
                       ? RaisedButton(
-                          color: Colors.red,
+                          color: restoreFile == null ? Colors.black54 : Colors.red,
                           onPressed: () async {
-                            setState(() {
-                              _importing = true;
-                            });
-                            String path = await getDatabasesPath();
+                            if (restoreFile != null) {
+                              setState(() {
+                                _importing = true;
+                              });
 
-                            File copiedFile = await restoreFile.copy("$path/${global.DB_NAME}");
-                            copiedFile.rename("$path/${global.DB_NAME}");
+                              String picturesPathOriginal = "/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures";
 
-                            CNotifications.showSnackBar(
-                                context, "Successfuly restored database to : ${DateFormat.yMMMd().format(DateTime.parse(restoreFile.path.split("/").last.replaceAll(".db", "")))}", "success", () {},
-                                backgroundColor: Colors.green);
+                              /// Delete Current Pictures directory
+                              Directory imageDirectoryOld = Directory(picturesPathOriginal);
+                              if(imageDirectoryOld.existsSync()){
+                                imageDirectoryOld.deleteSync(recursive: true);
+                              }
 
-                            setState(() {
-                              restoreFile = null;
-                              _importing = false;
-                            });
+                              /// Delete Current DB directory
+                              String path = await getDatabasesPath();
+                              Directory databaseOld = Directory("$path/${global.DB_NAME}");
+                              if(databaseOld.existsSync()){
+                                databaseOld.deleteSync(recursive: true);
+                              }
+
+                              /// Extract file
+                              Directory extractDirectory = await getTemporaryDirectory();
+                              // Read the Zip file from disk.
+                              final bytes = restoreFile.readAsBytesSync();
+
+                              // Decode the Zip file
+                              final archive = ZipDecoder().decodeBytes(bytes);
+
+                              for (final file in archive) {
+                                final filename = file.name;
+                                if (file.isFile) {
+                                  final data = file.content as List<int>;
+                                  File("${extractDirectory.path}/$filename")
+                                    ..createSync(recursive: true)
+                                    ..writeAsBytesSync(data);
+                                } else {
+                                  Directory("${extractDirectory.path}/$filename")..create(recursive: true);
+                                }
+                              }
+
+                              /// Copy pictures
+                              await Directory(picturesPathOriginal).create();
+                              copyDirectory(Directory("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/Pictures"), Directory(picturesPathOriginal));
+
+                              /// Copy DB
+                              String dbPath = await getDatabasesPath();
+                              String newPath = File("$dbPath/${global.DB_NAME}").path;
+                              File sourceFile = File("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
+                              await copyFile(sourceFile, newPath);
+
+
+                              CNotifications.showSnackBar(context, "Successfuly restored data", "success", () {}, backgroundColor: Colors.green);
+
+                              setState(() {
+                                restoreFile = null;
+                                _importing = false;
+                              });
+                            } else {
+                              // Something is wrong
+                              CNotifications.showSnackBar(context, "Invalid format, restore file looks like ***_kapci_backup.zip", "failed", () {}, backgroundColor: Colors.red);
+                            }
                           },
                           child: Text(
                             "Restore",
@@ -113,8 +157,35 @@ class _ImportSettingsState extends State<ImportSettings> {
     );
   }
 
+  void copyDirectory(Directory source, Directory destination) => source.listSync(recursive: false).forEach((var entity) {
+        if (entity is Directory) {
+          var newDirectory = Directory(path.join(destination.absolute.path, path.basename(entity.path)));
+          newDirectory.createSync();
+
+          copyDirectory(entity.absolute, newDirectory);
+        } else if (entity is File) {
+          entity.copySync(path.join(destination.path, path.basename(entity.path)));
+        }
+      });
+
   Future<File> copyFile(File sourceFile, String newPath) async {
     final newFile = await sourceFile.copy(newPath);
     return newFile;
+  }
+
+  Widget buildRestoreDate() {
+    try {
+      return Text(
+        DateFormat.yMMMd().format(DateTime.parse(restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", ""))),
+        style: TextStyle(fontSize: 13, color: Colors.black87),
+        textAlign: TextAlign.center,
+      );
+    } catch (e) {
+      return Text(
+        "Invalid Format",
+        style: TextStyle(fontSize: 13, color: Colors.black87),
+        textAlign: TextAlign.center,
+      );
+    }
   }
 }

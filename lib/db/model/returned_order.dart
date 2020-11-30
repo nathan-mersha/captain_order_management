@@ -54,8 +54,8 @@ class ReturnedOrder {
         : ReturnedOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
-            customer: Personnel.toModel(jsonDecode(map[CUSTOMER])),
+            employee: Personnel.toModel(map[EMPLOYEE]),
+            customer: Personnel.toModel(map[CUSTOMER]),
             product: Product.toModel(jsonDecode(map[CUSTOMER])),
             count: map[COUNT],
             note: map[NOTE],

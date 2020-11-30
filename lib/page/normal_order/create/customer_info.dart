@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
@@ -76,12 +78,12 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                                       size: 30,
                                     )
                                   : ClipOval(
-                                      child: Image.memory(
-                                        normalOrder.customer.profileImage,
+                                      child: Image.file(
+                                        File(normalOrder.customer.profileImage),
                                         fit: BoxFit.cover,
                                         height: 30,
                                         width: 30,
-                                      ),
+                                      )
                                     ))),
                       suggestionsCallback: (pattern) async {
                         return _customers.where((Personnel customer) {
@@ -97,12 +99,12 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                                   color: Colors.black12,
                                 )
                               : ClipOval(
-                                  child: Image.memory(
-                                    suggestedCustomer.profileImage,
+                                  child: Image.file(
+                                    File(suggestedCustomer.profileImage),
                                     fit: BoxFit.cover,
                                     height: 30,
                                     width: 30,
-                                  ),
+                                  )
                                 ),
                           title: Text(suggestedCustomer.name),
                           subtitle: Text(suggestedCustomer.phoneNumber),

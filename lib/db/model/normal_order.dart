@@ -100,13 +100,16 @@ class NormalOrder with ChangeNotifier {
 
   /// Converts Map to Model
   static NormalOrder toModel(dynamic map) {
+    print("Input employee : ${map[EMPLOYEE] is String}");
+
+
     return map == null
         ? null
         : NormalOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(jsonDecode(map[EMPLOYEE])),
-            customer: Personnel.toModel(jsonDecode(map[CUSTOMER])),
+            employee: Personnel.toModel(map[EMPLOYEE]),
+            customer: Personnel.toModel(map[CUSTOMER]),
             products: Product.toModelList(jsonDecode(map[PRODUCTS])),
             totalAmount: map[TOTAL_AMOUNT],
             advancePayment: map[ADVANCE_PAYMENT],

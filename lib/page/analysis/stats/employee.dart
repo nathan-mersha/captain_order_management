@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/returned_order.dart';
@@ -137,12 +138,12 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                               color: Colors.black54,
                             )
                           : ClipOval(
-                              child: Image.memory(
-                                returnsData[index].employee.profileImage,
+                              child: Image.file(
+                                File(returnsData[index].employee.profileImage),
                                 fit: BoxFit.cover,
                                 height: 30,
                                 width: 30,
-                              ),
+                              )
                             ),
                     );
                   },

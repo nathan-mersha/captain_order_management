@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/punch.dart';
@@ -108,12 +110,12 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                           size: 30,
                                         )
                                       : ClipOval(
-                                          child: Image.memory(
-                                            punch.employee.profileImage,
+                                          child: Image.file(
+                                            File(punch.employee.profileImage),
                                             fit: BoxFit.cover,
                                             height: 30,
                                             width: 30,
-                                          ),
+                                          )
                                         ))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
@@ -129,12 +131,12 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                       color: Colors.black12,
                                     )
                                   : ClipOval(
-                                      child: Image.memory(
-                                        suggestedEmployee.profileImage,
+                                      child: Image.file(
+                                        File(suggestedEmployee.profileImage),
                                         fit: BoxFit.cover,
                                         height: 30,
                                         width: 30,
-                                      ),
+                                      )
                                     ),
                               title: Text(suggestedEmployee.name),
                               subtitle: Text(suggestedEmployee.phoneNumber),
