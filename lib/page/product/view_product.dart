@@ -187,7 +187,7 @@ class _ProductDataSource extends DataTableSource {
 
   void _search(String searchInput) {
     products = List.from(originalBatch); // Restoring products from original batch
-    products.retainWhere((Product p) => p.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    products.retainWhere((Product p) => p.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 

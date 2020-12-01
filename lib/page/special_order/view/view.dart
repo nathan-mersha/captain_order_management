@@ -295,7 +295,7 @@ class _SpecialOrderDataSource extends DataTableSource {
 
   void _search(String searchInput) {
     specialOrders = List.from(originalBatch); // Restoring products from original batch
-    specialOrders.retainWhere((SpecialOrder p) => p.customer.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    specialOrders.retainWhere((SpecialOrder p) => p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 

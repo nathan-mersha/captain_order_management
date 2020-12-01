@@ -161,7 +161,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
 
           /// Product does not exist
           if (index == -1) {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
             paintsData.add(colorAnalysisModelNew);
           }
 
@@ -187,6 +187,6 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
 class ColorAnalysisModel {
   Product product;
   int count;
-  int totalLitter;
+  double totalLitter;
   ColorAnalysisModel({this.product, this.count, this.totalLitter});
 }

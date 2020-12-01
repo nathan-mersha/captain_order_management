@@ -190,7 +190,7 @@ class _ReturnedOrderDataSource extends DataTableSource {
 
   void _search(String searchInput) {
     returnedOrders = List.from(originalBatch); // Restoring returned order from original batch
-    returnedOrders.retainWhere((ReturnedOrder r) => r.product.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    returnedOrders.retainWhere((ReturnedOrder r) => r.product.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 

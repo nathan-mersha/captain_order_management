@@ -8,6 +8,7 @@ import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
+import 'package:sms/sms.dart';
 
 class CreateMessageView extends StatefulWidget {
   final GlobalKey<MessageTableState> messageTableKey;
@@ -127,6 +128,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
                             message.body = bodyValue;
                           },
                           maxLines: 8,
+                          maxLength: 160,
                           textAlignVertical: TextAlignVertical.top,
                           decoration: InputDecoration(
                             alignLabelWithHint: true,
@@ -170,6 +172,8 @@ class CreateMessageViewState extends State<CreateMessageView> {
     );
   }
 
+
+
   void cleanFields() {
     setState(() {
       /// Clearing data
@@ -189,7 +193,12 @@ class CreateMessageViewState extends State<CreateMessageView> {
 
     /// open sms dialog here send sms here.
     if (recipients.isNotEmpty) {
-      sendSMS(message: message.body, recipients: recipients);
+      recipients.forEach((recipient) {
+        SmsSender sender = SmsSender();
+        SmsMessage m = SmsMessage(recipient, message.body);
+        sender.sendSms(m);
+      });
+
       Message createdMessage = await MessageDAL.create(message);
       createInFSAndUpdateLocally(createdMessage);
 

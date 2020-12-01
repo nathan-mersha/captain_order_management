@@ -337,7 +337,7 @@ class _NormalOrderDataSource extends DataTableSource {
 
   void _search(String searchInput) {
     normalOrders = List.from(originalBatch); // Restoring products from original batch
-    normalOrders.retainWhere((NormalOrder p) => p.customer.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    normalOrders.retainWhere((NormalOrder p) => p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 

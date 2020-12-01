@@ -158,6 +158,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
 
     paintsData.clear();
+
     normalOrders.forEach((NormalOrder normalOrder) {
       normalOrder.products.forEach((Product product) {
         if (product.type == CreateProductViewState.PAINT) {
@@ -169,7 +170,8 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
 
           /// Product does not exist
           if (index == -1) {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
+//            print("Color analysis model : ${product.quantityInCart}");
             paintsData.add(colorAnalysisModelNew);
           }
 
@@ -182,7 +184,10 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
             paintsData.insert(index, colorAnalysisModelNew);
           }
         }
+
+
       });
+
     });
 
     // Sorting data
@@ -190,11 +195,13 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
 
     return true;
   }
+  
+  
 }
 
 class ColorAnalysisModel {
   Product product;
   int count;
-  int totalLitter;
+  double totalLitter;
   ColorAnalysisModel({this.product, this.count, this.totalLitter});
 }

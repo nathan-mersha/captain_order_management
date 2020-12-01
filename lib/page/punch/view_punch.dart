@@ -191,7 +191,7 @@ class _PunchDataSource extends DataTableSource {
 
   void _search(String searchInput) {
     punchs = List.from(originalBatch); // Restoring punches from original batch
-    punchs.retainWhere((Punch p) => p.product.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+    punchs.retainWhere((Punch p) => p.product.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 

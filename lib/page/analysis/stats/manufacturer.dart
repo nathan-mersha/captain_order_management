@@ -91,7 +91,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
           Color primary = Theme.of(context).primaryColorLight;
           return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
-        domainFn: (ManufacturerAnalysisModel val, _) => val.manufacturer,
+        domainFn: (ManufacturerAnalysisModel val, _) => val.manufacturer ?? "-",
         measureFn: (ManufacturerAnalysisModel val, _) => val.count,
         displayName: "Analysis",
         data: manufacturerData,
@@ -115,7 +115,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        manufacturerData[index].manufacturer,
+                        manufacturerData[index].manufacturer ?? "-",
                         style: TextStyle(fontSize: 12),
                       ),
                       subtitle: Text(

@@ -54,15 +54,13 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
       child: charts.BarChart(
         refactorData(),
         animate: true,
-        barGroupingType: charts.BarGroupingType.stacked,
+        barGroupingType: charts.BarGroupingType.grouped,
         barRendererDecorator: new charts.BarLabelDecorator<String>(),
         behaviors: [
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-          renderSpec: new charts.NoneRenderSpec(),
-        ),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(punchData[0].employee.name, punchData[0].count)),
       ),
     ));
   }

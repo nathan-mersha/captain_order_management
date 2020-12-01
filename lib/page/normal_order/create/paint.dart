@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:captain/db/dal/message.dart';
 import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
@@ -12,6 +14,7 @@ import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -405,12 +408,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
       if (allPaintsCompleted && cSharedPreference.sendNotificationAutomatically) {
         String smsMessage =
-            "Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} has been completed.Total ${oCCy.format(normalOrder.totalAmount)}br. Advance ${oCCy.format(normalOrder.advancePayment)}br. Remaining ${oCCy.format(normalOrder.remainingPayment)}br Kapci";
+            "ሰላም ጤና ይስጥልን የተከበሩ ${normalOrder.customer.name} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())}ያዘዙት ቀለም ስለደረሰ እባክዎን መጥተው  ይውሰዱ፡፡ ስለመጡ እናመሰግናለን! “ካፕሲ የመኪና ቀለሞች” "
+            "\n Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} has been completed. Please collect your goods. Thank you! Kapci Coatings";
 
-        SmsSender sender = SmsSender();
-        SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);
-        sender.sendSms(message);
-
+        _sendSMS(smsMessage, [normalOrder.customer.phoneNumber]);
         Message sentMessage = Message(recipient: normalOrder.customer.name, body: smsMessage);
         MessageDAL.create(sentMessage);
 
@@ -422,6 +423,13 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       List<String> whereArgs = [normalOrder.id];
       await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
     }
+  }
+
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents).catchError((onError) {
+      print(onError);
+    });
+    print(_result);
   }
 
   Color getStatusColor(String status) {
@@ -471,7 +479,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                     return ListTile(
                       dense: true,
                       leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
-                      title: Text(suggestedPaint.name, style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),),
+                      title: Text(
+                        suggestedPaint.name,
+                        style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                      ),
                     );
                   },
                   onSuggestionSelected: (Product selectedPaint) {
