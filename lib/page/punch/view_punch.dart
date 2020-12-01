@@ -42,6 +42,11 @@ class PunchTableState extends State<PunchTable> {
     return punchs;
   }
 
+  bool employeeSortAscending = true;
+  bool typeSortAscending = true;
+  bool weightSortAscending = true;
+  bool dateSortAscending = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -132,7 +137,8 @@ class PunchTableState extends State<PunchTable> {
                       DataColumn(
                         label: Text("Employee"),
                         onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.employee.name, columnIndex, ascending);
+                          employeeSortAscending = !employeeSortAscending;
+                          return _sort<String>((d) => d.employee.name, columnIndex, employeeSortAscending);
                         },
                       ),
                       DataColumn(
@@ -141,18 +147,23 @@ class PunchTableState extends State<PunchTable> {
                       DataColumn(
                         label: Text("Type"),
                         onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.type, columnIndex, ascending);
+                          typeSortAscending = !typeSortAscending;
+                          return _sort<String>((d) => d.type, columnIndex, typeSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Weight (gm)"),
                         onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => d.weight, columnIndex, ascending);
+                          weightSortAscending  = !weightSortAscending;
+                          return _sort<num>((d) => d.weight, columnIndex, weightSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Date"),
-                        onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                        onSort: (columnIndex, ascending) {
+                          dateSortAscending = !dateSortAscending;
+                          return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                        },
                       ),
                       DataColumn(
                         label: Text(""),

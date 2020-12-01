@@ -74,6 +74,7 @@ class NormalOrder with ChangeNotifier {
       this.paidInFull = true;
       this.advancePayment = this.totalAmount;
     }
+    print("Total amount : ${this.totalAmount}");
     notifyListeners();
   }
 

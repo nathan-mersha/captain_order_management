@@ -28,7 +28,7 @@ class CreateProductViewState extends State<CreateProductView> {
 
   // Product types
   static const String PAINT = "Paint"; // values not translatables
-  static const String OTHER_PRODUCTS = "Others"; // values not translatables
+  static const String OTHER_PRODUCTS = "others"; // values not translatables
   List<String> productTypes = [PAINT, OTHER_PRODUCTS];
   Map<String, String> productTypesValues;
 

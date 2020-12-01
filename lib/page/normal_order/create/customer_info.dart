@@ -43,6 +43,9 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
+    if(normalOrder.customer != null && normalOrder.customer.name != null && normalOrder.customer.name.isNotEmpty){
+      _customerController.text = normalOrder.customer.name.length > 17 ? normalOrder.customer.name.substring(0, 17) : normalOrder.customer.name;
+    }
     return Card(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -70,6 +73,7 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                           controller: _customerController,
                           maxLines: 1,
                           decoration: InputDecoration(
+                            
                               hintText: "customer name",
                               icon: normalOrder == null || normalOrder.customer == null || normalOrder.customer.profileImage == null
                                   ? Icon(

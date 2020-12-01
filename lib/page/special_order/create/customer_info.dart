@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:captain/db/dal/personnel.dart';
-import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/widget/c_snackbar.dart';
@@ -12,9 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SpecialOrderCustomerInformationPage extends StatefulWidget {
-  final FocusNode focus;
-
-  SpecialOrderCustomerInformationPage({this.focus});
 
   @override
   _SpecialOrderCustomerInformationPageState createState() => _SpecialOrderCustomerInformationPageState();
@@ -43,109 +39,44 @@ class _SpecialOrderCustomerInformationPageState extends State<SpecialOrderCustom
   @override
   Widget build(BuildContext context) {
     specialOrder = Provider.of<SpecialOrder>(context);
-
-    return Card(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Column(
+    if(specialOrder.customer != null && specialOrder.customer.name != null && specialOrder.customer.name.isNotEmpty){
+      _customerController.text = specialOrder.customer.name.length > 17 ? specialOrder.customer.name.substring(0, 17) : specialOrder.customer.name;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 30,
-                    child: TypeAheadField(
-                      textFieldConfiguration: TextFieldConfiguration(
-                          focusNode: widget.focus,
-                          controller: _customerController,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                              hintText: "customer name",
-                              icon: specialOrder == null || specialOrder.customer == null || specialOrder.customer.profileImage == null
-                                  ? Icon(
-                                      Icons.person_pin,
-                                      color: Colors.black12,
-                                      size: 30,
-                                    )
-                                  : ClipOval(
-                                      child: Image.file(
-                                        File(specialOrder.customer.profileImage),
-                                        fit: BoxFit.cover,
-                                        height: 30,
-                                        width: 30,
-                                      ),
-                                    ))),
-                      suggestionsCallback: (pattern) async {
-                        return _customers.where((Personnel customer) {
-                          return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
-                        });
-                      },
-                      itemBuilder: (context, Personnel suggestedCustomer) {
-                        return ListTile(
-                          dense: true,
-                          leading: suggestedCustomer.profileImage == null
-                              ? Icon(
-                                  Icons.person,
-                                  color: Colors.black12,
-                                )
-                              : ClipOval(
-                                  child: Image.file(
-                                    File(suggestedCustomer.profileImage,),
-                                    fit: BoxFit.cover,
-                                    height: 30,
-                                    width: 30,
-                                  )
-                                ),
-                          title: Text(suggestedCustomer.name),
-                          subtitle: Text(suggestedCustomer.phoneNumber),
-                        );
-                      },
-                      onSuggestionSelected: (Personnel selectedCustomer) {
-                        setState(() {
-                          _customerController.text = selectedCustomer.name;
-                          specialOrder.customer = selectedCustomer;
-                        });
-                      },
-                      noItemsFoundBuilder: (BuildContext context) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
-                          child: Text(
-                            "No customer found",
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      if (specialOrder.customer != null && specialOrder.customer.phoneNumber != null) {
-                        String launchURL = 'tel:${specialOrder.customer.phoneNumber}';
-                        _makePhoneCall(launchURL);
-                      } else {
-                        CNotifications.showSnackBar(context, "No phone provided", "failed", () {}, backgroundColor: Colors.red);
-                      }
-                    },
-                    child: Text(
-                      getPhoneNumber(),
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                  Text(
-                    getEmail(),
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  Text(getAddress(), style: TextStyle(color: Colors.black54))
-                ],
+            SizedBox(
+              width: 200,
+              height: 30,
+              child: Container(),
+            ),
+            SizedBox(height: 10),
+            GestureDetector(
+              onTap: () {
+                if (specialOrder.customer != null && specialOrder.customer.phoneNumber != null) {
+                  String launchURL = 'tel:${specialOrder.customer.phoneNumber}';
+                  _makePhoneCall(launchURL);
+                } else {
+                  CNotifications.showSnackBar(context, "No phone provided", "failed", () {}, backgroundColor: Colors.red);
+                }
+              },
+              child: Text(
+                getPhoneNumber(),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
-            )
+            ),
+            Text(
+              getEmail(),
+              style: TextStyle(color: Colors.black54),
+            ),
+            Text(getAddress(), style: TextStyle(color: Colors.black54))
           ],
-        ),
-      ),
+        )
+      ],
     );
   }
 

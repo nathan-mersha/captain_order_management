@@ -3,6 +3,7 @@ import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,10 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     return true;
   }
 
+  int getInCartCount(){
+    return normalOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).length;
+  }
+
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
@@ -89,7 +94,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                     child: Text(
-                      "Other Products",
+                      "Other Products - ${getInCartCount()}",
                       style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                     ),
                   ),
@@ -189,11 +194,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                               otherProduct.name ?? "-",
                               style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
                             ),
-                            onDoubleTap: () {
-                              setState(() {
-                                normalOrder.products.remove(otherProduct);
-                              });
-                              CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                            onLongPress: () {
+                              removePaintProductFromCart(otherProduct);
                             },
                           )),
                           DataCell(Container(
@@ -215,6 +217,47 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                     )
                   ],
                 ),
+        ));
+  }
+
+  Future<String> removePaintProductFromCart(Product otherProduct) async {
+    return await showDialog<String>(
+        context: context,
+        builder: (context) => CDialog(
+          widgetYes: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Icon(
+                Icons.done,
+                size: 50,
+                color: Theme.of(context).primaryColor,
+              ),
+            ],
+          ),
+          widgetNo: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+            ],
+          ),
+          message: "Are you sure you want to delete \n${otherProduct.name}",
+          onYes: () async {
+            // Delete customer here.
+            Navigator.pop(context);
+
+            setState(() {
+              normalOrder.removeProduct(otherProduct);
+            });
+            CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+
+            return null;
+          },
+          onNo: () {
+            Navigator.pop(
+              context,
+            );
+            return null;
+          },
         ));
   }
 
@@ -302,19 +345,22 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                               _noOtherProductValue = true;
                             });
                           } else {
-                            print("Every thing is good");
                             // Every thing seems good.
                             setState(() {
                               _noOtherProductValue = false;
                               currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
 
                               normalOrder.addProduct(currentOnEditProduct);
+                              CNotifications.showSnackBar(context, "Successfuly added ${currentOnEditProduct.name}", "success", () {}, backgroundColor: Colors.green);
+
                               currentOnEditProduct = Product(
                                 type: CreateProductViewState.OTHER_PRODUCTS,
                                 quantityInCart: 0,
                                 unitPrice: 0,
                               );
                               clearInputs();
+
+
                             });
                           }
                         }

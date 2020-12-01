@@ -1,11 +1,14 @@
 import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/personnel.dart';
+import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/punch.dart';
 import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/db/model/statistics.dart';
 import 'package:captain/page/analysis/stats/color.dart';
+import 'package:captain/page/punch/create_punch.dart';
 import 'package:captain/widget/statistics.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +32,8 @@ class _OverViewPageState extends State<OverViewPage> {
                     StatisticsCard(Statistics(title: "Orders", subTitle: "total order", iconData: Icons.color_lens,), getStat: getTotalOrderCount(),),
                     StatisticsCard(Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account), getStat: getCustomerCount(),),
                     StatisticsCard(Statistics(title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return), getStat: getTotalReturnedOrdersCount(),),
+                    StatisticsCard(Statistics(title: "Punch in", subTitle: "total punch in", iconData: Icons.arrow_back), getStat: getPunchInCount(),),
+                    StatisticsCard(Statistics(title: "Punch out", subTitle: "total punch out", iconData: Icons.arrow_forward), getStat: getPunchOutCount(),),
                   ],
                 )),
             Expanded(flex: 4, child: ColorAnalysis(noDataFound: noDataFound(),))
@@ -56,6 +61,21 @@ class _OverViewPageState extends State<OverViewPage> {
     List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
     return returnOrders.length;
   }
+
+  Future<num> getPunchInCount() async{
+    String where = "${Punch.TYPE} = ?";
+    List<String> whereArgs = [CreatePunchViewState.PUNCH_IN]; //
+    List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
+    return punches.length;
+  }
+
+  Future<num> getPunchOutCount() async{
+    String where = "${Punch.TYPE} = ?";
+    List<String> whereArgs = [CreatePunchViewState.PUNCH_OUT]; //
+    List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
+    return punches.length;
+  }
+
 
   Future<num> getCustomerCount() async{
     String where = "${Personnel.TYPE} = ?";

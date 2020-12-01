@@ -1,12 +1,17 @@
+
+import 'dart:io';
+
+import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/page/special_order/create/customer_info.dart';
 import 'package:captain/page/special_order/main.dart';
 import 'package:captain/rsr/export/pdf_exporter.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -32,29 +37,26 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
   TextEditingController _paintController = TextEditingController();
   TextEditingController _volumeController = TextEditingController();
   TextEditingController _unitPriceController = TextEditingController();
+  TextEditingController _customerController = TextEditingController();
 
   // Lists required for view to be build
   List<Product> _paints = [];
+  List<Personnel> _customers = [];
 
   // Handles paint validation
   bool _noPaintValue = false;
 
   Product _currentOnEditPaint = Product(
-    type: CreateProductViewState.PAINT,
-    unitOfMeasurement: CreateProductViewState.LITER,
-    status: SpecialOrderMainPageState.PENDING,
+    status: SpecialOrderMainPageState.DELIVERED,
     quantityInCart: 0,
     unitPrice: 0,
   );
 
   // Status type
 
-  List<String> statusTypes = [SpecialOrderMainPageState.PENDING, SpecialOrderMainPageState.COMPLETED, SpecialOrderMainPageState.DELIVERED];
-  Map<String, String> statusTypeValues;
   Map<String, String> measurementTypesValues;
 
   bool _doingCRUD = false;
-  bool _keyboardIsVisible = false;
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
@@ -62,21 +64,20 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
   void initState() {
     super.initState();
     _assignPaintData();
+    _assignPersonnelData();
     measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
-    statusTypeValues = {SpecialOrderMainPageState.PENDING: "pending", SpecialOrderMainPageState.COMPLETED: "completed", SpecialOrderMainPageState.DELIVERED: "delivered"};
-
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        _keyboardIsVisible = visible;
-      },
-    );
   }
 
+  Future<bool> _assignPersonnelData() async {
+    // Assigning employees data.
+    String wherePersonnel = "${Personnel.TYPE} = ?";
+    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
+    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
+    setState(() {});
+    return true;
+  }
   Future<bool> _assignPaintData() async {
-    // Assigning paints data
-    String wherePaint = "${Product.TYPE} = ?";
-    List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
-    _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    _paints = await ProductDAL.find();
     setState(() {});
     return true;
   }
@@ -139,19 +140,14 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                   ),
                   Container(
                       height: 592,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            buildTable(),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                              children: [Expanded(child: Container()), Expanded(flex: 2, child: buildForm())],
-                            ),
-                            buildCreateOrder()
-                          ],
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+                          buildForm(),
+
+                          buildCreateOrder()
+                        ],
                       )),
                 ],
               ),
@@ -173,12 +169,9 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     );
   }
 
-  bool paintInSpecialOrderAvailable() {
-    return specialOrder.products.any((element) => element.type == CreateProductViewState.PAINT);
-  }
-
   Widget buildCreateOrder() {
     return Container(
+      margin: EdgeInsets.only(bottom: 20),
       width: 200,
       child: specialOrder.id == null
           ? RaisedButton(
@@ -296,90 +289,78 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     );
   }
 
-  Widget buildTable() {
-    return Visibility(
-        visible: !_keyboardIsVisible,
-        child: Container(
-          height: 200,
-          child: !paintInSpecialOrderAvailable()
-              ? noPaintAddedInSpecialOrder()
-              : ListView(
-                  children: [
-                    DataTable(
-                      columnSpacing: 30,
-                      columns: [
-                        DataColumn(
-                            label: Text(
-                          "Color",
-                          style: dataColumnStyle(),
-                        )),
-                        DataColumn(label: Text("Type", style: dataColumnStyle())), // Defines the paint type, auto-cryl/metalic
-                        DataColumn(
-                          label: Text("Ltr", style: dataColumnStyle()),
-                        ), // Defines volume of the paint in ltr
-                        DataColumn(label: Text("Unit Price", style: dataColumnStyle())),
-                        DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
-                      ],
-                      rows: specialOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
-                        return DataRow(cells: [
-                          DataCell(GestureDetector(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  size: 10,
-                                  color: paintProduct == null || paintProduct.colorValue == null ? Colors.black12 : Color(int.parse(paintProduct.colorValue)),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  paintProduct.name ?? "-",
-                                  style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                                )
-                              ],
-                            ),
-                            onDoubleTap: () {
-                              setState(() {
-                                specialOrder.products.remove(paintProduct);
-                              });
-                              CNotifications.showSnackBar(context, "Successfuly removed ${paintProduct.name}", "success", () {}, backgroundColor: Colors.red);
-                            },
-                          )),
-                          DataCell(Text(paintProduct.paintType ?? "-", style: dataCellStyle())),
-                          DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
-                          DataCell(Text("${oCCy.format(paintProduct.unitPrice)} br", style: dataCellStyle())),
-                          DataCell(Text("${oCCy.format(paintProduct.calculateSubTotal())} br", style: dataCellStyle())),
-                        ]);
-                      }).toList(),
-                    )
-                  ],
-                ),
-        ));
-  }
-
-  Color getStatusColor(String status) {
-    if (status == SpecialOrderMainPageState.PENDING) {
-      return Colors.orange;
-    } else if (status == SpecialOrderMainPageState.COMPLETED) {
-      return Colors.green;
-    } else if (status == SpecialOrderMainPageState.DELIVERED) {
-      return Colors.blue;
-    } else {
-      return Colors.black54;
-    }
-  }
-
   Widget buildForm() {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 30, left: 30, top: 0),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 30, left: 30, top: 10),
       child: Form(
           key: _paintOrderFormKey,
           child: SingleChildScrollView(
             child: Column(
               children: [
+                TypeAheadField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                      controller: _customerController,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          hintText: "customer name",
+                          icon: specialOrder == null || specialOrder.customer == null || specialOrder.customer.profileImage == null
+                              ? Icon(
+                            Icons.person_pin,
+                            color: Colors.black12,
+                            size: 30,
+                          )
+                              : ClipOval(
+                            child: Image.file(
+                              File(specialOrder.customer.profileImage),
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            ),
+                          ))),
+                  suggestionsCallback: (pattern) async {
+                    return _customers.where((Personnel customer) {
+                      return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                    });
+                  },
+                  itemBuilder: (context, Personnel suggestedCustomer) {
+                    return ListTile(
+                      dense: true,
+                      leading: suggestedCustomer.profileImage == null
+                          ? Icon(
+                        Icons.person,
+                        color: Colors.black12,
+                      )
+                          : ClipOval(
+                          child: Image.file(
+                            File(suggestedCustomer.profileImage,),
+                            fit: BoxFit.cover,
+                            height: 30,
+                            width: 30,
+                          )
+                      ),
+                      title: Text(suggestedCustomer.name),
+                      subtitle: Text(suggestedCustomer.phoneNumber),
+                    );
+                  },
+                  onSuggestionSelected: (Personnel selectedCustomer) {
+                    setState(() {
+                      _customerController.text = selectedCustomer.name;
+                      specialOrder.customer = selectedCustomer;
+                    });
+                  },
+                  noItemsFoundBuilder: (BuildContext context) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                      child: Text(
+                        "No customer found",
+                      ),
+                    );
+                  },
+                ),
+
+
                 SizedBox(
-                  height: 5,
+                  height: 15,
                 ),
 
                 /// Paint input
@@ -388,13 +369,15 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       controller: _paintController,
                       maxLines: 1,
                       decoration: InputDecoration(
-                          errorText: _noPaintValue ? "Paint value is required" : null,
-                          hintText: "Select paint",
-                          labelText: "Paint",
+                          errorText: _noPaintValue ? "Product value is required" : null,
+                          hintText: "Select product",
+                          labelText: "Product",
                           icon: Icon(
                             Icons.circle,
                             size: 30,
-                            color: specialOrder == null || _currentOnEditPaint == null || _currentOnEditPaint.colorValue == null ? Colors.black12 : Color(int.parse(_currentOnEditPaint.colorValue)),
+                            color: specialOrder == null || _currentOnEditPaint == null || _currentOnEditPaint.colorValue == null || _currentOnEditPaint.colorValue == "-"
+                                ? Colors.black12
+                                : Color(int.parse(_currentOnEditPaint.colorValue)),
                           ))),
                   suggestionsCallback: (pattern) async {
                     return _paints.where((Product paint) {
@@ -404,8 +387,12 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                   itemBuilder: (context, Product suggestedPaint) {
                     return ListTile(
                       dense: true,
-                      leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
-                      title: Text(suggestedPaint.name, style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),),
+                      leading:
+                          Icon(Icons.circle, size: 30, color: suggestedPaint.colorValue != null && suggestedPaint.colorValue != "-" ? Color(int.parse(suggestedPaint.colorValue)) : Colors.black12),
+                      title: Text(
+                        suggestedPaint.name,
+                        style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                      ),
                     );
                   },
                   onSuggestionSelected: (Product selectedPaint) {
@@ -476,9 +463,11 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                   decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br")),
                 ),
 
+
                 SizedBox(
-                  height: 8,
+                  height: 30,
                 ),
+
                 Align(
                   alignment: Alignment.topRight,
                   child: OutlineButton(
@@ -496,9 +485,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                               specialOrder.addProduct(_currentOnEditPaint);
                               _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
                               _currentOnEditPaint = Product(
-                                type: CreateProductViewState.PAINT,
-                                unitOfMeasurement: CreateProductViewState.LITER,
-                                status: SpecialOrderMainPageState.PENDING,
+                                status: SpecialOrderMainPageState.DELIVERED,
                                 quantityInCart: 0,
                                 unitPrice: 0,
                               );
@@ -513,9 +500,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       )),
                 ),
 
-                SizedBox(
-                  height: 70,
-                ),
+
               ],
             ),
           )),

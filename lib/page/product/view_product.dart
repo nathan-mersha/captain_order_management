@@ -38,6 +38,12 @@ class ProductTableState extends State<ProductTable> {
     return products;
   }
 
+  bool nameSortAscending = true;
+  bool paintTypeSortAscending = true;
+  bool manufacturerSortAscending = true;
+  bool priceSortAscending = true;
+  bool unitSortAscending = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -128,26 +134,37 @@ class ProductTableState extends State<ProductTable> {
                       DataColumn(
                         label: Text("Name"),
                         onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.name, columnIndex, ascending);
+                          nameSortAscending = !nameSortAscending;
+                          return _sort<String>((d) => d.name, columnIndex, nameSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Paint type"),
+                        onSort: (columnIndex, ascending) {
+                          paintTypeSortAscending = !paintTypeSortAscending;
+                          return _sort<String>((d) => d.type ?? "-", columnIndex, paintTypeSortAscending);
+                        },
                       ),
                       DataColumn(
                         label: Text("Manufacturer"),
+                        onSort: (columnIndex, ascending) {
+                          manufacturerSortAscending = !manufacturerSortAscending;
+                          return _sort<String>((d) => d.manufacturer ?? "-", columnIndex, manufacturerSortAscending);
+                        },
                       ),
                       DataColumn(
                         label: Text("Price (br)"),
                         numeric: true,
                         onSort: (columnIndex, ascending) {
-                          return _sort<num>((d) => d.unitPrice, columnIndex, ascending);
+                          priceSortAscending = !priceSortAscending;
+                          return _sort<num>((d) => d.unitPrice, columnIndex, priceSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Unit"),
                         onSort: (columnIndex, ascending) {
-                          return _sort<String>((d) => d.unitOfMeasurement.toString(), columnIndex, ascending);
+                          unitSortAscending = !unitSortAscending;
+                          return _sort<String>((d) => d.unitOfMeasurement.toString(), columnIndex, unitSortAscending);
                         },
                       ),
                       DataColumn(

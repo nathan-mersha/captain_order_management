@@ -38,6 +38,11 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
     return specialOrders;
   }
 
+  bool customerSortAscending = true;
+  bool addressSortAscending = true;
+  bool totalSortAscending = true;
+  bool dateSortAscending = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -134,13 +139,15 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                               DataColumn(
                                 label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => d.customer.name, columnIndex, ascending);
+                                  customerSortAscending = !customerSortAscending;
+                                  return _sort<String>((d) => d.customer.name, columnIndex, customerSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Address", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => d.customer.address, columnIndex, ascending);
+                                  addressSortAscending = !addressSortAscending;
+                                  return _sort<String>((d) => d.customer.address, columnIndex, addressSortAscending);
                                 },
                               ),
                               DataColumn(
@@ -149,12 +156,16 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                               DataColumn(
                                 label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
+                                  totalSortAscending = !totalSortAscending;
+                                  return _sort<num>((d) => d.totalAmount, columnIndex, totalSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                                onSort: (columnIndex, ascending){
+                                  dateSortAscending = !dateSortAscending;
+                                  return  _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                                },
                               ),
                               DataColumn(
                                 label: Text(""),

@@ -22,6 +22,10 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
+    if(normalOrder.advancePayment is num){
+      _advanceController.text = oCCy.format(normalOrder.advancePayment);
+    }
+
     return Card(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

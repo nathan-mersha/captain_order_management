@@ -38,6 +38,14 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     return normalOrders;
   }
 
+  bool customerSortAscending = true;
+  bool totalSortAscending = true;
+  bool remainingSortAscending = true;
+  bool paidSortAscending = true;
+  bool notifiedSortAscending = true;
+  bool statusSortAscending = true;
+  bool dateSortAscending = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -135,7 +143,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                               DataColumn(
                                 label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => d.customer.name, columnIndex, ascending);
+                                  customerSortAscending = !customerSortAscending;
+                                  return _sort<String>((d) => d.customer.name, columnIndex, customerSortAscending);
                                 },
                               ),
                               DataColumn(
@@ -144,36 +153,44 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                               DataColumn(
                                 label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<num>((d) => d.totalAmount, columnIndex, ascending);
+                                  totalSortAscending = !totalSortAscending;
+                                  return _sort<num>((d) => d.totalAmount, columnIndex, totalSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Remaining(br)", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<num>((d) => d.remainingPayment, columnIndex, ascending);
+                                  remainingSortAscending = !remainingSortAscending;
+                                  return _sort<num>((d) => d.remainingPayment, columnIndex, remainingSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Paid", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => getPaidStatus(d), columnIndex, ascending);
+                                  paidSortAscending = !paidSortAscending;
+                                  return _sort<String>((d) => getPaidStatus(d), columnIndex, paidSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Notified", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => d.userNotified.toString(), columnIndex, ascending);
+                                  notifiedSortAscending = !notifiedSortAscending;
+                                  return _sort<String>((d) => d.userNotified.toString(), columnIndex, notifiedSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Status", style: TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  return _sort<String>((d) => getOverallStatus(d), columnIndex, ascending);
+                                  statusSortAscending = !statusSortAscending;
+                                  return _sort<String>((d) => getOverallStatus(d), columnIndex, statusSortAscending);
                                 },
                               ),
                               DataColumn(
                                 label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending) => _sort<DateTime>((d) => d.firstModified, columnIndex, ascending),
+                                onSort: (columnIndex, ascending) {
+                                  dateSortAscending = !dateSortAscending;
+                                  return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                                },
                               ),
                               DataColumn(
                                 label: Text(""),

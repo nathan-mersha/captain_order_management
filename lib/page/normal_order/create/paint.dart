@@ -10,6 +10,7 @@ import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/rsr/export/pdf_exporter.dart';
+import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
-import 'package:sms/sms.dart';
 
 class CreateNormalOrderPaintPage extends StatefulWidget {
   final Function navigateTo;
@@ -112,7 +112,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Paint Order",
+                              "Paint Order - ${getInCartCount()}",
                               style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                             ),
                             SizedBox(
@@ -305,6 +305,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     );
   }
 
+  int getInCartCount() {
+    return normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).length;
+  }
+
   Widget buildTable() {
     return Visibility(
         visible: !_keyboardIsVisible,
@@ -340,20 +344,27 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                 SizedBox(
                                   width: 5,
                                 ),
-                                Text(
-                                  paintProduct.name ?? "-",
-                                  style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                                SizedBox(
+                                  width: 130,
+                                  child: Text(
+                                    paintProduct.name ?? "-",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.fade,
+                                    style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor,),
+                                  ),
                                 )
                               ],
                             ),
-                            onDoubleTap: () {
-                              setState(() {
-                                normalOrder.products.remove(paintProduct);
-                              });
-                              CNotifications.showSnackBar(context, "Successfuly removed ${paintProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                            onLongPress: () async {
+                              return await removePaintProductFromCart(paintProduct);
                             },
                           )),
-                          DataCell(Text(paintProduct.paintType ?? "-", style: dataCellStyle())),
+                          DataCell(GestureDetector(
+                            child: Text(paintProduct.paintType ?? "-", style: dataCellStyle()),
+                            onLongPress: () async {
+                              return await removePaintProductFromCart(paintProduct);
+                            },
+                          )),
                           DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
                           DataCell(Text(paintProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(
@@ -394,6 +405,47 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   ],
                 ),
         ));
+  }
+
+  Future<String> removePaintProductFromCart(Product paintProduct) async {
+    return await showDialog<String>(
+        context: context,
+        builder: (context) => CDialog(
+              widgetYes: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.done,
+                    size: 50,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ],
+              ),
+              widgetNo: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                ],
+              ),
+              message: "Are you sure you want to delete \n${paintProduct.name}",
+              onYes: () async {
+                // Delete customer here.
+                Navigator.pop(context);
+
+                setState(() {
+                  normalOrder.removeProduct(paintProduct);
+                });
+                CNotifications.showSnackBar(context, "Successfuly removed ${paintProduct.name}", "success", () {}, backgroundColor: Colors.red);
+
+                return null;
+              },
+              onNo: () {
+                Navigator.pop(
+                  context,
+                );
+                return null;
+              },
+            ));
   }
 
   notifyUserViaSMS(NormalOrder normalOrder) async {
@@ -545,6 +597,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               _noPaintValue = false;
                               _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
                               normalOrder.addProduct(_currentOnEditPaint);
+                              CNotifications.showSnackBar(context, "Successfuly added ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);
                               _currentOnEditPaint.status = NormalOrderMainPageState.PENDING;
                               _currentOnEditPaint = Product(
                                 type: CreateProductViewState.PAINT,
