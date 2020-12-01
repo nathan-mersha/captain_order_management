@@ -8,9 +8,11 @@ import 'package:captain/widget/c_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:captain/global.dart' as global;
 
 class NormalOrderTablePage extends StatefulWidget {
   final Function navigateTo;
+
   NormalOrderTablePage({this.navigateTo});
 
   @override
@@ -22,6 +24,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   int _sortColumnIndex;
   bool _sortAscending = true;
   _NormalOrderDataSource _normalOrderDataSource;
+  TextEditingController _searchController = TextEditingController();
 
   void _sort<T>(
     Comparable<T> Function(NormalOrder d) getField,
@@ -45,6 +48,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   bool notifiedSortAscending = true;
   bool statusSortAscending = true;
   bool dateSortAscending = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +82,10 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                           }, widget.navigateTo);
                         }
 
+                        if(global.normalOrderSearchHistory != null && global.normalOrderSearchHistory.isNotEmpty && _normalOrderDataSource != null){
+                          _searchController.text = global.normalOrderSearchHistory;
+                          _normalOrderDataSource._search(global.normalOrderSearchHistory);
+                        }
                         _rowsPerPage = 7;
 
                         return PaginatedDataTable(
@@ -88,9 +96,11 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                     labelText: "search",
                                     hintText: "search",
                                   ),
-                                  onChanged: (String searchInput) {
-                                    _normalOrderDataSource._search(searchInput);
+                                  onChanged: (String searchInputValue) {
+                                    global.normalOrderSearchHistory = searchInputValue;
+                                    _normalOrderDataSource._search(searchInputValue);
                                   },
+                                  controller: _searchController,
                                 ),
                                 width: 190,
                               ),
@@ -208,8 +218,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                NormalOrder normalOrder =
-                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
+                NormalOrder normalOrder = NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
                 widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
               },
             ),

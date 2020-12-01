@@ -8,6 +8,7 @@ import 'package:captain/widget/c_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:captain/global.dart' as global;
 
 class SpecialOrderTablePage extends StatefulWidget {
   final Function navigateTo;
@@ -22,6 +23,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
   int _sortColumnIndex;
   bool _sortAscending = true;
   _SpecialOrderDataSource _specialOrderDataSource;
+  TextEditingController _searchController = TextEditingController();
 
   void _sort<T>(
     Comparable<T> Function(SpecialOrder d) getField,
@@ -75,6 +77,10 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                           }, widget.navigateTo);
                         }
 
+                        if(global.specialOrderSearchHistory != null && global.specialOrderSearchHistory.isNotEmpty && _specialOrderDataSource != null){
+                          _searchController.text = global.specialOrderSearchHistory;
+                          _specialOrderDataSource._search(global.specialOrderSearchHistory);
+                        }
                         _rowsPerPage = 7;
 
                         return PaginatedDataTable(
@@ -85,9 +91,12 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                                     labelText: "search",
                                     hintText: "search",
                                   ),
-                                  onChanged: (String searchInput) {
-                                    _specialOrderDataSource._search(searchInput);
+                                  onChanged: (String searchInputValue) {
+                                    global.specialOrderSearchHistory = searchInputValue;
+                                    _specialOrderDataSource._search(searchInputValue);
                                   },
+                                  controller: _searchController,
+
                                 ),
                                 width: 190,
                               ),
