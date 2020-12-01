@@ -26,6 +26,14 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   _NormalOrderDataSource _normalOrderDataSource;
   TextEditingController _searchController = TextEditingController();
 
+  bool customerSortAscending = true;
+  bool totalSortAscending = true;
+  bool remainingSortAscending = true;
+  bool paidSortAscending = true;
+  bool notifiedSortAscending = true;
+  bool statusSortAscending = true;
+  bool dateSortAscending = true;
+
   void _sort<T>(
     Comparable<T> Function(NormalOrder d) getField,
     int columnIndex,
@@ -41,14 +49,11 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     return normalOrders;
   }
 
-  bool customerSortAscending = true;
-  bool totalSortAscending = true;
-  bool remainingSortAscending = true;
-  bool paidSortAscending = true;
-  bool notifiedSortAscending = true;
-  bool statusSortAscending = true;
-  bool dateSortAscending = true;
-
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +87,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                           }, widget.navigateTo);
                         }
 
-                        if(global.normalOrderSearchHistory != null && global.normalOrderSearchHistory.isNotEmpty && _normalOrderDataSource != null){
+                        if (global.normalOrderSearchHistory != null && global.normalOrderSearchHistory.isNotEmpty && _normalOrderDataSource != null) {
                           _searchController.text = global.normalOrderSearchHistory;
                           _normalOrderDataSource._search(global.normalOrderSearchHistory);
                         }
@@ -218,7 +223,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                NormalOrder normalOrder = NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
+                NormalOrder normalOrder =
+                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
                 widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
               },
             ),
@@ -468,7 +474,7 @@ class _NormalOrderDataSource extends DataTableSource {
 
                 NormalOrder deleteNormalOrder = deleteNormalOrderList.first;
                 if (deleteNormalOrder.idFS != null) {
-                  Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
+//                  Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
                 }
 
                 Navigator.pop(context);

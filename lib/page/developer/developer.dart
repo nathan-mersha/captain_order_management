@@ -27,7 +27,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             height: 20,
           ),
           Text(
-            "Nathan Mersha",
+            "Kelem Designs", // todo : change to company name
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w600),
           ),

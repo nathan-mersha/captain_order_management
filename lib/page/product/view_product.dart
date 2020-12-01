@@ -304,7 +304,7 @@ class _ProductDataSource extends DataTableSource {
 
                 Product deleteProduct = deleteProductList.first;
                 if (deleteProduct.idFS != null) {
-                  Firestore.instance.collection(Product.COLLECTION_NAME).document(deleteProduct.idFS).delete();
+//                  Firestore.instance.collection(Product.COLLECTION_NAME).document(deleteProduct.idFS).delete();
                 }
 
                 Navigator.pop(context);

@@ -46,6 +46,12 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
   bool dateSortAscending = true;
 
   @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 645,
@@ -77,7 +83,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                           }, widget.navigateTo);
                         }
 
-                        if(global.specialOrderSearchHistory != null && global.specialOrderSearchHistory.isNotEmpty && _specialOrderDataSource != null){
+                        if (global.specialOrderSearchHistory != null && global.specialOrderSearchHistory.isNotEmpty && _specialOrderDataSource != null) {
                           _searchController.text = global.specialOrderSearchHistory;
                           _specialOrderDataSource._search(global.specialOrderSearchHistory);
                         }
@@ -96,7 +102,6 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                                     _specialOrderDataSource._search(searchInputValue);
                                   },
                                   controller: _searchController,
-
                                 ),
                                 width: 190,
                               ),
@@ -171,9 +176,9 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                               ),
                               DataColumn(
                                 label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
-                                onSort: (columnIndex, ascending){
+                                onSort: (columnIndex, ascending) {
                                   dateSortAscending = !dateSortAscending;
-                                  return  _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                                  return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
                                 },
                               ),
                               DataColumn(
@@ -401,7 +406,7 @@ class _SpecialOrderDataSource extends DataTableSource {
 
                 SpecialOrder deleteSpecialOrder = deleteSpecialOrderList.first;
                 if (deleteSpecialOrder.idFS != null) {
-                  Firestore.instance.collection(SpecialOrder.COLLECTION_NAME).document(deleteSpecialOrder.idFS).delete();
+//                  Firestore.instance.collection(SpecialOrder.COLLECTION_NAME).document(deleteSpecialOrder.idFS).delete();
                 }
 
                 Navigator.pop(context);

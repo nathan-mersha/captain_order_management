@@ -139,12 +139,11 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                             )
                           : ClipOval(
                               child: Image.file(
-                                File(returnsData[index].employee.profileImage),
-                                fit: BoxFit.cover,
-                                height: 30,
-                                width: 30,
-                              )
-                            ),
+                              File(returnsData[index].employee.profileImage),
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            )),
                     );
                   },
                 )),

@@ -19,6 +19,12 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordInputController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _passwordInputController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,

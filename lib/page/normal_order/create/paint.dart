@@ -12,7 +12,6 @@ import 'package:captain/page/product/create_product.dart';
 import 'package:captain/rsr/export/pdf_exporter.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
@@ -65,6 +64,13 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   bool _keyboardIsVisible = false;
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
+
+  @override
+  void dispose() {
+    super.dispose();
+    _paintController.dispose();
+    _volumeController.dispose();
+  }
 
   @override
   void initState() {
@@ -350,7 +356,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                     paintProduct.name ?? "-",
                                     maxLines: 1,
                                     overflow: TextOverflow.fade,
-                                    style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor,),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 )
                               ],

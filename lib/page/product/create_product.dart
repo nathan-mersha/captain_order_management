@@ -57,6 +57,15 @@ class CreateProductViewState extends State<CreateProductView> {
   bool _manuallyAdjustPaintPrice = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _unitPriceController.dispose();
+    _manufacturerController.dispose();
+    _colorValueController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     // Separating keys to values for translatable.
@@ -477,8 +486,8 @@ class CreateProductViewState extends State<CreateProductView> {
 
       /// Creating data to fire store
       dynamic productMap = Product.toMap(queriedProduct);
-      DocumentReference docRef = await Firestore.instance.collection(Product.COLLECTION_NAME).add(productMap);
-      queriedProduct.idFS = docRef.documentID;
+//      DocumentReference docRef = await Firestore.instance.collection(Product.COLLECTION_NAME).add(productMap);
+//      queriedProduct.idFS = docRef.documentID;
       String where = "${Product.ID} = ?";
       List<String> whereArgs = [queriedProduct.id]; // Querying only products
       ProductDAL.update(where: where, whereArgs: whereArgs, product: queriedProduct);
@@ -506,7 +515,7 @@ class CreateProductViewState extends State<CreateProductView> {
     dynamic productMap = Product.toMap(product);
     // Updating to fire store if fire store generated id is present in doc.
     if (product.idFS != null) {
-      Firestore.instance.collection(Product.COLLECTION_NAME).document(product.idFS).updateData(productMap);
+//      Firestore.instance.collection(Product.COLLECTION_NAME).document(product.idFS).updateData(productMap);
     }
     // Showing notification
     CNotifications.showSnackBar(context, "Successfuly updated : ${product.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);

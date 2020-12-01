@@ -90,14 +90,14 @@ class _ImportSettingsState extends State<ImportSettings> {
 
                               /// Delete Current Pictures directory
                               Directory imageDirectoryOld = Directory(picturesPathOriginal);
-                              if(imageDirectoryOld.existsSync()){
+                              if (imageDirectoryOld.existsSync()) {
                                 imageDirectoryOld.deleteSync(recursive: true);
                               }
 
                               /// Delete Current DB directory
                               String path = await getDatabasesPath();
                               Directory databaseOld = Directory("$path/${global.DB_NAME}");
-                              if(databaseOld.existsSync()){
+                              if (databaseOld.existsSync()) {
                                 databaseOld.deleteSync(recursive: true);
                               }
 
@@ -130,7 +130,6 @@ class _ImportSettingsState extends State<ImportSettings> {
                               String newPath = File("$dbPath/${global.DB_NAME}").path;
                               File sourceFile = File("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
                               await copyFile(sourceFile, newPath);
-
 
                               CNotifications.showSnackBar(context, "Successfuly restored data", "success", () {}, backgroundColor: Colors.green);
 

@@ -8,7 +8,6 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 
-
 class ExportSettings extends StatefulWidget {
   @override
   _ExportSettingsState createState() => _ExportSettingsState();
@@ -61,7 +60,7 @@ class _ExportSettingsState extends State<ExportSettings> {
 
                         /// Copy Images directory
                         Directory imageDirectory = Directory("/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures");
-                        if(imageDirectory.existsSync()){
+                        if (imageDirectory.existsSync()) {
                           copyDirectory(imageDirectory, exportPictureFile);
                         }
 

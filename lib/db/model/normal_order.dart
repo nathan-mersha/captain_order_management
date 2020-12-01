@@ -95,14 +95,13 @@ class NormalOrder with ChangeNotifier {
             STATUS: normalOrder.status,
             USER_NOTIFIED: normalOrder.userNotified,
             FIRST_MODIFIED: normalOrder.firstModified == null ? DateTime.now().toIso8601String() : normalOrder.firstModified.toIso8601String(),
-            LAST_MODIFIED: normalOrder.lastModified == null ? DateTime.now().toIso8601String() :  normalOrder.lastModified.toIso8601String()
+            LAST_MODIFIED: normalOrder.lastModified == null ? DateTime.now().toIso8601String() : normalOrder.lastModified.toIso8601String()
           };
   }
 
   /// Converts Map to Model
   static NormalOrder toModel(dynamic map) {
     print("Input employee : ${map[EMPLOYEE] is String}");
-
 
     return map == null
         ? null

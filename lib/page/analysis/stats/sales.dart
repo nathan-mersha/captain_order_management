@@ -147,12 +147,11 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                             )
                           : ClipOval(
                               child: Image.file(
-                                File(salesData[index].personnel.profileImage),
-                                fit: BoxFit.cover,
-                                height: 30,
-                                width: 30,
-                              )
-                            ),
+                              File(salesData[index].personnel.profileImage),
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            )),
                       dense: true,
                     );
                   },

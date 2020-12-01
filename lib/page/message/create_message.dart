@@ -7,7 +7,6 @@ import 'package:captain/page/message/view_message.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:sms/sms.dart';
 
 class CreateMessageView extends StatefulWidget {
@@ -43,6 +42,12 @@ class CreateMessageViewState extends State<CreateMessageView> {
     // Separating keys to values for translatable.
     // translatable values
     recipientTypeValues = {ALL: "all", CUSTOMERS: "customers", EMPLOYEES: "employees"};
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bodyController.dispose();
   }
 
   @override
@@ -172,8 +177,6 @@ class CreateMessageViewState extends State<CreateMessageView> {
     );
   }
 
-
-
   void cleanFields() {
     setState(() {
       /// Clearing data
@@ -217,8 +220,8 @@ class CreateMessageViewState extends State<CreateMessageView> {
 
       /// Creating data to fire store
       dynamic messageMap = Message.toMap(queriedMessage);
-      DocumentReference docRef = await Firestore.instance.collection(Message.COLLECTION_NAME).add(messageMap);
-      queriedMessage.idFS = docRef.documentID;
+//      DocumentReference docRef = await Firestore.instance.collection(Message.COLLECTION_NAME).add(messageMap);
+//      queriedMessage.idFS = docRef.documentID;
 
       String where = "${Message.ID} = ?";
       List<String> whereArgs = [queriedMessage.id]; // Querying only messages

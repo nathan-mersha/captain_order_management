@@ -26,7 +26,9 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == true) {
               return paintsData.length == 0
-                  ? widget.noDataFound == null ? buildDataNotFound() : widget.noDataFound
+                  ? widget.noDataFound == null
+                      ? buildDataNotFound()
+                      : widget.noDataFound
                   : Row(
                       children: [
                         Expanded(flex: 1, child: buildAnalysisList()),
@@ -171,23 +173,17 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           /// Product does not exist
           if (index == -1) {
             ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
-//            print("Color analysis model : ${product.quantityInCart}");
             paintsData.add(colorAnalysisModelNew);
           }
 
           /// Product already exists in the analysis data
           else {
             ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
-
-            // Removing and re-inserting data
             paintsData.removeAt(index);
             paintsData.insert(index, colorAnalysisModelNew);
           }
         }
-
-
       });
-
     });
 
     // Sorting data
@@ -195,8 +191,6 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
 
     return true;
   }
-  
-  
 }
 
 class ColorAnalysisModel {

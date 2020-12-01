@@ -40,10 +40,16 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _customerController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    if(normalOrder.customer != null && normalOrder.customer.name != null && normalOrder.customer.name.isNotEmpty){
+    if (normalOrder.customer != null && normalOrder.customer.name != null && normalOrder.customer.name.isNotEmpty) {
       _customerController.text = normalOrder.customer.name.length > 17 ? normalOrder.customer.name.substring(0, 17) : normalOrder.customer.name;
     }
     return Card(
@@ -73,7 +79,6 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                           controller: _customerController,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            
                               hintText: "customer name",
                               icon: normalOrder == null || normalOrder.customer == null || normalOrder.customer.profileImage == null
                                   ? Icon(
@@ -83,12 +88,11 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                                     )
                                   : ClipOval(
                                       child: Image.file(
-                                        File(normalOrder.customer.profileImage),
-                                        fit: BoxFit.cover,
-                                        height: 30,
-                                        width: 30,
-                                      )
-                                    ))),
+                                      File(normalOrder.customer.profileImage),
+                                      fit: BoxFit.cover,
+                                      height: 30,
+                                      width: 30,
+                                    )))),
                       suggestionsCallback: (pattern) async {
                         return _customers.where((Personnel customer) {
                           return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
@@ -104,12 +108,11 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                                 )
                               : ClipOval(
                                   child: Image.file(
-                                    File(suggestedCustomer.profileImage),
-                                    fit: BoxFit.cover,
-                                    height: 30,
-                                    width: 30,
-                                  )
-                                ),
+                                  File(suggestedCustomer.profileImage),
+                                  fit: BoxFit.cover,
+                                  height: 30,
+                                  width: 30,
+                                )),
                           title: Text(suggestedCustomer.name),
                           subtitle: Text(suggestedCustomer.phoneNumber),
                         );

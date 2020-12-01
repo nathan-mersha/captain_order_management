@@ -12,7 +12,7 @@ class CRoutes {
 
   var routes;
   CRoutes() {
-    ApiGlobalConfig.get();
+//    ApiGlobalConfig.get();
 
     routes = {
       ROOT: (BuildContext context) {

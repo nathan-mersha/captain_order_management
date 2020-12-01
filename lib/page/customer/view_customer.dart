@@ -45,12 +45,12 @@ class CustomerTableState extends State<CustomerTable> {
     return customers;
   }
 
-  // todo here
   bool nameSortAscending = true;
   bool phoneNumberSortAscending = true;
   bool addressSortAscending = true;
   bool dateSortAscending = true;
 
+  int pageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -136,6 +136,9 @@ class CustomerTableState extends State<CustomerTable> {
                         _rowsPerPage = value;
                       });
                     },
+                    onPageChanged: (int page) {
+                      pageIndex = page;
+                    },
                     sortColumnIndex: _sortColumnIndex,
                     sortAscending: _sortAscending,
                     columnSpacing: 30,
@@ -143,7 +146,6 @@ class CustomerTableState extends State<CustomerTable> {
                       DataColumn(
                         label: Text("Name"),
                         onSort: (columnIndex, ascending) {
-                          // todo : here
                           nameSortAscending = !nameSortAscending;
                           return _sort<String>((d) => d.name.toLowerCase(), columnIndex, nameSortAscending);
                         },
@@ -157,7 +159,7 @@ class CustomerTableState extends State<CustomerTable> {
                       ),
                       DataColumn(
                         label: Text("Address"),
-                        onSort: (columnIndex, ascending){
+                        onSort: (columnIndex, ascending) {
                           addressSortAscending = !addressSortAscending;
                           _sort<String>((d) => d.address, columnIndex, addressSortAscending);
                         },
@@ -277,7 +279,7 @@ class _CustomerDataSource extends DataTableSource {
 
                 Personnel deletePersonnel = deletePersonnelList.first;
                 if (deletePersonnel.idFS != null) {
-                  Firestore.instance.collection(Personnel.CUSTOMER).document(deletePersonnel.idFS).delete();
+//                  Firestore.instance.collection(Personnel.CUSTOMER).document(deletePersonnel.idFS).delete();
                 }
 
                 Navigator.pop(context);

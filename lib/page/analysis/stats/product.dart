@@ -152,7 +152,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
     paintsData.clear();
     normalOrders.forEach((NormalOrder normalOrder) {
       normalOrder.products.forEach((Product product) {
-        if (product.type == CreateProductViewState.OTHER_PRODUCTS) {
+        if (product.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS) {
           // Doing analysis for paint values only
           /// Checking if the paint exist -1 no, any other value >= 0 yes.
           int index = paintsData.indexWhere((ColorAnalysisModel paintAnalysisModel) {
@@ -167,7 +167,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
 
           /// Product already exists in the analysis data
           else {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + double.parse(product.quantityInCart.toString()));
 
             // Removing and re-inserting data
             paintsData.removeAt(index);
@@ -177,6 +177,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
       });
     });
 
+    print("Paints data length : ${paintsData.length}");
     // Sorting data
     paintsData.sort((a, b) => b.count.compareTo(a.count));
 

@@ -154,7 +154,7 @@ class PunchTableState extends State<PunchTable> {
                       DataColumn(
                         label: Text("Weight (gm)"),
                         onSort: (columnIndex, ascending) {
-                          weightSortAscending  = !weightSortAscending;
+                          weightSortAscending = !weightSortAscending;
                           return _sort<num>((d) => d.weight, columnIndex, weightSortAscending);
                         },
                       ),
@@ -318,7 +318,7 @@ class _PunchDataSource extends DataTableSource {
 
                 Punch deletePunch = deletePunchList.first;
                 if (deletePunch.idFS != null) {
-                  Firestore.instance.collection(Punch.COLLECTION_NAME).document(deletePunch.idFS).delete();
+//                  Firestore.instance.collection(Punch.COLLECTION_NAME).document(deletePunch.idFS).delete();
                 }
 
                 Navigator.pop(context);

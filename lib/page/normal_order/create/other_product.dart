@@ -50,6 +50,14 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   bool _keyboardIsVisible = false;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _otherProductsController.dispose();
+    _quantityController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _assignOtherProductData();
@@ -72,8 +80,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     return true;
   }
 
-  int getInCartCount(){
-    return normalOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).length;
+  int getInCartCount() {
+    return normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS).length;
   }
 
   @override
@@ -132,8 +140,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   }
 
   bool otherProductsInNormalOrderAvailable() {
-    bool otherProductsAvailable = normalOrder.products.any((element) => element.type == CreateProductViewState.OTHER_PRODUCTS);
-    print("Other prducts available : ${otherProductsAvailable.toString()}");
+    bool otherProductsAvailable = normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS);
     return otherProductsAvailable;
   }
 
@@ -187,7 +194,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Delivered", style: dataColumnStyle())),
                       ],
-                      rows: normalOrder.products.where((element) => element.type == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
+                      rows: normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
                         return DataRow(cells: [
                           DataCell(GestureDetector(
                             child: Text(
@@ -224,41 +231,41 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     return await showDialog<String>(
         context: context,
         builder: (context) => CDialog(
-          widgetYes: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Icon(
-                Icons.done,
-                size: 50,
-                color: Theme.of(context).primaryColor,
+              widgetYes: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.done,
+                    size: 50,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ],
               ),
-            ],
-          ),
-          widgetNo: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
-            ],
-          ),
-          message: "Are you sure you want to delete \n${otherProduct.name}",
-          onYes: () async {
-            // Delete customer here.
-            Navigator.pop(context);
+              widgetNo: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                ],
+              ),
+              message: "Are you sure you want to delete \n${otherProduct.name}",
+              onYes: () async {
+                // Delete customer here.
+                Navigator.pop(context);
 
-            setState(() {
-              normalOrder.removeProduct(otherProduct);
-            });
-            CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                setState(() {
+                  normalOrder.removeProduct(otherProduct);
+                });
+                CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
 
-            return null;
-          },
-          onNo: () {
-            Navigator.pop(
-              context,
-            );
-            return null;
-          },
-        ));
+                return null;
+              },
+              onNo: () {
+                Navigator.pop(
+                  context,
+                );
+                return null;
+              },
+            ));
   }
 
   Widget buildForm() {
@@ -359,8 +366,6 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                                 unitPrice: 0,
                               );
                               clearInputs();
-
-
                             });
                           }
                         }

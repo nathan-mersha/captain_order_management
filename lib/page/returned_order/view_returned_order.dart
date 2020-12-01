@@ -303,7 +303,7 @@ class _ReturnedOrderDataSource extends DataTableSource {
 
                 ReturnedOrder deleteReturnedOrder = deleteReturnedOrderList.first;
                 if (deleteReturnedOrder.idFS != null) {
-                  Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(deleteReturnedOrder.idFS).delete();
+//                  Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(deleteReturnedOrder.idFS).delete();
                 }
 
                 Navigator.pop(context);

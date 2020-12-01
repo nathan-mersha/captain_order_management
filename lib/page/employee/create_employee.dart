@@ -6,7 +6,6 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:captain/page/employee/view_employee.dart';
 import 'package:captain/rsr/regions.dart';
-import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -310,8 +309,8 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
       /// Creating data to fire store
       dynamic employeeMap = Personnel.toMap(queriedEmployee);
       employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-      DocumentReference docRef = await Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap);
-      queriedEmployee.idFS = docRef.documentID;
+//      DocumentReference docRef = await Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap);
+//      queriedEmployee.idFS = docRef.documentID;
 
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [queriedEmployee.id]; // Querying only employees
@@ -343,7 +342,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
 
     // Updating to fire store if fire store generated id is present in doc.
     if (employee.idFS != null) {
-      Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
+//      Firestore.instance.collection(Personnel.EMPLOYEE).document(employee.idFS).updateData(employeeMap);
     }
 
     // Showing notification
@@ -378,13 +377,12 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
         height: imageSize,
         width: imageSize,
         child: ClipOval(
-          child: Image.file(
-            File(employee.profileImage),
-            fit: BoxFit.cover,
-            height: 30,
-            width: 30,
-          )
-        ),
+            child: Image.file(
+          File(employee.profileImage),
+          fit: BoxFit.cover,
+          height: 30,
+          width: 30,
+        )),
       );
     }
   }
@@ -396,6 +394,17 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     _addressController.clear();
     _addressDetailController.clear();
     _noteController.clear();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _addressDetailController.dispose();
+    _noteController.dispose();
   }
 
   void passForUpdate(Personnel employeeUpdateData) async {

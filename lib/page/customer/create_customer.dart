@@ -309,8 +309,8 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
       /// Creating data to fire store
       dynamic customerMap = Personnel.toMap(queriedCustomer);
       customerMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
-      DocumentReference docRef = await Firestore.instance.collection(Personnel.CUSTOMER).add(customerMap);
-      queriedCustomer.idFS = docRef.documentID;
+//      DocumentReference docRef = await Firestore.instance.collection(Personnel.CUSTOMER).add(customerMap);
+//      queriedCustomer.idFS = docRef.documentID;
 
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [queriedCustomer.id]; // Querying only customers
@@ -342,7 +342,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
 
     // Updating to fire store if fire store generated id is present in doc.
     if (customer.idFS != null) {
-      Firestore.instance.collection(Personnel.CUSTOMER).document(customer.idFS).updateData(customerMap);
+//      Firestore.instance.collection(Personnel.CUSTOMER).document(customer.idFS).updateData(customerMap);
     }
 
     // Showing notification

@@ -143,12 +143,11 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
                             )
                           : ClipOval(
                               child: Image.file(
-                                File(punchData[index].employee.profileImage),
-                                fit: BoxFit.cover,
-                                height: 30,
-                                width: 30,
-                              )
-                            ),
+                              File(punchData[index].employee.profileImage),
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            )),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,

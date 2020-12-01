@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:captain/db/dal/personnel.dart';
@@ -8,7 +7,6 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
-import 'package:captain/page/special_order/create/customer_info.dart';
 import 'package:captain/page/special_order/main.dart';
 import 'package:captain/rsr/export/pdf_exporter.dart';
 import 'package:captain/widget/c_snackbar.dart';
@@ -16,19 +14,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 
-class CreateSpecialOrderPaintPage extends StatefulWidget {
+class ProductInputPage extends StatefulWidget {
   final Function navigateTo;
 
-  CreateSpecialOrderPaintPage({this.navigateTo});
+  ProductInputPage({this.navigateTo});
 
   @override
-  CreateSpecialOrderPaintPageState createState() => CreateSpecialOrderPaintPageState();
+  ProductInputPageState createState() => ProductInputPageState();
 }
 
-class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage> {
+class ProductInputPageState extends State<ProductInputPage> {
   final _paintOrderFormKey = GlobalKey<FormState>();
 
   SpecialOrder specialOrder;
@@ -61,6 +58,15 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
   @override
+  void dispose() {
+    super.dispose();
+    _paintController.dispose();
+    _volumeController.dispose();
+    _unitPriceController.dispose();
+    _customerController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _assignPaintData();
@@ -76,6 +82,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
     setState(() {});
     return true;
   }
+
   Future<bool> _assignPaintData() async {
     _paints = await ProductDAL.find();
     setState(() {});
@@ -142,12 +149,7 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       height: 592,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-                          buildForm(),
-
-                          buildCreateOrder()
-                        ],
+                        children: [buildForm(), buildCreateOrder()],
                       )),
                 ],
               ),
@@ -305,18 +307,18 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                           hintText: "customer name",
                           icon: specialOrder == null || specialOrder.customer == null || specialOrder.customer.profileImage == null
                               ? Icon(
-                            Icons.person_pin,
-                            color: Colors.black12,
-                            size: 30,
-                          )
+                                  Icons.person_pin,
+                                  color: Colors.black12,
+                                  size: 30,
+                                )
                               : ClipOval(
-                            child: Image.file(
-                              File(specialOrder.customer.profileImage),
-                              fit: BoxFit.cover,
-                              height: 30,
-                              width: 30,
-                            ),
-                          ))),
+                                  child: Image.file(
+                                    File(specialOrder.customer.profileImage),
+                                    fit: BoxFit.cover,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                ))),
                   suggestionsCallback: (pattern) async {
                     return _customers.where((Personnel customer) {
                       return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
@@ -327,17 +329,18 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                       dense: true,
                       leading: suggestedCustomer.profileImage == null
                           ? Icon(
-                        Icons.person,
-                        color: Colors.black12,
-                      )
+                              Icons.person,
+                              color: Colors.black12,
+                            )
                           : ClipOval(
-                          child: Image.file(
-                            File(suggestedCustomer.profileImage,),
-                            fit: BoxFit.cover,
-                            height: 30,
-                            width: 30,
-                          )
-                      ),
+                              child: Image.file(
+                              File(
+                                suggestedCustomer.profileImage,
+                              ),
+                              fit: BoxFit.cover,
+                              height: 30,
+                              width: 30,
+                            )),
                       title: Text(suggestedCustomer.name),
                       subtitle: Text(suggestedCustomer.phoneNumber),
                     );
@@ -357,7 +360,6 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                     );
                   },
                 ),
-
 
                 SizedBox(
                   height: 15,
@@ -463,7 +465,6 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                   decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br")),
                 ),
 
-
                 SizedBox(
                   height: 30,
                 ),
@@ -499,8 +500,6 @@ class CreateSpecialOrderPaintPageState extends State<CreateSpecialOrderPaintPage
                         style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
-
-
               ],
             ),
           )),

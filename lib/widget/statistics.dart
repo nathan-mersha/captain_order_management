@@ -10,22 +10,19 @@ class StatisticsCard extends StatefulWidget {
 
   StatisticsCard(this.statistics, {this.getStat});
 
-
   @override
   _StatisticsCardState createState() => _StatisticsCardState();
 }
 
 class _StatisticsCardState extends State<StatisticsCard> {
-
   final RandomColor _randomColor = RandomColor();
 
-  TextStyle getStatStyle(){
+  TextStyle getStatStyle() {
     return TextStyle(fontWeight: FontWeight.w800, color: Colors.black87, fontSize: 17);
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Expanded(
       child: Card(
         child: Container(
@@ -42,29 +39,37 @@ class _StatisticsCardState extends State<StatisticsCard> {
                     widget.statistics.title,
                     style: TextStyle(color: _randomColor.randomColor(colorHue: ColorHue.purple, colorBrightness: ColorBrightness.dark), fontSize: 11, fontWeight: FontWeight.w800),
                   ),
-
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       widget.getStat == null
                           ? Text(
-                        widget.statistics.stat,
-                        style: getStatStyle(),
-                      ) : FutureBuilder(future: widget.getStat, initialData: 0,builder: (BuildContext context, AsyncSnapshot snapshot){
-                          if(snapshot.connectionState == ConnectionState.done){
-                            return Text(snapshot.data.toString(), style: getStatStyle());
-                          }else {
-                            return Text("0", style: getStatStyle(),);
-                          }
-
-                      },),
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
+                          : FutureBuilder(
+                              future: widget.getStat,
+                              initialData: 0,
+                              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
+                                  return Text(snapshot.data.toString(), style: getStatStyle());
+                                } else {
+                                  return Text(
+                                    "0",
+                                    style: getStatStyle(),
+                                  );
+                                }
+                              },
+                            ),
                       Text(
                         widget.statistics.subTitle,
                         style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.orange)),
                       )
-                    ],)
+                    ],
+                  )
                 ],
               ),
               Align(

@@ -1,7 +1,7 @@
 import 'package:captain/db/model/special_order.dart';
-import 'package:captain/page/special_order/create/other_product.dart';
-import 'package:captain/page/special_order/create/paint.dart';
 import 'package:captain/page/special_order/create/payment_info.dart';
+import 'package:captain/page/special_order/create/product_input.dart';
+import 'package:captain/page/special_order/create/products_table.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +28,7 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                 flex: 2,
                 child: Column(
                   children: [
-                    CreateSpecialOrderPaintPage(
+                    ProductInputPage(
                       navigateTo: widget.navigateTo,
                     )
                   ],
@@ -42,7 +42,7 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                     children: [
                       // Other product
                       /// Not visible when focus
-                      Expanded(flex: 3, child: CreateSpecialOrderOtherProductPage()),
+                      Expanded(flex: 3, child: ProductViewPage()),
 
                       // Customer and Payment information page
                       Expanded(flex: 1, child: SpecialOrderPaymentInformationPage()),

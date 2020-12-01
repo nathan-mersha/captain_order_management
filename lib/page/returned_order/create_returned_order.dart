@@ -106,12 +106,11 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                         )
                                       : ClipOval(
                                           child: Image.file(
-                                            File(returnedOrder.employee.profileImage),
-                                            fit: BoxFit.cover,
-                                            height: 30,
-                                            width: 30,
-                                          )
-                                        ))),
+                                          File(returnedOrder.employee.profileImage),
+                                          fit: BoxFit.cover,
+                                          height: 30,
+                                          width: 30,
+                                        )))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
                               return employee.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
@@ -127,12 +126,11 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                     )
                                   : ClipOval(
                                       child: Image.file(
-                                        File(suggestedEmployee.profileImage),
-                                        fit: BoxFit.cover,
-                                        height: 30,
-                                        width: 30,
-                                      )
-                                    ),
+                                      File(suggestedEmployee.profileImage),
+                                      fit: BoxFit.cover,
+                                      height: 30,
+                                      width: 30,
+                                    )),
                               title: Text(suggestedEmployee.name),
                               subtitle: Text(suggestedEmployee.phoneNumber),
                             );
@@ -178,7 +176,10 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                             return ListTile(
                               dense: true,
                               leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
-                              title: Text(suggestedPaint.name, style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),),
+                              title: Text(
+                                suggestedPaint.name,
+                                style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                              ),
                             );
                           },
                           onSuggestionSelected: (Product selectedPaint) {
@@ -213,12 +214,11 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                         )
                                       : ClipOval(
                                           child: Image.file(
-                                            File(returnedOrder.customer.profileImage),
-                                            fit: BoxFit.cover,
-                                            height: 30,
-                                            width: 30,
-                                          )
-                                        ))),
+                                          File(returnedOrder.customer.profileImage),
+                                          fit: BoxFit.cover,
+                                          height: 30,
+                                          width: 30,
+                                        )))),
                           suggestionsCallback: (pattern) async {
                             return _customers.where((Personnel customer) {
                               return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
@@ -234,12 +234,11 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                     )
                                   : ClipOval(
                                       child: Image.file(
-                                        File(suggestedCustomer.profileImage),
-                                        fit: BoxFit.cover,
-                                        height: 30,
-                                        width: 30,
-                                      )
-                                    ),
+                                      File(suggestedCustomer.profileImage),
+                                      fit: BoxFit.cover,
+                                      height: 30,
+                                      width: 30,
+                                    )),
                               title: Text(suggestedCustomer.name),
                               subtitle: Text(suggestedCustomer.phoneNumber),
                             );
@@ -438,12 +437,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _countController.dispose();
-    _noteController.dispose();
-  }
+
 
   void clearInputs() {
     _countController.clear();

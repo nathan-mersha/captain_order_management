@@ -18,7 +18,6 @@ class OverViewPage extends StatefulWidget {
 }
 
 class _OverViewPageState extends State<OverViewPage> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,55 +28,91 @@ class _OverViewPageState extends State<OverViewPage> {
                 flex: 1,
                 child: Row(
                   children: [
-                    StatisticsCard(Statistics(title: "Orders", subTitle: "total order", iconData: Icons.color_lens,), getStat: getTotalOrderCount(),),
-                    StatisticsCard(Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account), getStat: getCustomerCount(),),
-                    StatisticsCard(Statistics(title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return), getStat: getTotalReturnedOrdersCount(),),
-                    StatisticsCard(Statistics(title: "Punch in", subTitle: "total punch in", iconData: Icons.arrow_back), getStat: getPunchInCount(),),
-                    StatisticsCard(Statistics(title: "Punch out", subTitle: "total punch out", iconData: Icons.arrow_forward), getStat: getPunchOutCount(),),
+                    StatisticsCard(
+                      Statistics(
+                        title: "Orders",
+                        subTitle: "total order",
+                        iconData: Icons.color_lens,
+                      ),
+                      getStat: getTotalOrderCount(),
+                    ),
+                    StatisticsCard(
+                      Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account),
+                      getStat: getCustomerCount(),
+                    ),
+                    StatisticsCard(
+                      Statistics(title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return),
+                      getStat: getTotalReturnedOrdersCount(),
+                    ),
+                    StatisticsCard(
+                      Statistics(title: "Punch in", subTitle: "total punch in", iconData: Icons.arrow_back),
+                      getStat: getPunchInCount(),
+                    ),
+                    StatisticsCard(
+                      Statistics(title: "Punch out", subTitle: "total punch out", iconData: Icons.arrow_forward),
+                      getStat: getPunchOutCount(),
+                    ),
                   ],
                 )),
-            Expanded(flex: 4, child: ColorAnalysis(noDataFound: noDataFound(),))
+            Expanded(
+                flex: 4,
+                child: ColorAnalysis(
+                  noDataFound: noDataFound(),
+                ))
           ],
         ));
   }
 
-
-  Widget noDataFound(){
+  Widget noDataFound() {
     return Card(
       elevation: 0,
-      child: Center(child: Column(mainAxisAlignment : MainAxisAlignment.center, children: [
-      Icon(Icons.color_lens, color: Theme.of(context).accentColor,size: 70,),
-      SizedBox(height: 20,),
-      Text("No orders has been created", style: TextStyle(color: Colors.black54, fontSize: 16),)
-    ],),),);
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.color_lens,
+              color: Theme.of(context).accentColor,
+              size: 70,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "No orders has been created",
+              style: TextStyle(color: Colors.black54, fontSize: 16),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
-  Future<num> getTotalOrderCount() async{
+  Future<num> getTotalOrderCount() async {
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
     return normalOrders.length;
   }
 
-  Future<num> getTotalReturnedOrdersCount() async{
+  Future<num> getTotalReturnedOrdersCount() async {
     List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
     return returnOrders.length;
   }
 
-  Future<num> getPunchInCount() async{
+  Future<num> getPunchInCount() async {
     String where = "${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_IN]; //
     List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;
   }
 
-  Future<num> getPunchOutCount() async{
+  Future<num> getPunchOutCount() async {
     String where = "${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_OUT]; //
     List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;
   }
 
-
-  Future<num> getCustomerCount() async{
+  Future<num> getCustomerCount() async {
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
     List<Personnel> customers = await PersonnelDAL.find(
@@ -87,6 +122,4 @@ class _OverViewPageState extends State<OverViewPage> {
 
     return customers.length;
   }
-
-
 }

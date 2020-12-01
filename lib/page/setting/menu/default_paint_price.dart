@@ -16,6 +16,13 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
   CSharedPreference cSharedPreference = CSharedPreference();
 
   @override
+  void dispose() {
+    super.dispose();
+    _metalicPriceController.dispose();
+    _autoCrylPasswordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _metalicPriceController.text = cSharedPreference.metalicPricePerLitter.toStringAsFixed(2);
     _autoCrylPasswordController.text = cSharedPreference.autoCrylPricePerLitter.toStringAsFixed(2);

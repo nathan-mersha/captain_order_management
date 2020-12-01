@@ -17,6 +17,13 @@ class _AdminPasswordSettingsState extends State<AdminPasswordSettings> {
   CSharedPreference cSharedPreference = CSharedPreference();
 
   @override
+  void dispose() {
+    super.dispose();
+    _mainPasswordController.dispose();
+    _confirmPasswordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

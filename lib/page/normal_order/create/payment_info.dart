@@ -18,11 +18,18 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
   TextEditingController _advanceController = TextEditingController();
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
+
+  @override
+  void dispose() {
+    super.dispose();
+    _advanceController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    if(normalOrder.advancePayment is num){
+    if (normalOrder.advancePayment is num) {
       _advanceController.text = oCCy.format(normalOrder.advancePayment);
     }
 

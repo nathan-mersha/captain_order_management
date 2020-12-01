@@ -10,7 +10,6 @@ import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/punch/statistics_punch.dart';
 import 'package:captain/page/punch/view_punch.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -111,12 +110,11 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                         )
                                       : ClipOval(
                                           child: Image.file(
-                                            File(punch.employee.profileImage),
-                                            fit: BoxFit.cover,
-                                            height: 30,
-                                            width: 30,
-                                          )
-                                        ))),
+                                          File(punch.employee.profileImage),
+                                          fit: BoxFit.cover,
+                                          height: 30,
+                                          width: 30,
+                                        )))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
                               return employee.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
@@ -132,12 +130,11 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                     )
                                   : ClipOval(
                                       child: Image.file(
-                                        File(suggestedEmployee.profileImage),
-                                        fit: BoxFit.cover,
-                                        height: 30,
-                                        width: 30,
-                                      )
-                                    ),
+                                      File(suggestedEmployee.profileImage),
+                                      fit: BoxFit.cover,
+                                      height: 30,
+                                      width: 30,
+                                    )),
                               title: Text(suggestedEmployee.name),
                               subtitle: Text(suggestedEmployee.phoneNumber),
                             );
@@ -181,7 +178,10 @@ class CreatePunchViewState extends State<CreatePunchView> {
                             return ListTile(
                               dense: true,
                               leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
-                              title: Text(suggestedPaint.name, style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),),
+                              title: Text(
+                                suggestedPaint.name,
+                                style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                              ),
                             );
                           },
                           onSuggestionSelected: (Product selectedPaint) {
@@ -426,6 +426,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
     super.dispose();
     _weightController.dispose();
     _noteController.dispose();
+    _employeeController.dispose();
+    _paintController.dispose();
   }
 
   void clearInputs() {

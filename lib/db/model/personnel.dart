@@ -75,7 +75,6 @@ class Personnel {
 
   /// Converts Map to Model
   static Personnel toModel(dynamic map) {
-
     return map == null || map == "null"
         ? null
         : Personnel(

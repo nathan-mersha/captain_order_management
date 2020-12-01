@@ -152,7 +152,7 @@ class EmployeeTableState extends State<EmployeeTable> {
                       ),
                       DataColumn(
                         label: Text("Address"),
-                        onSort: (columnIndex, ascending){
+                        onSort: (columnIndex, ascending) {
                           addressSortAscending = !addressSortAscending;
                           _sort<String>((d) => d.address, columnIndex, addressSortAscending);
                         },
@@ -202,6 +202,7 @@ class _EmployeeDataSource extends DataTableSource {
   void _search(String searchInput) {
     employees = List.from(originalBatch); // Restoring products from original batch
     employees.retainWhere((Personnel p) => p.name.toLowerCase().contains(searchInput.toLowerCase()));
+
     notifyListeners();
   }
 
@@ -272,7 +273,7 @@ class _EmployeeDataSource extends DataTableSource {
 
                 Personnel deletePersonnel = deletePersonnelList.first;
                 if (deletePersonnel.idFS != null) {
-                  Firestore.instance.collection(Personnel.EMPLOYEE).document(deletePersonnel.idFS).delete();
+//                  Firestore.instance.collection(Personnel.EMPLOYEE).document(deletePersonnel.idFS).delete();
                 }
 
                 Navigator.pop(context);
