@@ -27,9 +27,8 @@ class CreateProductViewState extends State<CreateProductView> {
 
   // Product types
   static const String PAINT = "Paint"; // values not translatables
-  static const String OTHER_PRODUCTS = "others"; // values not translatables
+  static const String OTHER_PRODUCTS = "Others"; // values not translatables
   List<String> productTypes = [PAINT, OTHER_PRODUCTS];
-  Map<String, String> productTypesValues;
 
   // Unit of measurements types
   static const String LITER = "Liter"; // values not translatables
@@ -38,13 +37,11 @@ class CreateProductViewState extends State<CreateProductView> {
   static const String PIECE = "Piece"; // values not translatables
   static const String PACKAGE = "Package"; // values not translatables
   List<String> measurementTypes = [LITER, GRAM, PIECE, PACKAGE, GALLON];
-  Map<String, String> measurementTypesValues;
 
   // Paint type
   static const String METALIC = "Metalic"; // values not translatables
   static const String AUTO_CRYL = "Auto-Cryl"; // value not translatable
   List<String> paintTypes = [METALIC, AUTO_CRYL];
-  Map<String, String> paintTypesValues;
 
   // Text editing controllers
   TextEditingController _nameController = TextEditingController();
@@ -62,16 +59,6 @@ class CreateProductViewState extends State<CreateProductView> {
     _unitPriceController.dispose();
     _manufacturerController.dispose();
     _colorValueController.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Separating keys to values for translatable.
-    // translatable values
-    productTypesValues = {PAINT: "paint", OTHER_PRODUCTS: "others"};
-    measurementTypesValues = {LITER: "liter", GRAM: "gram", PIECE: "piece", PACKAGE: "package", GALLON: "gallon"};
-    paintTypesValues = {METALIC: "Metalic", AUTO_CRYL: "Auto-Cryl"};
   }
 
   @override
@@ -139,7 +126,7 @@ class CreateProductViewState extends State<CreateProductView> {
                                         width: 10,
                                       ),
                                       Text(
-                                        productTypesValues[productValue],
+                                        productValue,
                                         style: TextStyle(fontSize: 12),
                                       ),
                                     ],
@@ -198,10 +185,7 @@ class CreateProductViewState extends State<CreateProductView> {
                             product.unitPrice = num.parse(unitPriceValue);
                             _manuallyAdjustPaintPrice = true;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Unit price",
-                              contentPadding: EdgeInsets.symmetric(vertical: 5),
-                              suffix: Text("br per ${measurementTypesValues[product.unitOfMeasurement] ?? measurementTypesValues[LITER]}")),
+                          decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br per ${product.unitOfMeasurement ?? LITER}")),
                         ),
 
                         product.type == PAINT
@@ -318,7 +302,7 @@ class CreateProductViewState extends State<CreateProductView> {
                   child: Row(
                     children: [
                       Text(
-                        measurementTypesValues[measurementValue],
+                        measurementValue,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -416,7 +400,7 @@ class CreateProductViewState extends State<CreateProductView> {
                   child: Row(
                     children: [
                       Text(
-                        paintTypesValues[paintTypeValue],
+                        paintTypeValue,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],

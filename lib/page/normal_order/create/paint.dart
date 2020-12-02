@@ -178,7 +178,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   }
 
   TextStyle dataCellStyle() {
-    return TextStyle(fontSize: 12, color: Colors.black54);
+    return TextStyle(fontSize: 12, color: Colors.black87);
   }
 
   TextStyle dataColumnStyle() {
@@ -340,7 +340,9 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                       ],
                       rows: normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
                         return DataRow(cells: [
-                          DataCell(GestureDetector(
+                          DataCell(
+                              SingleChildScrollView(
+                                child: GestureDetector(
                             child: Row(
                               children: [
                                 Icon(
@@ -355,8 +357,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   width: 130,
                                   child: Text(
                                     paintProduct.name ?? "-",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.fade,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Theme.of(context).primaryColor,
@@ -368,7 +368,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                             onLongPress: () async {
                               return await removePaintProductFromCart(paintProduct);
                             },
-                          )),
+                          ),scrollDirection: Axis.horizontal,)),
                           DataCell(GestureDetector(
                             child: Text(paintProduct.paintType ?? "-", style: dataCellStyle()),
                             onLongPress: () async {
@@ -469,8 +469,9 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       });
 
       if (allPaintsCompleted && cSharedPreference.sendNotificationAutomatically) {
+        String firstName = normalOrder.customer.name.split(" ").first;
         String smsMessage =
-            "ሰላም ${normalOrder.customer.name.length > 11 ? normalOrder.customer.name.substring(0, 11) : normalOrder.customer.name} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} ያዘዙት ቀለም ደርሷል መጥተው ይውሰዱ. ካፕሲ የመኪና ቀለሞች!";
+            "ሰላም ${firstName.length > 11 ? firstName.substring(0, 11) : firstName} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} ያዘዙት ቀለም ደርሷል መጥተው ይውሰዱ. ካፕሲ የመኪና ቀለሞች!";
 
         SmsSender sender = SmsSender();
         SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);

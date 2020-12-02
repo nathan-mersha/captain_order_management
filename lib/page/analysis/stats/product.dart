@@ -152,7 +152,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
     paintsData.clear();
     normalOrders.forEach((NormalOrder normalOrder) {
       normalOrder.products.forEach((Product product) {
-        if (product.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS) {
+        if (product.type == CreateProductViewState.OTHER_PRODUCTS) {
           // Doing analysis for paint values only
           /// Checking if the paint exist -1 no, any other value >= 0 yes.
           int index = paintsData.indexWhere((ColorAnalysisModel paintAnalysisModel) {

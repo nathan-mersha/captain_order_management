@@ -50,14 +50,14 @@ class Exporter {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("Captain Paints",
+                          Text("Kapci Coatings",
                               style: TextStyle(
                                 fontSize: 19,
                                 font: ttf,
                               )),
-                          Text("Addis Ababa, Gofa", style: companyValuesStyle(ttf), textAlign: TextAlign.right),
-                          Text("251911228909", style: companyValuesStyle(ttf)),
-                          Text("www.kapci.com", style: companyValuesStyle(ttf)),
+                          Text("Address : Gofa , Addis Ababa", style: companyValuesStyle(ttf), textAlign: TextAlign.right),
+                          Text("Tel : +251911780428", style: companyValuesStyle(ttf)),
+                          Text("www.kemsadhub.com", style: companyValuesStyle(ttf)),
                           Text(DateFormat.yMMMd().format(lastModified), style: companyValuesStyle(ttf)),
                         ],
                       )

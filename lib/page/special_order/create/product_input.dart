@@ -436,7 +436,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   onFieldSubmitted: (volumeValue) {
                     _currentOnEditPaint.quantityInCart = num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(labelText: "Volume", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("liter")),
+                  decoration: InputDecoration(labelText: "Volume", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text(_currentOnEditPaint.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(
@@ -492,6 +492,9 @@ class ProductInputPageState extends State<ProductInputPage> {
                               );
                               clearInputs();
                             });
+
+                            CNotifications.showSnackBar(context, "Successfuly added : ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
+
                           }
                         }
                       },

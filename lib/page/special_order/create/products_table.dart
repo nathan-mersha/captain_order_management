@@ -134,6 +134,7 @@ class ProductViewPageState extends State<ProductViewPage> {
           : ListView(
               children: [
                 DataTable(
+                  columnSpacing: 1,
                   columns: [
                     DataColumn(
                         label: Text(
@@ -146,7 +147,11 @@ class ProductViewPageState extends State<ProductViewPage> {
                     )),
                     DataColumn(
                         label: Container(
-                      child: Text("Manufacturer", style: dataColumnStyle()),
+                          child: Text("Unit", style: dataColumnStyle()),
+                        )),
+                    DataColumn(
+                        label: Container(
+                      child: Text("Maker", style: dataColumnStyle()),
                     )),
 
                     /// Defines the paint type, auto-cryl/metalic
@@ -157,35 +162,44 @@ class ProductViewPageState extends State<ProductViewPage> {
                   ],
                   rows: specialOrder.products.map((Product otherProduct) {
                     return DataRow(cells: [
-                      DataCell(GestureDetector(
+                      DataCell(SizedBox(
+                        child: GestureDetector(
                         child: otherProduct.type == CreateProductViewState.PAINT
                             ? Row(
-                                children: [
-                                  Icon(
-                                    Icons.circle,
-                                    size: 10,
-                                    color: otherProduct == null || otherProduct.colorValue == null ? Colors.black12 : Color(int.parse(otherProduct.colorValue)),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    otherProduct.name ?? "-",
-                                    style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                                  )
-                                ],
-                              )
+                          children: [
+                            Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: otherProduct == null || otherProduct.colorValue == null ? Colors.black12 : Color(int.parse(otherProduct.colorValue)),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              otherProduct.name ?? "-",
+                              style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                            )
+                          ],
+                        )
                             : Text(
-                                otherProduct.name ?? "-",
-                                style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                              ),
+                          otherProduct.name ?? "-",
+                          style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                        ),
+                        onLongPress: () {
+                          removePaintProductFromCart(otherProduct);
+                        },
+                      ),width: 150,)),
+                      DataCell(GestureDetector(
+                        child: Container(
+                          child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
+                        ),
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
                         },
                       )),
                       DataCell(GestureDetector(
                         child: Container(
-                          child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
+                          child: Text(otherProduct.unitOfMeasurement.toString(), style: dataCellStyle()),
                         ),
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);

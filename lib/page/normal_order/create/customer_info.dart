@@ -63,7 +63,7 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
               style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
             ),
             SizedBox(
-              height: 18,
+              height: 5,
             ),
             Expanded(
               child: Column(
@@ -72,7 +72,7 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                 children: [
                   SizedBox(
                     width: 200,
-                    height: 30,
+                    height: 45,
                     child: TypeAheadField(
                       textFieldConfiguration: TextFieldConfiguration(
                           focusNode: widget.focus,

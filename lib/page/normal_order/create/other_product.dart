@@ -51,7 +51,6 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _otherProductsController.dispose();
     _quantityController.dispose();
@@ -81,7 +80,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   }
 
   int getInCartCount() {
-    return normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS).length;
+    return normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase()).length;
   }
 
   @override
@@ -140,7 +139,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   }
 
   bool otherProductsInNormalOrderAvailable() {
-    bool otherProductsAvailable = normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS);
+    bool otherProductsAvailable = normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase());
     return otherProductsAvailable;
   }
 
@@ -194,13 +193,13 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Delivered", style: dataColumnStyle())),
                       ],
-                      rows: normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS).toList().map((Product otherProduct) {
+                      rows: normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase()).toList().map((Product otherProduct) {
                         return DataRow(cells: [
                           DataCell(GestureDetector(
-                            child: Text(
+                            child: SizedBox(width: 130,child: Text(
                               otherProduct.name ?? "-",
                               style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                            ),
+                            ),),
                             onLongPress: () {
                               removePaintProductFromCart(otherProduct);
                             },

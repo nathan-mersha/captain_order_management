@@ -49,7 +49,9 @@ class _ImportSettingsState extends State<ImportSettings> {
 
                         FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
 
+                        print("File path : ${result.files.single.path}");
                         if (result.files.single.path.endsWith("_kapci_backup.zip")) {
+                          print("File is okay");
                           restoreFile = File(result.files.single.path);
                         } else {
                           restoreFile = null;
@@ -174,12 +176,16 @@ class _ImportSettingsState extends State<ImportSettings> {
 
   Widget buildRestoreDate() {
     try {
+      String dateTimeText = restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", "");
+      print("date time text : ${dateTimeText}");
+      print("date time now : ${DateTime.now().toString()}");
       return Text(
-        DateFormat.yMMMd().format(DateTime.parse(restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", ""))),
+        DateFormat.yMMMd().format(DateTime.parse(dateTimeText)),
         style: TextStyle(fontSize: 13, color: Colors.black87),
         textAlign: TextAlign.center,
       );
     } catch (e) {
+      print("error while date parsing : ${e.toString()}");
       return Text(
         "Invalid Format",
         style: TextStyle(fontSize: 13, color: Colors.black87),
