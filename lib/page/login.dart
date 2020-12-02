@@ -154,7 +154,7 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  
+
 
   Widget loadSecondaryPage() {
     if (currentPage == LOGIN) {
