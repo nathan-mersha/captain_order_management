@@ -10,7 +10,6 @@ import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/returned_order/statistics_returned_order.dart';
 import 'package:captain/page/returned_order/view_returned_order.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';

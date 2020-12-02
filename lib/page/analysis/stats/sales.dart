@@ -131,13 +131,14 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "${salesData[index].count.toStringAsFixed(0)} times",
-                            style: TextStyle(fontSize: 11, color: Colors.black38),
-                          ),
-                          Text(
                             "${oCCy.format(salesData[index].totalAmount)} br",
                             style: TextStyle(fontSize: 11),
                           ),
+                          Text(
+                            "${salesData[index].count.toStringAsFixed(0)} times",
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
+                          ),
+
                         ],
                       ),
                       leading: salesData[index].personnel.profileImage == null
@@ -191,7 +192,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
     });
 
     // Sorting data
-    salesData.sort((a, b) => b.count.compareTo(a.count));
+    salesData.sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
 
     return true;
   }

@@ -5,7 +5,6 @@ import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/special_order/main.dart';
 import 'package:captain/page/special_order/view/statistics_normal_order.dart';
 import 'package:captain/widget/c_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:captain/global.dart' as global;

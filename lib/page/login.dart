@@ -1,4 +1,5 @@
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
+import 'package:captain/page/developer/developer.dart';
 import 'package:captain/route.dart';
 import 'package:flutter/material.dart';
 
@@ -153,50 +154,13 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  Widget developerSecondaryPage() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            Icons.code,
-            color: Theme.of(context).primaryColor,
-            size: 90,
-          ),
-          Text(
-            "Developed by",
-            style: TextStyle(color: Colors.black26),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Nathan Mersha",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "0967823595",
-            style: TextStyle(color: Colors.black38),
-          ),
-          Text(
-            "nathanmersha@gmail.com",
-            style: TextStyle(color: Colors.black38),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
   Widget loadSecondaryPage() {
     if (currentPage == LOGIN) {
       return loginSecondaryPage();
     } else {
-      return developerSecondaryPage();
+      return DeveloperPage();
     }
   }
 }

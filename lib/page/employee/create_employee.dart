@@ -7,7 +7,6 @@ import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:captain/page/employee/view_employee.dart';
 import 'package:captain/rsr/regions.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/contacts.dart';
 import 'package:image_picker/image_picker.dart';

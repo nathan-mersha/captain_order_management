@@ -19,6 +19,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
+import 'package:sms/sms.dart';
 
 class CreateNormalOrderPaintPage extends StatefulWidget {
   final Function navigateTo;
@@ -469,10 +470,12 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
       if (allPaintsCompleted && cSharedPreference.sendNotificationAutomatically) {
         String smsMessage =
-            "ሰላም ጤና ይስጥልን የተከበሩ ${normalOrder.customer.name} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())}ያዘዙት ቀለም ስለደረሰ እባክዎን መጥተው  ይውሰዱ፡፡ ስለመጡ እናመሰግናለን! “ካፕሲ የመኪና ቀለሞች” "
-            "\n Hello ${normalOrder.customer.name}, Your paint order requested on ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} has been completed. Please collect your goods. Thank you! Kapci Coatings";
+            "ሰላም ${normalOrder.customer.name.length > 11 ? normalOrder.customer.name.substring(0, 11) : normalOrder.customer.name} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} ያዘዙት ቀለም ደርሷል መጥተው ይውሰዱ. ካፕሲ የመኪና ቀለሞች!";
 
-        _sendSMS(smsMessage, [normalOrder.customer.phoneNumber]);
+        SmsSender sender = SmsSender();
+        SmsMessage message = SmsMessage(normalOrder.customer.phoneNumber, smsMessage);
+        sender.sendSms(message);
+
         Message sentMessage = Message(recipient: normalOrder.customer.name, body: smsMessage);
         MessageDAL.create(sentMessage);
 
@@ -484,13 +487,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       List<String> whereArgs = [normalOrder.id];
       await NormalOrderDAL.update(where: where, whereArgs: whereArgs, normalOrder: normalOrder);
     }
-  }
-
-  void _sendSMS(String message, List<String> recipents) async {
-    String _result = await sendSMS(message: message, recipients: recipents).catchError((onError) {
-      print(onError);
-    });
-    print(_result);
   }
 
   Color getStatusColor(String status) {

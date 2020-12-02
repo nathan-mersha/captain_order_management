@@ -14,33 +14,27 @@ class _DeveloperPageState extends State<DeveloperPage> {
           SizedBox(
             height: 200,
           ),
-          Icon(
-            Icons.code,
-            color: Theme.of(context).primaryColor,
-            size: 80,
-          ),
+          Image.asset("assets/images/kelem_icon.png", scale: 1.5,),
+
+          SizedBox(height: 20,),
           Text(
-            "Developed by",
-            style: TextStyle(color: Colors.black26),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Kelem Designs", // todo : change to company name
+            "Kelem Designs",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w600),
+            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w800),
           ),
           SizedBox(
-            height: 20,
+            height: 16,
           ),
           Text(
-            "0967823595",
-            style: TextStyle(color: Colors.black38),
+            "+251 912 27 0298",
+            style: TextStyle(color: Colors.black45),
+          ),
+          SizedBox(
+            height: 5,
           ),
           Text(
-            "nathanmersha@gmail.com",
-            style: TextStyle(color: Colors.black38),
+            "kelem.designs@gmail.com",
+            style: TextStyle(color: Colors.black45),
           ),
         ],
       ),

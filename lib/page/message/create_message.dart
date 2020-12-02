@@ -5,7 +5,6 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/message/statistics_message.dart';
 import 'package:captain/page/message/view_message.dart';
 import 'package:captain/widget/c_snackbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
 

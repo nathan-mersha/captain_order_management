@@ -62,7 +62,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].totalLitter.round())),
       ),
     ));
   }
@@ -132,12 +132,12 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            "sold ${paintsData[index].count.toStringAsFixed(0)} times",
-                            style: TextStyle(fontSize: 11, color: Colors.black38),
-                          ),
-                          Text(
                             "${paintsData[index].totalLitter.toStringAsFixed(0)} ltrs",
                             style: TextStyle(fontSize: 12, color: Colors.black87),
+                          ),
+                          Text(
+                            "sold ${paintsData[index].count.toStringAsFixed(0)} times",
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
                           ),
                         ],
                       ),
@@ -167,18 +167,20 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           // Doing analysis for paint values only
           /// Checking if the paint exist -1 no, any other value >= 0 yes.
           int index = paintsData.indexWhere((ColorAnalysisModel paintAnalysisModel) {
-            return paintAnalysisModel.product.id == product.id;
+            return paintAnalysisModel.product.name == product.name;
           });
 
           /// Product does not exist
           if (index == -1) {
             ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
+
             paintsData.add(colorAnalysisModelNew);
           }
 
           /// Product already exists in the analysis data
           else {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + product.quantityInCart);
+            ColorAnalysisModel colorAnalysisModelNew =
+                ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + double.parse(product.quantityInCart.toString()));
             paintsData.removeAt(index);
             paintsData.insert(index, colorAnalysisModelNew);
           }
@@ -187,8 +189,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
     });
 
     // Sorting data
-    paintsData.sort((a, b) => b.count.compareTo(a.count));
-
+    paintsData.sort((a, b) => b.totalLitter.compareTo(a.totalLitter));
     return true;
   }
 }

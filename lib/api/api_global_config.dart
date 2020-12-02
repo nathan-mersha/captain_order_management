@@ -1,6 +1,4 @@
-import 'package:captain/db/model/global.dart';
-import 'package:captain/db/shared_preference/c_shared_preference.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ApiGlobalConfig {
   static const String GLOBAL_KEY_ID = "9NA2lDXNcsU1TlfFDApv";

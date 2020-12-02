@@ -3,7 +3,6 @@ import 'package:captain/db/model/personnel.dart';
 import 'package:captain/page/customer/create_customer.dart';
 import 'package:captain/page/customer/statistics_customer.dart';
 import 'package:captain/widget/c_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/contacts.dart';
 import 'package:intl/intl.dart';
