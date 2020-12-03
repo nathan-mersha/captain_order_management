@@ -25,6 +25,7 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
     _advanceController.dispose();
   }
 
+  
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);

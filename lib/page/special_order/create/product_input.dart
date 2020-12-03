@@ -93,6 +93,9 @@ class ProductInputPageState extends State<ProductInputPage> {
   Widget build(BuildContext context) {
     specialOrder = Provider.of<SpecialOrder>(context);
 
+    if (specialOrder.customer != null && specialOrder.customer.name != null && specialOrder.customer.name.isNotEmpty) {
+      _customerController.text = specialOrder.customer.name.length > 17 ? specialOrder.customer.name.substring(0, 17) : specialOrder.customer.name;
+    }
     return WillPopScope(
         child: Container(
             height: 645,
