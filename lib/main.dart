@@ -6,9 +6,7 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/dal/special_order.dart';
-import 'package:captain/db/model/product.dart';
 import 'package:captain/route.dart';
-import 'package:captain/rsr/kapci/product.dart';
 import 'package:captain/rsr/theme/c_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +50,7 @@ class MyAppState extends State<MyApp> {
   }
 
   requestPermissions() async {
-    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage, PermissionGroup.sms, PermissionGroup.camera]);
+    await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.phone, PermissionGroup.storage, PermissionGroup.camera]);
   }
 
   Future initializeSharedPreference() async {
@@ -60,45 +58,6 @@ class MyAppState extends State<MyApp> {
     global.db = await createTable();
     return true;
   }
-
-//  Future createProducts() async{
-//    await ProductDAL.delete();
-//
-//    ProductSeed.VALUES.forEach((Map<String, String> element) {
-//
-//      String type = element["type"];
-//      Product product;
-//      if(type == "paint"){
-//
-//        product = Product(
-//            name: element["product"],
-//            type: "Paint",
-//            unitPrice: num.parse(element["price"]),
-//            colorValue: Color.fromARGB(100, int.parse(element["red"]), int.parse(element["green"]), int.parse(element["blue"])).value.toString(),
-//            manufacturer: element["manufacture"],
-//            paintType: element["paintType"],
-//            unitOfMeasurement: element["measurment"],
-//            lastModified: DateTime.now(),
-//            firstModified: DateTime.now(),
-//            isGallonBased: element["measurment"] == "Gallon" ? true : false);
-//
-//      }else if(type == "others"){
-//        product = Product(
-//            name: element["product"],
-//            type: "Others",
-//            unitPrice: num.parse(element["price"]),
-//            colorValue: Colors.white.value.toString(),
-//            manufacturer: element["manufacture"],
-//            paintType: "-",
-//            unitOfMeasurement: element["measurment"],
-//            lastModified: DateTime.now(),
-//            firstModified: DateTime.now(),
-//            isGallonBased: element["measurment"] == "Gallon" ? true : false);
-//      }
-//      ProductDAL.create(product);
-//    });
-//  }
-
 
   Future<Database> createTable() async {
     Database db = await openDatabase(

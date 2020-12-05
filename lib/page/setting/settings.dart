@@ -22,14 +22,14 @@ class _SettingsPageState extends State<SettingsPage> {
   static const String CHILD = "CHILD";
 
   static const int LOCK_FEATURES = 0;
-  static const int THEME = 1;
-  static const int MAIN_PASSWORD = 2;
-  static const int ADMIN_PASSWORD = 3;
-  static const int CUSTOMER_NOTIFICATION = 4;
-  static const int DEFAULT_PAINT_PRICE = 5;
-  static const int EXPORT = 6;
-  static const int IMPORT = 7;
-  static const int DEVELOPER = 8;
+  // static const int THEME = 1;
+  // static const int MAIN_PASSWORD = 2;
+  // static const int ADMIN_PASSWORD = 3;
+  // static const int CUSTOMER_NOTIFICATION = 4;
+  // static const int DEFAULT_PAINT_PRICE = 5;
+  // static const int EXPORT = 6;
+  // static const int IMPORT = 7;
+  // static const int DEVELOPER = 8;
 
   int selectedMenuIndex = LOCK_FEATURES;
 

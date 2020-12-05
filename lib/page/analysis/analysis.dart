@@ -20,14 +20,14 @@ class _AnalysisPageState extends State<AnalysisPage> {
   static const String ICON = "ICON";
   static const String CHILD = "CHILD";
 
-  static const int RETURNED_ORDER = 0;
-  static const int COLOR = 1;
+  // static const int RETURNED_ORDER = 0;
+  // static const int COLOR = 1;
   static const int PRODUCT = 2;
-  static const int EMPLOYEE = 3;
-  static const int MANUFACTURER = 4;
-  static const int CUSTOMER = 5;
-  static const int PUNCH = 6;
-  static const int SALES = 7;
+  // static const int EMPLOYEE = 3;
+  // static const int MANUFACTURER = 4;
+  // static const int CUSTOMER = 5;
+  // static const int PUNCH = 6;
+  // static const int SALES = 7;
 
   int selectedMenuIndex = PRODUCT;
   List menus = [

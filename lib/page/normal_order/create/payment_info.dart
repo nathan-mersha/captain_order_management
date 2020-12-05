@@ -25,14 +25,10 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
     _advanceController.dispose();
   }
 
-  
+
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
-
-    if (normalOrder.advancePayment is num) {
-      _advanceController.text = oCCy.format(normalOrder.advancePayment);
-    }
 
     return Card(
       child: Container(
@@ -79,7 +75,7 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                         width: 100,
                         child: TextFormField(
                           keyboardType: TextInputType.number,
-                          controller: _advanceController,
+                          initialValue: oCCy.format(normalOrder.advancePayment),
                           focusNode: widget.focus,
                           onChanged: (advanceValue) {
                             setState(() {
@@ -127,7 +123,6 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                               normalOrder.advancePayment = 0; // Reset advance payment to 0
                               normalOrder.calculatePaymentInfo();
                             }
-                            _advanceController.text = oCCy.format(normalOrder.advancePayment);
                           });
                         },
                       )

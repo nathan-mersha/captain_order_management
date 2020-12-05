@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:captain/db/model/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:random_color/random_color.dart';

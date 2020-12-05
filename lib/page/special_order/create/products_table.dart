@@ -5,8 +5,8 @@ import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 
 class ProductViewPage extends StatefulWidget {
@@ -175,10 +175,11 @@ class ProductViewPageState extends State<ProductViewPage> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
+                            Expanded(child: Text(
                               otherProduct.name ?? "-",
                               style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                            )
+//                              overflow: TextOverflow.fade,
+                            ),)
                           ],
                         )
                             : Text(

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:captain/db/dal/message.dart';
 import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/product.dart';
@@ -14,7 +12,6 @@ import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -280,7 +277,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     /// Updating from fire store
 //    normalOrder.customer.profileImage = null;
 //    normalOrder.employee.profileImage = null;
-    dynamic normalOrderMap = NormalOrder.toMap(normalOrder);
+//     dynamic normalOrderMap = NormalOrder.toMap(normalOrder);
 
     // todo Updating to fire store if fire store generated id is present in doc.
 //    if (normalOrder.idFS != null) {

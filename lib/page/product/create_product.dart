@@ -468,7 +468,7 @@ class CreateProductViewState extends State<CreateProductView> {
       Product queriedProduct = product.first;
 
       /// Creating data to fire store
-      dynamic productMap = Product.toMap(queriedProduct);
+      // dynamic productMap = Product.toMap(queriedProduct);
 //      DocumentReference docRef = await Firestore.instance.collection(Product.COLLECTION_NAME).add(productMap);
 //      queriedProduct.idFS = docRef.documentID;
       String where = "${Product.ID} = ?";
@@ -495,7 +495,7 @@ class CreateProductViewState extends State<CreateProductView> {
     await ProductDAL.update(where: where, whereArgs: whereArgs, product: product);
 
     /// Updating from fire store
-    dynamic productMap = Product.toMap(product);
+    // dynamic productMap = Product.toMap(product);
     // Updating to fire store if fire store generated id is present in doc.
     if (product.idFS != null) {
 //      Firestore.instance.collection(Product.COLLECTION_NAME).document(product.idFS).updateData(productMap);

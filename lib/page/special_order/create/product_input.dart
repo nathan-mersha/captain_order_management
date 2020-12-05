@@ -115,7 +115,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Paint Order",
+                              "Paint Order - ${specialOrder.products.length.toString()}",
                               style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                             ),
                             SizedBox(
@@ -270,7 +270,7 @@ class ProductInputPageState extends State<ProductInputPage> {
     }
 
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated : ${specialOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfully updated : ${specialOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   Widget noPaintAddedInSpecialOrder() {
@@ -487,6 +487,8 @@ class ProductInputPageState extends State<ProductInputPage> {
                               _noPaintValue = false;
                               _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
                               specialOrder.addProduct(_currentOnEditPaint);
+                              CNotifications.showSnackBar(context, "Successfuly added : ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
+
                               _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
                               _currentOnEditPaint = Product(
                                 status: SpecialOrderMainPageState.DELIVERED,
@@ -496,7 +498,6 @@ class ProductInputPageState extends State<ProductInputPage> {
                               clearInputs();
                             });
 
-                            CNotifications.showSnackBar(context, "Successfuly added : ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
 
                           }
                         }

@@ -1,4 +1,3 @@
-import 'package:captain/api/api_global_config.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/dashboard.dart';
 import 'package:captain/page/login.dart';

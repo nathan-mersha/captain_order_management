@@ -218,7 +218,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
       Message queriedMessage = message.first;
 
       /// Creating data to fire store
-      dynamic messageMap = Message.toMap(queriedMessage);
+      // dynamic messageMap = Message.toMap(queriedMessage);
 //      DocumentReference docRef = await Firestore.instance.collection(Message.COLLECTION_NAME).add(messageMap);
 //      queriedMessage.idFS = docRef.documentID;
 
