@@ -4,6 +4,8 @@ import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/product/statistics_product.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:captain/global.dart' as global;
+
 
 class ProductTable extends StatefulWidget {
   final GlobalKey<CreateProductViewState> createProductKey;
@@ -21,6 +23,8 @@ class ProductTableState extends State<ProductTable> {
   int _sortColumnIndex;
   bool _sortAscending = true;
   _ProductDataSource _productDataSource;
+  TextEditingController _searchController = TextEditingController();
+
 
   void _sort<T>(
     Comparable<T> Function(Product d) getField,
@@ -42,6 +46,12 @@ class ProductTableState extends State<ProductTable> {
   bool manufacturerSortAscending = true;
   bool priceSortAscending = true;
   bool unitSortAscending = true;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +79,11 @@ class ProductTableState extends State<ProductTable> {
                     });
                   }, widget.createProductKey);
                 }
+
+                if (global.productSearchHistory != null && global.productSearchHistory.isNotEmpty && _productDataSource != null) {
+                  _searchController.text = global.productSearchHistory;
+                  _productDataSource._search(global.productSearchHistory);
+                }
                 _rowsPerPage = 7;
                 return PaginatedDataTable(
                     actions: [
@@ -79,8 +94,10 @@ class ProductTableState extends State<ProductTable> {
                             hintText: "search",
                           ),
                           onChanged: (String searchInput) {
+                            global.productSearchHistory = searchInput;
                             _productDataSource._search(searchInput);
                           },
+                          controller: _searchController,
                         ),
                         width: 120,
                       ),

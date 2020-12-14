@@ -287,14 +287,19 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
       note: customer.note,
     );
 
-    Contact createdContact = await Contacts.addContact(contact);
+    try{
+      Contact createdContact = await Contacts.addContact(contact);
+      /// Create Personnel Customer data to local db
+      customer.contactIdentifier = createdContact.identifier;
+    }catch(e){
+      print(e.toString());
+    }
 
-    /// Create Personnel Customer data to local db
-    customer.contactIdentifier = createdContact.identifier;
+
     Personnel createdCustomer = await PersonnelDAL.create(customer);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created : ${customer.name}", "success", () {}, backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfully created : ${customer.name}", "success", () {}, backgroundColor: Colors.green);
 
     createInFSAndUpdateLocally(createdCustomer);
   }

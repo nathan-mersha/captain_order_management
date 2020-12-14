@@ -143,7 +143,7 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
       // Doing analysis for customer values only
       /// Checking if the customer exist -1 no, any other value >= 0 yes.
       int index = customerData.indexWhere((CustomerAnalysisModel customerAnalysisModel) {
-        return customerAnalysisModel.address == personnel.address;
+        return customerAnalysisModel.address.trim() == personnel.address.trim();
       });
 
       /// Product does not exist

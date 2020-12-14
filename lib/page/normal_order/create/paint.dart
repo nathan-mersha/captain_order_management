@@ -466,6 +466,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       });
 
       if (allPaintsCompleted && cSharedPreference.sendNotificationAutomatically) {
+        print("Hiere");
         String firstName = normalOrder.customer.name.split(" ").first;
         String smsMessage =
             "ሰላም ${firstName.length > 11 ? firstName.substring(0, 11) : firstName} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} ያዘዙት ቀለም ደርሷል መጥተው ይውሰዱ. ካፕሲ የመኪና ቀለሞች!";
@@ -478,7 +479,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         MessageDAL.create(sentMessage);
 
         normalOrder.userNotified = true;
-        CNotifications.showSnackBar(context, "Successfuly sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
+        CNotifications.showSnackBar(context, "Successfully sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
       }
 
       String where = "${Product.ID} = ?";
