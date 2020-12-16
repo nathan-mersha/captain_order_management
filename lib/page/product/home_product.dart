@@ -8,7 +8,8 @@ class HomeProductPage extends StatefulWidget {
   HomeProductPageState createState() => HomeProductPageState();
 }
 
-class HomeProductPageState extends State<HomeProductPage> with SingleTickerProviderStateMixin {
+class HomeProductPageState extends State<HomeProductPage>
+    with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<ProductTableState> productTableKey = GlobalKey();
   GlobalKey<CreateProductViewState> createProductKey = GlobalKey();

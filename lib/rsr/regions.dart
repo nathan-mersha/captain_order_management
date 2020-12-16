@@ -61,6 +61,7 @@ class AddisAbabaRegions {
     "Gewasa",
     "Ghiliffalegn Stream",
     "Giorgis",
+    "Gofa",
     "Gojjam Berenda",
     "Golla Mikael",
     "Goma Kuteba",

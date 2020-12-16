@@ -9,13 +9,19 @@ class StatisticsSpecialOrderView extends StatefulWidget {
   final GlobalKey<StatisticsSpecialOrderViewState> statisticsCustomerKey;
   final GlobalKey<CustomerTableState> customerTableKey;
 
-  const StatisticsSpecialOrderView({this.customerTableKey, this.createCustomerKey, this.statisticsCustomerKey}) : super(key: statisticsCustomerKey);
+  const StatisticsSpecialOrderView(
+      {this.customerTableKey,
+      this.createCustomerKey,
+      this.statisticsCustomerKey})
+      : super(key: statisticsCustomerKey);
 
   @override
-  StatisticsSpecialOrderViewState createState() => StatisticsSpecialOrderViewState();
+  StatisticsSpecialOrderViewState createState() =>
+      StatisticsSpecialOrderViewState();
 }
 
-class StatisticsSpecialOrderViewState extends State<StatisticsSpecialOrderView> {
+class StatisticsSpecialOrderViewState
+    extends State<StatisticsSpecialOrderView> {
   @override
   Widget build(BuildContext context) {
     return Row(

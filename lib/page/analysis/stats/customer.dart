@@ -55,7 +55,10 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(customerData[0].address, customerData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(
+            renderSpec: new charts.NoneRenderSpec(),
+            viewport: charts.OrdinalViewport(
+                customerData[0].address, customerData[0].count)),
       ),
     ));
   }
@@ -87,9 +90,11 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
         id: 'Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(
+              r: primary.red, g: primary.green, b: primary.blue);
         },
-        domainFn: (CustomerAnalysisModel val, _) => val.address.substring(0, val.address.length < 18 ? val.address.length : 18),
+        domainFn: (CustomerAnalysisModel val, _) => val.address
+            .substring(0, val.address.length < 18 ? val.address.length : 18),
         measureFn: (CustomerAnalysisModel val, _) => val.count,
         displayName: "Analysis",
         data: customerData,
@@ -99,7 +104,8 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -142,7 +148,8 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
     customers.forEach((Personnel personnel) {
       // Doing analysis for customer values only
       /// Checking if the customer exist -1 no, any other value >= 0 yes.
-      int index = customerData.indexWhere((CustomerAnalysisModel customerAnalysisModel) {
+      int index = customerData
+          .indexWhere((CustomerAnalysisModel customerAnalysisModel) {
         return customerAnalysisModel.address.trim() == personnel.address.trim();
       });
 

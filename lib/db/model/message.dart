@@ -17,7 +17,13 @@ class Message {
   DateTime firstModified;
   DateTime lastModified;
 
-  Message({this.id, this.idFS, this.recipient, this.body, this.firstModified, this.lastModified});
+  Message(
+      {this.id,
+      this.idFS,
+      this.recipient,
+      this.body,
+      this.firstModified,
+      this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Message message) {
@@ -37,7 +43,13 @@ class Message {
   static Message toModel(dynamic map) {
     return map == null
         ? null
-        : Message(id: map[ID], idFS: map[ID_FS], recipient: map[RECIPIENT], body: map[BODY], firstModified: DateTime.parse(map[FIRST_MODIFIED]), lastModified: DateTime.parse(map[LAST_MODIFIED]));
+        : Message(
+            id: map[ID],
+            idFS: map[ID_FS],
+            recipient: map[RECIPIENT],
+            body: map[BODY],
+            firstModified: DateTime.parse(map[FIRST_MODIFIED]),
+            lastModified: DateTime.parse(map[LAST_MODIFIED]));
   }
 
   /// Changes List of Map to List of Model

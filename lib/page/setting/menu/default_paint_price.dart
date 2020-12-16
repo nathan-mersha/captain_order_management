@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class DefaultPaintPriceSettings extends StatefulWidget {
   @override
-  _DefaultPaintPriceSettingsState createState() => _DefaultPaintPriceSettingsState();
+  _DefaultPaintPriceSettingsState createState() =>
+      _DefaultPaintPriceSettingsState();
 }
 
 class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
@@ -24,8 +25,10 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
 
   @override
   Widget build(BuildContext context) {
-    _metalicPriceController.text = cSharedPreference.metalicPricePerLitter.toStringAsFixed(2);
-    _autoCrylPasswordController.text = cSharedPreference.autoCrylPricePerLitter.toStringAsFixed(2);
+    _metalicPriceController.text =
+        cSharedPreference.metalicPricePerLitter.toStringAsFixed(2);
+    _autoCrylPasswordController.text =
+        cSharedPreference.autoCrylPricePerLitter.toStringAsFixed(2);
 
     return Column(
       children: [
@@ -33,7 +36,8 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
           width: double.infinity,
           child: Text(
             "Set default paint prices",
-            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           color: Colors.black45,
@@ -56,7 +60,9 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
                     }
                   },
                   controller: _metalicPriceController,
-                  decoration: InputDecoration(labelText: "Metalic Price", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                  decoration: InputDecoration(
+                      labelText: "Metalic Price",
+                      contentPadding: EdgeInsets.symmetric(vertical: 5)),
                 ),
                 SizedBox(
                   height: 16,
@@ -70,7 +76,9 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
                     }
                   },
                   controller: _autoCrylPasswordController,
-                  decoration: InputDecoration(labelText: "Auto-Cryl Price", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                  decoration: InputDecoration(
+                      labelText: "Auto-Cryl Price",
+                      contentPadding: EdgeInsets.symmetric(vertical: 5)),
                 ),
                 SizedBox(
                   height: 35,
@@ -86,10 +94,17 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        cSharedPreference.metalicPricePerLitter = num.parse(_metalicPriceController.text);
-                        cSharedPreference.autoCrylPricePerLitter = num.parse(_autoCrylPasswordController.text);
+                        cSharedPreference.metalicPricePerLitter =
+                            num.parse(_metalicPriceController.text);
+                        cSharedPreference.autoCrylPricePerLitter =
+                            num.parse(_autoCrylPasswordController.text);
 
-                        CNotifications.showSnackBar(context, "Successfuly changed paint prices", "success", () {}, backgroundColor: Colors.green);
+                        CNotifications.showSnackBar(
+                            context,
+                            "Successfuly changed paint prices",
+                            "success",
+                            () {},
+                            backgroundColor: Colors.green);
                       }
                     },
                   ),

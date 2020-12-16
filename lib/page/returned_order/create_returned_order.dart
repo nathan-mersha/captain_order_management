@@ -19,7 +19,11 @@ class CreateReturnedOrderView extends StatefulWidget {
   final GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey;
   final GlobalKey<ReturnedOrderTableState> returnedOrderTableKey;
 
-  const CreateReturnedOrderView({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey}) : super(key: createReturnedOrderKey);
+  const CreateReturnedOrderView(
+      {this.returnedOrderTableKey,
+      this.createReturnedOrderKey,
+      this.statisticsReturnedOrderKey})
+      : super(key: createReturnedOrderKey);
 
   @override
   CreateReturnedOrderViewState createState() => CreateReturnedOrderViewState();
@@ -58,7 +62,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -69,19 +74,29 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${returnedOrder.id == null ? "Create" : "Update"} ReturnedOrder",
-                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 15),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                    right: 20,
+                    left: 20,
+                    top: 15),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -94,10 +109,15 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               controller: _employeeController,
                               maxLines: 1,
                               decoration: InputDecoration(
-                                  errorText: _noEmployeeValue ? "Employee is required" : null,
+                                  errorText: _noEmployeeValue
+                                      ? "Employee is required"
+                                      : null,
                                   hintText: "Select employee",
                                   labelText: "Employee",
-                                  icon: returnedOrder == null || returnedOrder.employee == null || returnedOrder.employee.profileImage == null
+                                  icon: returnedOrder == null ||
+                                          returnedOrder.employee == null ||
+                                          returnedOrder.employee.profileImage ==
+                                              null
                                       ? Icon(
                                           Icons.person_pin,
                                           color: Colors.black12,
@@ -105,14 +125,16 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                         )
                                       : ClipOval(
                                           child: Image.file(
-                                          File(returnedOrder.employee.profileImage),
+                                          File(returnedOrder
+                                              .employee.profileImage),
                                           fit: BoxFit.cover,
                                           height: 30,
                                           width: 30,
                                         )))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
-                              return employee.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                              return employee.name.toLowerCase().startsWith(
+                                  pattern.toLowerCase()); // Apples to apples
                             });
                           },
                           itemBuilder: (context, Personnel suggestedEmployee) {
@@ -142,7 +164,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                           },
                           noItemsFoundBuilder: (BuildContext context) {
                             return Container(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
                               child: Text(
                                 "No employees found",
                               ),
@@ -156,28 +179,41 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               controller: _paintController,
                               maxLines: 1,
                               decoration: InputDecoration(
-                                  errorText: _noPaintValue ? "Paint value is required" : null,
+                                  errorText: _noPaintValue
+                                      ? "Paint value is required"
+                                      : null,
                                   hintText: "Select paint",
                                   labelText: "Paint",
                                   icon: Icon(
                                     Icons.circle,
                                     size: 30,
-                                    color: returnedOrder == null || returnedOrder.product == null || returnedOrder.product.colorValue == null
+                                    color: returnedOrder == null ||
+                                            returnedOrder.product == null ||
+                                            returnedOrder.product.colorValue ==
+                                                null
                                         ? Colors.black12
-                                        : Color(int.parse(returnedOrder.product.colorValue)),
+                                        : Color(int.parse(
+                                            returnedOrder.product.colorValue)),
                                   ))),
                           suggestionsCallback: (pattern) async {
                             return _paints.where((Product paint) {
-                              return paint.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                              return paint.name.toLowerCase().startsWith(
+                                  pattern.toLowerCase()); // Apples to apples
                             });
                           },
                           itemBuilder: (context, Product suggestedPaint) {
                             return ListTile(
                               dense: true,
-                              leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
+                              leading: Icon(Icons.circle,
+                                  size: 30,
+                                  color: Color(
+                                      int.parse(suggestedPaint.colorValue))),
                               title: Text(
                                 suggestedPaint.name,
-                                style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w800),
                               ),
                             );
                           },
@@ -189,7 +225,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                           },
                           noItemsFoundBuilder: (BuildContext context) {
                             return Container(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
                               child: Text(
                                 "No paint found",
                               ),
@@ -205,7 +242,10 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               decoration: InputDecoration(
                                   hintText: "Select customer",
                                   labelText: "Customer",
-                                  icon: returnedOrder == null || returnedOrder.customer == null || returnedOrder.customer.profileImage == null
+                                  icon: returnedOrder == null ||
+                                          returnedOrder.customer == null ||
+                                          returnedOrder.customer.profileImage ==
+                                              null
                                       ? Icon(
                                           Icons.person_pin,
                                           color: Colors.black12,
@@ -213,14 +253,16 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                                         )
                                       : ClipOval(
                                           child: Image.file(
-                                          File(returnedOrder.customer.profileImage),
+                                          File(returnedOrder
+                                              .customer.profileImage),
                                           fit: BoxFit.cover,
                                           height: 30,
                                           width: 30,
                                         )))),
                           suggestionsCallback: (pattern) async {
                             return _customers.where((Personnel customer) {
-                              return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                              return customer.name.toLowerCase().startsWith(
+                                  pattern.toLowerCase()); // Apples to apples
                             });
                           },
                           itemBuilder: (context, Personnel suggestedCustomer) {
@@ -250,7 +292,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                           },
                           noItemsFoundBuilder: (BuildContext context) {
                             return Container(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
                               child: Text(
                                 "No customer found",
                               ),
@@ -277,7 +320,10 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                           onFieldSubmitted: (countValue) {
                             returnedOrder.count = num.parse(countValue);
                           },
-                          decoration: InputDecoration(labelText: "Count", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(
+                              labelText: "Count",
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 5)),
                         ),
                         SizedBox(
                           height: 5,
@@ -291,7 +337,10 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                           onFieldSubmitted: (noteValue) {
                             returnedOrder.note = noteValue;
                           },
-                          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(
+                              labelText: "Note",
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 5)),
                         ),
                       ],
                     ),
@@ -319,7 +368,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                               ),
                             ),
                       onPressed: () async {
-                        if (_formKey.currentState.validate() && fieldsValidated()) {
+                        if (_formKey.currentState.validate() &&
+                            fieldsValidated()) {
                           setState(() {
                             _doingCRUD = true;
                           });
@@ -334,10 +384,14 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                         RaisedButton(
                             child: Text(
                               "Update",
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white),
                             ),
                             onPressed: () async {
-                              if (_formKey.currentState.validate() && fieldsValidated()) {
+                              if (_formKey.currentState.validate() &&
+                                  fieldsValidated()) {
                                 setState(() {
                                   _doingCRUD = true;
                                 });
@@ -348,7 +402,10 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
                         OutlineButton(
                           child: Text(
                             "Cancel",
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
                             cleanFields();
@@ -380,31 +437,49 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
   Future<bool> _assignPersonnelAndPaintData() async {
     // Assigning employees data.
     String wherePersonnel = "${Personnel.TYPE} = ?";
-    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
-    List<String> whereArgsEmployees = [Personnel.EMPLOYEE]; // Querying only employees
-    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
-    _employees = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsEmployees); // Assign employees
+    List<String> whereArgsCustomers = [
+      Personnel.CUSTOMER
+    ]; // Querying only customers
+    List<String> whereArgsEmployees = [
+      Personnel.EMPLOYEE
+    ]; // Querying only employees
+    _customers = await PersonnelDAL.find(
+        where: wherePersonnel,
+        whereArgs: whereArgsCustomers); // Assign customers
+    _employees = await PersonnelDAL.find(
+        where: wherePersonnel,
+        whereArgs: whereArgsEmployees); // Assign employees
 
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
-    List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
-    _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    List<String> whereArgsPaint = [
+      CreateProductViewState.PAINT
+    ]; // Querying only paint type
+    _paints =
+        await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
     setState(() {});
     return true;
   }
 
   Future createReturnedOrder(BuildContext context) async {
-    ReturnedOrder createdReturnedOrder = await ReturnedOrderDAL.create(returnedOrder);
+    ReturnedOrder createdReturnedOrder =
+        await ReturnedOrderDAL.create(returnedOrder);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created returned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Colors.green);
+    CNotifications.showSnackBar(
+        context,
+        "Successfuly created returned order for employee ${returnedOrder.employee.name}",
+        "success",
+        () {},
+        backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdReturnedOrder);
   }
 
   Future createInFSAndUpdateLocally(ReturnedOrder returnedOrder) async {
     String where = "${ReturnedOrder.ID} = ?";
     List<String> whereArgs = [returnedOrder.id]; // Querying only returnedOrders
-    ReturnedOrderDAL.find(where: where, whereArgs: whereArgs).then((List<ReturnedOrder> returnedOrder) async {
+    ReturnedOrderDAL.find(where: where, whereArgs: whereArgs)
+        .then((List<ReturnedOrder> returnedOrder) async {
       ReturnedOrder queriedReturnedOrder = returnedOrder.first;
 
       /// todo Creating data to fire store nullify image
@@ -421,7 +496,8 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     /// Query and update user
     String where = "${ReturnedOrder.ID} = ?";
     List<String> whereArgs = [returnedOrder.id];
-    await ReturnedOrderDAL.update(where: where, whereArgs: whereArgs, returnedOrder: returnedOrder);
+    await ReturnedOrderDAL.update(
+        where: where, whereArgs: whereArgs, returnedOrder: returnedOrder);
 
     /// Updating from fire store
     dynamic returnedOrderMap = ReturnedOrder.toMap(returnedOrder);
@@ -433,10 +509,13 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
 //      Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(returnedOrder.idFS).updateData(returnedOrderMap);
     }
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(
+        context,
+        "Successfuly updated retruned order for employee ${returnedOrder.employee.name}",
+        "success",
+        () {},
+        backgroundColor: Theme.of(context).accentColor);
   }
-
-
 
   void clearInputs() {
     _countController.clear();
@@ -448,8 +527,11 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
 
   void passForUpdate(ReturnedOrder returnedOrderUpdateData) async {
     String where = "${ReturnedOrder.ID} = ?";
-    List<String> whereArgs = [returnedOrderUpdateData.id]; // Querying only returnedOrders
-    List<ReturnedOrder> returnedOrders = await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
+    List<String> whereArgs = [
+      returnedOrderUpdateData.id
+    ]; // Querying only returnedOrders
+    List<ReturnedOrder> returnedOrders =
+        await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       returnedOrder = returnedOrders.first;

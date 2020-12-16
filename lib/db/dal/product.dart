@@ -32,7 +32,8 @@ class ProductDAL {
     product.firstModified = DateTime.now();
     product.lastModified = DateTime.now();
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, Product.toMap(product), conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, Product.toMap(product),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return product;
   }
 
@@ -40,8 +41,12 @@ class ProductDAL {
   /// whereArgs : [2]
   static Future<List<Product>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${Product.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Product.LAST_MODIFIED} DESC");
+        ? await global.db
+            .query(TABLE_NAME, orderBy: "${Product.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME,
+            where: where,
+            whereArgs: whereArgs,
+            orderBy: "${Product.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Product(
@@ -67,9 +72,11 @@ class ProductDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Product product}) async {
+  static Future<void> update(
+      {String where, dynamic whereArgs, Product product}) async {
     product.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, Product.toMap(product), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, Product.toMap(product),
+        where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

@@ -34,16 +34,22 @@ class NormalOrderDAL {
     normalOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, NormalOrder.toMap(normalOrder),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return normalOrder;
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<List<NormalOrder>> find({String where, dynamic whereArgs}) async {
+  static Future<List<NormalOrder>> find(
+      {String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
+        ? await global.db
+            .query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME,
+            where: where,
+            whereArgs: whereArgs,
+            orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return NormalOrder(
@@ -51,7 +57,8 @@ class NormalOrderDAL {
         idFS: maps[i][NormalOrder.ID_FS],
         employee: Personnel.toModel(jsonDecode(maps[i][NormalOrder.EMPLOYEE])),
         customer: Personnel.toModel(jsonDecode(maps[i][NormalOrder.CUSTOMER])),
-        products: Product.toModelList(jsonDecode(maps[i][NormalOrder.PRODUCTS])),
+        products:
+            Product.toModelList(jsonDecode(maps[i][NormalOrder.PRODUCTS])),
         totalAmount: maps[i][NormalOrder.TOTAL_AMOUNT],
         advancePayment: maps[i][NormalOrder.ADVANCE_PAYMENT],
         remainingPayment: maps[i][NormalOrder.REMAINING_PAYMENT],
@@ -66,9 +73,11 @@ class NormalOrderDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, NormalOrder normalOrder}) async {
+  static Future<void> update(
+      {String where, dynamic whereArgs, NormalOrder normalOrder}) async {
     normalOrder.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, NormalOrder.toMap(normalOrder), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, NormalOrder.toMap(normalOrder),
+        where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

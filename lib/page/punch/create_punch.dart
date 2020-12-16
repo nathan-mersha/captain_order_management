@@ -19,7 +19,9 @@ class CreatePunchView extends StatefulWidget {
   final GlobalKey<StatisticsPunchViewState> statisticsPunchKey;
   final GlobalKey<PunchTableState> punchTableKey;
 
-  const CreatePunchView({this.punchTableKey, this.createPunchKey, this.statisticsPunchKey}) : super(key: createPunchKey);
+  const CreatePunchView(
+      {this.punchTableKey, this.createPunchKey, this.statisticsPunchKey})
+      : super(key: createPunchKey);
 
   @override
   CreatePunchViewState createState() => CreatePunchViewState();
@@ -63,7 +65,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -74,19 +77,29 @@ class CreatePunchViewState extends State<CreatePunchView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${punch.id == null ? "Create" : "Update"} Punch",
-                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 15),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                    right: 20,
+                    left: 20,
+                    top: 15),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -99,10 +112,14 @@ class CreatePunchViewState extends State<CreatePunchView> {
                               controller: _employeeController,
                               maxLines: 1,
                               decoration: InputDecoration(
-                                  errorText: _noEmployeeValue ? "Employee is required" : null,
+                                  errorText: _noEmployeeValue
+                                      ? "Employee is required"
+                                      : null,
                                   hintText: "Select employee",
                                   labelText: "Employee",
-                                  icon: punch == null || punch.employee == null || punch.employee.profileImage == null
+                                  icon: punch == null ||
+                                          punch.employee == null ||
+                                          punch.employee.profileImage == null
                                       ? Icon(
                                           Icons.person_pin,
                                           color: Colors.black12,
@@ -117,7 +134,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                         )))),
                           suggestionsCallback: (pattern) async {
                             return _employees.where((Personnel employee) {
-                              return employee.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                              return employee.name.toLowerCase().startsWith(
+                                  pattern.toLowerCase()); // Apples to apples
                             });
                           },
                           itemBuilder: (context, Personnel suggestedEmployee) {
@@ -147,7 +165,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
                           },
                           noItemsFoundBuilder: (BuildContext context) {
                             return Container(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
                               child: Text(
                                 "No employees found",
                               ),
@@ -161,26 +180,40 @@ class CreatePunchViewState extends State<CreatePunchView> {
                               controller: _paintController,
                               maxLines: 1,
                               decoration: InputDecoration(
-                                  errorText: _noPaintValue ? "Paint value is required" : null,
+                                  errorText: _noPaintValue
+                                      ? "Paint value is required"
+                                      : null,
                                   hintText: "Select paint",
                                   labelText: "Paint",
                                   icon: Icon(
                                     Icons.circle,
                                     size: 30,
-                                    color: punch == null || punch.product == null || punch.product.colorValue == null ? Colors.black12 : Color(int.parse(punch.product.colorValue)),
+                                    color: punch == null ||
+                                            punch.product == null ||
+                                            punch.product.colorValue == null
+                                        ? Colors.black12
+                                        : Color(int.parse(
+                                            punch.product.colorValue)),
                                   ))),
                           suggestionsCallback: (pattern) async {
                             return _paints.where((Product paint) {
-                              return paint.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                              return paint.name.toLowerCase().startsWith(
+                                  pattern.toLowerCase()); // Apples to apples
                             });
                           },
                           itemBuilder: (context, Product suggestedPaint) {
                             return ListTile(
                               dense: true,
-                              leading: Icon(Icons.circle, size: 30, color: Color(int.parse(suggestedPaint.colorValue))),
+                              leading: Icon(Icons.circle,
+                                  size: 30,
+                                  color: Color(
+                                      int.parse(suggestedPaint.colorValue))),
                               title: Text(
                                 suggestedPaint.name,
-                                style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w800),
                               ),
                             );
                           },
@@ -192,7 +225,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
                           },
                           noItemsFoundBuilder: (BuildContext context) {
                             return Container(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
                               child: Text(
                                 "No paint found",
                               ),
@@ -219,14 +253,19 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                 Icons.keyboard_arrow_down,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              items: punchTypes.map<DropdownMenuItem<String>>((String punchValue) {
+                              items: punchTypes.map<DropdownMenuItem<String>>(
+                                  (String punchValue) {
                                 return DropdownMenuItem(
                                   child: Row(
                                     children: [
                                       Icon(
-                                        punchValue == PUNCH_IN ? Icons.arrow_back : Icons.arrow_forward,
+                                        punchValue == PUNCH_IN
+                                            ? Icons.arrow_back
+                                            : Icons.arrow_forward,
                                         size: 15,
-                                        color: punchValue == PUNCH_IN ? Colors.red : Colors.green,
+                                        color: punchValue == PUNCH_IN
+                                            ? Colors.red
+                                            : Colors.green,
                                       ),
                                       SizedBox(
                                         width: 10,
@@ -266,7 +305,10 @@ class CreatePunchViewState extends State<CreatePunchView> {
                           onFieldSubmitted: (countValue) {
                             punch.weight = num.parse(countValue);
                           },
-                          decoration: InputDecoration(labelText: "Weight (gm)", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(
+                              labelText: "Weight (gm)",
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 5)),
                         ),
                         SizedBox(
                           height: 5,
@@ -280,7 +322,10 @@ class CreatePunchViewState extends State<CreatePunchView> {
                           onFieldSubmitted: (noteValue) {
                             punch.note = noteValue;
                           },
-                          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(
+                              labelText: "Note",
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 5)),
                         ),
                       ],
                     ),
@@ -308,7 +353,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
                               ),
                             ),
                       onPressed: () async {
-                        if (_formKey.currentState.validate() && fieldsValidated()) {
+                        if (_formKey.currentState.validate() &&
+                            fieldsValidated()) {
                           setState(() {
                             _doingCRUD = true;
                           });
@@ -323,10 +369,14 @@ class CreatePunchViewState extends State<CreatePunchView> {
                         RaisedButton(
                             child: Text(
                               "Update",
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white),
                             ),
                             onPressed: () async {
-                              if (_formKey.currentState.validate() && fieldsValidated()) {
+                              if (_formKey.currentState.validate() &&
+                                  fieldsValidated()) {
                                 setState(() {
                                   _doingCRUD = true;
                                 });
@@ -337,7 +387,10 @@ class CreatePunchViewState extends State<CreatePunchView> {
                         OutlineButton(
                           child: Text(
                             "Cancel",
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
                             cleanFields();
@@ -369,13 +422,20 @@ class CreatePunchViewState extends State<CreatePunchView> {
   Future<bool> _assignPersonnelAndPaintData() async {
     // Assigning employees data.
     String wherePersonnel = "${Personnel.TYPE} = ?";
-    List<String> whereArgsEmployees = [Personnel.EMPLOYEE]; // Querying only employees
-    _employees = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsEmployees); // Assign employees
+    List<String> whereArgsEmployees = [
+      Personnel.EMPLOYEE
+    ]; // Querying only employees
+    _employees = await PersonnelDAL.find(
+        where: wherePersonnel,
+        whereArgs: whereArgsEmployees); // Assign employees
 
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
-    List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
-    _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    List<String> whereArgsPaint = [
+      CreateProductViewState.PAINT
+    ]; // Querying only paint type
+    _paints =
+        await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
     setState(() {});
     return true;
   }
@@ -384,14 +444,20 @@ class CreatePunchViewState extends State<CreatePunchView> {
     Punch createdPunch = await PunchDAL.create(punch);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created punch for employee ${punch.employee.name}", "success", () {}, backgroundColor: Colors.green);
+    CNotifications.showSnackBar(
+        context,
+        "Successfuly created punch for employee ${punch.employee.name}",
+        "success",
+        () {},
+        backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdPunch);
   }
 
   Future createInFSAndUpdateLocally(Punch punch) async {
     String where = "${Punch.ID} = ?";
     List<String> whereArgs = [punch.id]; // Querying only punchs
-    PunchDAL.find(where: where, whereArgs: whereArgs).then((List<Punch> punch) async {
+    PunchDAL.find(where: where, whereArgs: whereArgs)
+        .then((List<Punch> punch) async {
       Punch queriedPunch = punch.first;
 
       /// todo Creating data to fire store, nullify image
@@ -418,7 +484,12 @@ class CreatePunchViewState extends State<CreatePunchView> {
 //      Firestore.instance.collection(Punch.COLLECTION_NAME).document(punch.idFS).updateData(punchMap);
     }
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${punch.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(
+        context,
+        "Successfuly updated retruned order for employee ${punch.employee.name}",
+        "success",
+        () {},
+        backgroundColor: Theme.of(context).accentColor);
   }
 
   @override
@@ -440,7 +511,8 @@ class CreatePunchViewState extends State<CreatePunchView> {
   void passForUpdate(Punch punchUpdateData) async {
     String where = "${Punch.ID} = ?";
     List<String> whereArgs = [punchUpdateData.id]; // Querying only punchs
-    List<Punch> punchs = await PunchDAL.find(where: where, whereArgs: whereArgs);
+    List<Punch> punchs =
+        await PunchDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       punch = punchs.first;

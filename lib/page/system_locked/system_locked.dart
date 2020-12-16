@@ -25,7 +25,8 @@ class SystemLockedPageState extends State<SystemLockedPage> {
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   image: DecorationImage(
-                    image: AssetImage("assets/images/captain_icon_big_faded.png"),
+                    image:
+                        AssetImage("assets/images/captain_icon_big_faded.png"),
                     alignment: Alignment.topRight,
                   )),
               child: Column(
@@ -34,14 +35,18 @@ class SystemLockedPageState extends State<SystemLockedPage> {
                 children: <Widget>[
                   Text(
                     "Customer and Order \nManagement",
-                    style: TextStyle(color: Colors.white, fontSize: 45, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 45,
+                        fontWeight: FontWeight.w800),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
                     "Captain's customer and management system, create order and\nanalyze your data.",
-                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w100),
+                    style: TextStyle(
+                        color: Colors.white70, fontWeight: FontWeight.w100),
                   ),
                   SizedBox(
                     height: 45,
@@ -50,14 +55,18 @@ class SystemLockedPageState extends State<SystemLockedPage> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 60),
                       child: Text(
-                        currentPage == ERROR_PAGE ? "Contact Developer" : "View Error",
+                        currentPage == ERROR_PAGE
+                            ? "Contact Developer"
+                            : "View Error",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                     color: Colors.redAccent,
                     onPressed: () {
                       setState(() {
-                        currentPage = currentPage == CONTACT_DEVELOPER ? ERROR_PAGE : CONTACT_DEVELOPER;
+                        currentPage = currentPage == CONTACT_DEVELOPER
+                            ? ERROR_PAGE
+                            : CONTACT_DEVELOPER;
                       });
                     },
                   )
@@ -94,7 +103,10 @@ class SystemLockedPageState extends State<SystemLockedPage> {
           Text(
             "Exception Occured",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 17,
+                fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 20,
@@ -136,7 +148,10 @@ class SystemLockedPageState extends State<SystemLockedPage> {
           Text(
             "Nathan Mersha",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 17,
+                fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 20,

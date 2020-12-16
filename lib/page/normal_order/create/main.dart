@@ -12,7 +12,8 @@ class NormalOrderCreateMainPage extends StatefulWidget {
   NormalOrderCreateMainPage({this.normalOrder, this.navigateTo});
 
   @override
-  _NormalOrderCreateMainPageState createState() => _NormalOrderCreateMainPageState();
+  _NormalOrderCreateMainPageState createState() =>
+      _NormalOrderCreateMainPageState();
 }
 
 class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
@@ -56,7 +57,8 @@ class _NormalOrderCreateMainPageState extends State<NormalOrderCreateMainPage> {
                   // Other product
                   /// Not visible when focus
                   Visibility(
-                    child: Expanded(flex: 2, child: CreateNormalOrderOtherProductPage()),
+                    child: Expanded(
+                        flex: 2, child: CreateNormalOrderOtherProductPage()),
                     visible: !focusOnLowerElements,
                   ),
 

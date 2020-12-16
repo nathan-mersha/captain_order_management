@@ -16,10 +16,12 @@ class NormalOrderCustomerInformationPage extends StatefulWidget {
   NormalOrderCustomerInformationPage({this.focus});
 
   @override
-  _NormalOrderCustomerInformationPageState createState() => _NormalOrderCustomerInformationPageState();
+  _NormalOrderCustomerInformationPageState createState() =>
+      _NormalOrderCustomerInformationPageState();
 }
 
-class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomerInformationPage> {
+class _NormalOrderCustomerInformationPageState
+    extends State<NormalOrderCustomerInformationPage> {
   NormalOrder normalOrder;
   List<Personnel> _customers = [];
   TextEditingController _customerController = TextEditingController();
@@ -33,8 +35,12 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   Future<bool> _assignPersonnelData() async {
     // Assigning employees data.
     String wherePersonnel = "${Personnel.TYPE} = ?";
-    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
-    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
+    List<String> whereArgsCustomers = [
+      Personnel.CUSTOMER
+    ]; // Querying only customers
+    _customers = await PersonnelDAL.find(
+        where: wherePersonnel,
+        whereArgs: whereArgsCustomers); // Assign customers
     setState(() {});
     return true;
   }
@@ -49,8 +55,12 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    if (normalOrder.customer != null && normalOrder.customer.name != null && normalOrder.customer.name.isNotEmpty) {
-      _customerController.text = normalOrder.customer.name.length > 17 ? normalOrder.customer.name.substring(0, 17) : normalOrder.customer.name;
+    if (normalOrder.customer != null &&
+        normalOrder.customer.name != null &&
+        normalOrder.customer.name.isNotEmpty) {
+      _customerController.text = normalOrder.customer.name.length > 17
+          ? normalOrder.customer.name.substring(0, 17)
+          : normalOrder.customer.name;
     }
     return Card(
       child: Container(
@@ -60,7 +70,8 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
           children: [
             Text(
               "Customer Information",
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
             ),
             SizedBox(
               height: 5,
@@ -80,7 +91,9 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                           maxLines: 1,
                           decoration: InputDecoration(
                               hintText: "customer name",
-                              icon: normalOrder == null || normalOrder.customer == null || normalOrder.customer.profileImage == null
+                              icon: normalOrder == null ||
+                                      normalOrder.customer == null ||
+                                      normalOrder.customer.profileImage == null
                                   ? Icon(
                                       Icons.person_pin,
                                       color: Colors.black12,
@@ -95,7 +108,8 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                                     )))),
                       suggestionsCallback: (pattern) async {
                         return _customers.where((Personnel customer) {
-                          return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                          return customer.name.toLowerCase().startsWith(
+                              pattern.toLowerCase()); // Apples to apples
                         });
                       },
                       itemBuilder: (context, Personnel suggestedCustomer) {
@@ -125,7 +139,8 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                       },
                       noItemsFoundBuilder: (BuildContext context) {
                         return Container(
-                          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 12, horizontal: 5),
                           child: Text(
                             "No customer found",
                           ),
@@ -136,11 +151,15 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
                   SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      if (normalOrder.customer != null && normalOrder.customer.phoneNumber != null) {
-                        String launchURL = 'tel:${normalOrder.customer.phoneNumber}';
+                      if (normalOrder.customer != null &&
+                          normalOrder.customer.phoneNumber != null) {
+                        String launchURL =
+                            'tel:${normalOrder.customer.phoneNumber}';
                         _makePhoneCall(launchURL);
                       } else {
-                        CNotifications.showSnackBar(context, "No phone provided", "failed", () {}, backgroundColor: Colors.red);
+                        CNotifications.showSnackBar(
+                            context, "No phone provided", "failed", () {},
+                            backgroundColor: Colors.red);
                       }
                     },
                     child: Text(
@@ -169,14 +188,21 @@ class _NormalOrderCustomerInformationPageState extends State<NormalOrderCustomer
   }
 
   String getPhoneNumber() {
-    return normalOrder.customer == null || normalOrder.customer.phoneNumber == null ? "no phone number" : normalOrder.customer.phoneNumber;
+    return normalOrder.customer == null ||
+            normalOrder.customer.phoneNumber == null
+        ? "no phone number"
+        : normalOrder.customer.phoneNumber;
   }
 
   String getEmail() {
-    return normalOrder.customer == null || normalOrder.customer.email == null ? "no email" : normalOrder.customer.email;
+    return normalOrder.customer == null || normalOrder.customer.email == null
+        ? "no email"
+        : normalOrder.customer.email;
   }
 
   String getAddress() {
-    return normalOrder.customer == null || normalOrder.customer.address == null ? "no address" : normalOrder.customer.address;
+    return normalOrder.customer == null || normalOrder.customer.address == null
+        ? "no address"
+        : normalOrder.customer.address;
   }
 }

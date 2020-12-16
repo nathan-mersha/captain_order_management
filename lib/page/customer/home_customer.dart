@@ -9,7 +9,8 @@ class HomeCustomerPage extends StatefulWidget {
   HomeCustomerPageState createState() => HomeCustomerPageState();
 }
 
-class HomeCustomerPageState extends State<HomeCustomerPage> with SingleTickerProviderStateMixin {
+class HomeCustomerPageState extends State<HomeCustomerPage>
+    with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<CustomerTableState> customerTableKey = GlobalKey();
   GlobalKey<CreateCustomerViewState> createCustomerKey = GlobalKey();

@@ -33,7 +33,8 @@ class CRoutes {
   }
 
   Widget buildFirstPage(BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.connectionState == ConnectionState.none && snapshot.hasData == null) {
+    if (snapshot.connectionState == ConnectionState.none &&
+        snapshot.hasData == null) {
       return CircularProgressIndicator();
     } else if (snapshot.data == true) {
       return LoginPage();

@@ -28,7 +28,16 @@ class ReturnedOrder {
   DateTime firstModified;
   DateTime lastModified;
 
-  ReturnedOrder({this.id, this.idFS, this.employee, this.customer, this.product, this.count, this.note, this.firstModified, this.lastModified});
+  ReturnedOrder(
+      {this.id,
+      this.idFS,
+      this.employee,
+      this.customer,
+      this.product,
+      this.count,
+      this.note,
+      this.firstModified,
+      this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(ReturnedOrder returnedOrder) {

@@ -17,7 +17,14 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
   static const String PENDING = "Pending"; // values not translatables
   static const String COMPLETED = "Completed"; // value not translatable
   static const String DELIVERED = "Delivered"; // value not translatable
-  NormalOrder normalOrder = NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: PENDING, products: []);
+  NormalOrder normalOrder = NormalOrder(
+      advancePayment: 0,
+      paidInFull: false,
+      totalAmount: 0,
+      remainingPayment: 0,
+      userNotified: false,
+      status: PENDING,
+      products: []);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,8 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
     setState(() {
       currentPage = pageName;
       if (passedNormalOrder != null) {
-        normalOrder = passedNormalOrder; // normal order passed for update reasons
+        normalOrder =
+            passedNormalOrder; // normal order passed for update reasons
       }
     });
   }

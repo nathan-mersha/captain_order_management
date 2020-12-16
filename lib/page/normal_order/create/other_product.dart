@@ -15,10 +15,12 @@ class CreateNormalOrderOtherProductPage extends StatefulWidget {
   CreateNormalOrderOtherProductPage();
 
   @override
-  CreateNormalOrderOtherProductPageState createState() => CreateNormalOrderOtherProductPageState();
+  CreateNormalOrderOtherProductPageState createState() =>
+      CreateNormalOrderOtherProductPageState();
 }
 
-class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOtherProductPage> {
+class CreateNormalOrderOtherProductPageState
+    extends State<CreateNormalOrderOtherProductPage> {
   final _paintOrderFormKey = GlobalKey<FormState>();
 
   NormalOrder normalOrder;
@@ -60,8 +62,17 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   void initState() {
     super.initState();
     _assignOtherProductData();
-    measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
-    statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
+    measurementTypesValues = {
+      CreateProductViewState.LITER: "liter",
+      CreateProductViewState.GRAM: "gram",
+      CreateProductViewState.PIECE: "piece",
+      CreateProductViewState.PACKAGE: "package"
+    };
+    statusTypeValues = {
+      PENDING: "pending",
+      COMPLETED: "completed",
+      DELIVERED: "delivered"
+    };
 
     KeyboardVisibilityNotification().addNewListener(
       onChange: (bool visible) {
@@ -73,14 +84,21 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   Future<bool> _assignOtherProductData() async {
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
-    List<String> whereArgsPaint = [CreateProductViewState.OTHER_PRODUCTS]; // Querying only paint type
-    _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    List<String> whereArgsPaint = [
+      CreateProductViewState.OTHER_PRODUCTS
+    ]; // Querying only paint type
+    _otherProducts =
+        await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
     setState(() {});
     return true;
   }
 
   int getInCartCount() {
-    return normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase()).length;
+    return normalOrder.products
+        .where((element) =>
+            element.type.toLowerCase() ==
+            CreateProductViewState.OTHER_PRODUCTS.toLowerCase())
+        .length;
   }
 
   @override
@@ -97,12 +115,18 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                 child: Card(
                   margin: EdgeInsets.all(0),
                   color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5))),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                     child: Text(
                       "Other Products - ${getInCartCount()}",
-                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
@@ -117,7 +141,10 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                           height: 10,
                         ),
                         Row(
-                          children: [Expanded(flex: 1, child: Container()), Expanded(flex: 2, child: buildForm())],
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(flex: 2, child: buildForm())
+                          ],
                         )
                       ],
                     ),
@@ -139,7 +166,9 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   }
 
   bool otherProductsInNormalOrderAvailable() {
-    bool otherProductsAvailable = normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase());
+    bool otherProductsAvailable = normalOrder.products.any((element) =>
+        element.type.toLowerCase() ==
+        CreateProductViewState.OTHER_PRODUCTS.toLowerCase());
     return otherProductsAvailable;
   }
 
@@ -189,32 +218,55 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                           width: 30,
                           child: Text("Qnt", style: dataColumnStyle()),
                         )), // Defines the paint type, auto-cryl/metalic
-                        DataColumn(label: Text("Unit Price", style: dataColumnStyle()), numeric: true), // Defines volume of the paint in ltr
-                        DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
-                        DataColumn(label: Text("Delivered", style: dataColumnStyle())),
+                        DataColumn(
+                            label: Text("Unit Price", style: dataColumnStyle()),
+                            numeric:
+                                true), // Defines volume of the paint in ltr
+                        DataColumn(
+                            label: Text("SubTotal", style: dataColumnStyle())),
+                        DataColumn(
+                            label: Text("Delivered", style: dataColumnStyle())),
                       ],
-                      rows: normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase()).toList().map((Product otherProduct) {
+                      rows: normalOrder.products
+                          .where((element) =>
+                              element.type.toLowerCase() ==
+                              CreateProductViewState.OTHER_PRODUCTS
+                                  .toLowerCase())
+                          .toList()
+                          .map((Product otherProduct) {
                         return DataRow(cells: [
                           DataCell(GestureDetector(
-                            child: SizedBox(width: 130,child: Text(
-                              otherProduct.name ?? "-",
-                              style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
-                            ),),
+                            child: SizedBox(
+                              width: 130,
+                              child: Text(
+                                otherProduct.name ?? "-",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
                             onLongPress: () {
                               removePaintProductFromCart(otherProduct);
                             },
                           )),
                           DataCell(Container(
                             width: 20,
-                            child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
+                            child: Text(otherProduct.quantityInCart.toString(),
+                                style: dataCellStyle()),
                           )),
-                          DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
-                          DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
+                          DataCell(Text(otherProduct.unitPrice.toString(),
+                              style: dataCellStyle())),
+                          DataCell(Text(
+                              otherProduct.calculateSubTotal().toString(),
+                              style: dataCellStyle())),
                           DataCell(Switch(
-                            value: otherProduct.status == NormalOrderMainPageState.DELIVERED,
+                            value: otherProduct.status ==
+                                NormalOrderMainPageState.DELIVERED,
                             onChanged: (bool changed) {
                               setState(() {
-                                otherProduct.status = changed ? NormalOrderMainPageState.DELIVERED : NormalOrderMainPageState.PENDING;
+                                otherProduct.status = changed
+                                    ? NormalOrderMainPageState.DELIVERED
+                                    : NormalOrderMainPageState.PENDING;
                               });
                             },
                           )),
@@ -243,7 +295,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear,
+                      size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
               message: "Are you sure you want to delete \n${otherProduct.name}",
@@ -254,7 +307,12 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                 setState(() {
                   normalOrder.removeProduct(otherProduct);
                 });
-                CNotifications.showSnackBar(context, "Successfuly removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
+                CNotifications.showSnackBar(
+                    context,
+                    "Successfuly removed ${otherProduct.name}",
+                    "success",
+                    () {},
+                    backgroundColor: Colors.red);
 
                 return null;
               },
@@ -269,7 +327,11 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
 
   Widget buildForm() {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 30, left: 30, top: 0),
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          right: 30,
+          left: 30,
+          top: 0),
       child: Form(
           key: _paintOrderFormKey,
           child: SingleChildScrollView(
@@ -281,13 +343,15 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                       controller: _otherProductsController,
                       maxLines: 1,
                       decoration: InputDecoration(
-                        errorText: _noOtherProductValue ? "Product is required" : null,
+                        errorText:
+                            _noOtherProductValue ? "Product is required" : null,
                         hintText: "Select product",
                         labelText: "Product",
                       )),
                   suggestionsCallback: (pattern) async {
                     return _otherProducts.where((Product paint) {
-                      return paint.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
+                      return paint.name.toLowerCase().startsWith(
+                          pattern.toLowerCase()); // Apples to apples
                     });
                   },
                   itemBuilder: (context, Product suggestedPaint) {
@@ -304,7 +368,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                   },
                   noItemsFoundBuilder: (BuildContext context) {
                     return Container(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 5),
                       child: Text(
                         "No produts found",
                       ),
@@ -330,12 +395,18 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                   keyboardType: TextInputType.number,
                   controller: _quantityController,
                   onChanged: (volumeValue) {
-                    currentOnEditProduct.quantityInCart = num.parse(volumeValue);
+                    currentOnEditProduct.quantityInCart =
+                        num.parse(volumeValue);
                   },
                   onFieldSubmitted: (volumeValue) {
-                    currentOnEditProduct.quantityInCart = num.parse(volumeValue);
+                    currentOnEditProduct.quantityInCart =
+                        num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(labelText: "Quantity", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text(currentOnEditProduct.unitOfMeasurement ?? "liter")),
+                  decoration: InputDecoration(
+                      labelText: "Quantity",
+                      contentPadding: EdgeInsets.symmetric(vertical: 5),
+                      suffix: Text(
+                          currentOnEditProduct.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(
@@ -354,10 +425,16 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                             // Every thing seems good.
                             setState(() {
                               _noOtherProductValue = false;
-                              currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
+                              currentOnEditProduct.quantityInCart =
+                                  num.parse(_quantityController.text);
 
                               normalOrder.addProduct(currentOnEditProduct);
-                              CNotifications.showSnackBar(context, "Successfuly added ${currentOnEditProduct.name}", "success", () {}, backgroundColor: Colors.green);
+                              CNotifications.showSnackBar(
+                                  context,
+                                  "Successfuly added ${currentOnEditProduct.name}",
+                                  "success",
+                                  () {},
+                                  backgroundColor: Colors.green);
 
                               currentOnEditProduct = Product(
                                 type: CreateProductViewState.OTHER_PRODUCTS,
@@ -371,7 +448,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                       },
                       child: Text(
                         "add",
-                        style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
 

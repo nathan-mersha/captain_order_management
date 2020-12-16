@@ -34,7 +34,8 @@ class SpecialOrderMainPageState extends State<SpecialOrderMainPage> {
     setState(() {
       currentPage = pageName;
       if (passedSpecialOrder != null) {
-        specialOrder = passedSpecialOrder; // normal order passed for update reasons
+        specialOrder =
+            passedSpecialOrder; // normal order passed for update reasons
       }
     });
   }

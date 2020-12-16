@@ -29,7 +29,8 @@ class PunchDAL {
     punch.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, Punch.toMap(punch), conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, Punch.toMap(punch),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return punch;
   }
 
@@ -37,8 +38,12 @@ class PunchDAL {
   /// whereArgs : [2]
   static Future<List<Punch>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${Punch.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Punch.LAST_MODIFIED} DESC");
+        ? await global.db
+            .query(TABLE_NAME, orderBy: "${Punch.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME,
+            where: where,
+            whereArgs: whereArgs,
+            orderBy: "${Punch.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Punch(
@@ -57,9 +62,11 @@ class PunchDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Punch punch}) async {
+  static Future<void> update(
+      {String where, dynamic whereArgs, Punch punch}) async {
     punch.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, Punch.toMap(punch), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, Punch.toMap(punch),
+        where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

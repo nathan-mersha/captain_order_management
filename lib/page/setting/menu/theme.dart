@@ -18,13 +18,48 @@ class _ThemeSettingsState extends State<ThemeSettings> {
   static const String COLOR = "COLOR";
 
   List menus = [
-    {NAME: "Tshey", DESCRIPTION: "Sun based theme", KEY: CTheme.TSEHAY, COLOR: CTheme.THEME_MAP[CTheme.TSEHAY][CTheme.primaryColor]},
-    {NAME: "Bertukan", DESCRIPTION: "Orange based theme", KEY: CTheme.BERTUKAN, COLOR: CTheme.THEME_MAP[CTheme.BERTUKAN][CTheme.primaryColor]},
-    {NAME: "Weyne", DESCRIPTION: "Wine based theme", KEY: CTheme.WEYNE, COLOR: CTheme.THEME_MAP[CTheme.WEYNE][CTheme.primaryColor]},
-    {NAME: "Buna", DESCRIPTION: "Coffee based theme", KEY: CTheme.BUNA, COLOR: CTheme.THEME_MAP[CTheme.BUNA][CTheme.primaryColor]},
-    {NAME: "Weha", DESCRIPTION: "Water based theme", KEY: CTheme.WEHA, COLOR: CTheme.THEME_MAP[CTheme.WEHA][CTheme.primaryColor]},
-    {NAME: "Ketel", DESCRIPTION: "Leaf based theme", KEY: CTheme.KETEL, COLOR: CTheme.THEME_MAP[CTheme.KETEL][CTheme.primaryColor]},
-    {NAME: "Lelit", DESCRIPTION: "Night based theme", KEY: CTheme.LELIT, COLOR: CTheme.THEME_MAP[CTheme.LELIT][CTheme.primaryColor]},
+    {
+      NAME: "Tshey",
+      DESCRIPTION: "Sun based theme",
+      KEY: CTheme.TSEHAY,
+      COLOR: CTheme.THEME_MAP[CTheme.TSEHAY][CTheme.primaryColor]
+    },
+    {
+      NAME: "Bertukan",
+      DESCRIPTION: "Orange based theme",
+      KEY: CTheme.BERTUKAN,
+      COLOR: CTheme.THEME_MAP[CTheme.BERTUKAN][CTheme.primaryColor]
+    },
+    {
+      NAME: "Weyne",
+      DESCRIPTION: "Wine based theme",
+      KEY: CTheme.WEYNE,
+      COLOR: CTheme.THEME_MAP[CTheme.WEYNE][CTheme.primaryColor]
+    },
+    {
+      NAME: "Buna",
+      DESCRIPTION: "Coffee based theme",
+      KEY: CTheme.BUNA,
+      COLOR: CTheme.THEME_MAP[CTheme.BUNA][CTheme.primaryColor]
+    },
+    {
+      NAME: "Weha",
+      DESCRIPTION: "Water based theme",
+      KEY: CTheme.WEHA,
+      COLOR: CTheme.THEME_MAP[CTheme.WEHA][CTheme.primaryColor]
+    },
+    {
+      NAME: "Ketel",
+      DESCRIPTION: "Leaf based theme",
+      KEY: CTheme.KETEL,
+      COLOR: CTheme.THEME_MAP[CTheme.KETEL][CTheme.primaryColor]
+    },
+    {
+      NAME: "Lelit",
+      DESCRIPTION: "Night based theme",
+      KEY: CTheme.LELIT,
+      COLOR: CTheme.THEME_MAP[CTheme.LELIT][CTheme.primaryColor]
+    },
   ];
 
   @override
@@ -34,7 +69,9 @@ class _ThemeSettingsState extends State<ThemeSettings> {
         itemCount: menus.length,
         itemBuilder: (context, index) {
           return Container(
-            color: cSP.currentTheme == menus[index][KEY] ? Colors.black.withOpacity(0.07) : Colors.white,
+            color: cSP.currentTheme == menus[index][KEY]
+                ? Colors.black.withOpacity(0.07)
+                : Colors.white,
             child: GestureDetector(
               child: ListTile(
                 leading: Icon(
@@ -53,7 +90,9 @@ class _ThemeSettingsState extends State<ThemeSettings> {
               onTap: () {
                 cSP.currentTheme = menus[index][KEY];
                 AppBuilder.of(context).rebuild();
-                CNotifications.showSnackBar(context, "Successfuly changed theme", "success", () {}, backgroundColor: Theme.of(context).primaryColor);
+                CNotifications.showSnackBar(
+                    context, "Successfuly changed theme", "success", () {},
+                    backgroundColor: Theme.of(context).primaryColor);
               },
             ),
           );

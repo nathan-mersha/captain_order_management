@@ -8,7 +8,8 @@ class HomeEmployeePage extends StatefulWidget {
   HomeEmployeePageState createState() => HomeEmployeePageState();
 }
 
-class HomeEmployeePageState extends State<HomeEmployeePage> with SingleTickerProviderStateMixin {
+class HomeEmployeePageState extends State<HomeEmployeePage>
+    with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<EmployeeTableState> employeeTableKey = GlobalKey();
   GlobalKey<CreateEmployeeViewState> createEmployeeKey = GlobalKey();

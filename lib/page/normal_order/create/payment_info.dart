@@ -10,10 +10,12 @@ class NormalOrderPaymentInformationPage extends StatefulWidget {
   NormalOrderPaymentInformationPage({this.focus});
 
   @override
-  _NormalOrderPaymentInformationPageState createState() => _NormalOrderPaymentInformationPageState();
+  _NormalOrderPaymentInformationPageState createState() =>
+      _NormalOrderPaymentInformationPageState();
 }
 
-class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentInformationPage> {
+class _NormalOrderPaymentInformationPageState
+    extends State<NormalOrderPaymentInformationPage> {
   NormalOrder normalOrder;
   TextEditingController _advanceController = TextEditingController();
 
@@ -24,7 +26,6 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
     super.dispose();
     _advanceController.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,8 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
           children: [
             Text(
               "Payment Information",
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
             ),
             SizedBox(
               height: 18,
@@ -79,7 +81,8 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                           focusNode: widget.focus,
                           onChanged: (advanceValue) {
                             setState(() {
-                              normalOrder.advancePayment = num.parse(advanceValue);
+                              normalOrder.advancePayment =
+                                  num.parse(advanceValue);
                               normalOrder.calculatePaymentInfo();
                             });
                           },
@@ -98,7 +101,10 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                       ),
                       Text(
                         "${oCCy.format(normalOrder.remainingPayment)} br",
-                        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 14),
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14),
                       ),
                     ],
                   ),
@@ -116,11 +122,13 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
                           setState(() {
                             if (changed) {
                               normalOrder.paidInFull = true;
-                              normalOrder.advancePayment = normalOrder.totalAmount;
+                              normalOrder.advancePayment =
+                                  normalOrder.totalAmount;
                               normalOrder.calculatePaymentInfo();
                             } else {
                               normalOrder.paidInFull = false;
-                              normalOrder.advancePayment = 0; // Reset advance payment to 0
+                              normalOrder.advancePayment =
+                                  0; // Reset advance payment to 0
                               normalOrder.calculatePaymentInfo();
                             }
                           });
@@ -142,6 +150,7 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
   }
 
   TextStyle getValueStyle() {
-    return TextStyle(color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 16);
+    return TextStyle(
+        color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 16);
   }
 }

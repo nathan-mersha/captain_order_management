@@ -14,13 +14,20 @@ class _DeveloperPageState extends State<DeveloperPage> {
           SizedBox(
             height: 200,
           ),
-          Image.asset("assets/images/kelem_icon.png", scale: 1.5,),
-
-          SizedBox(height: 20,),
+          Image.asset(
+            "assets/images/kelem_icon.png",
+            scale: 1.5,
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Text(
             "Kelem Designs",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 17,
+                fontWeight: FontWeight.w800),
           ),
           SizedBox(
             height: 16,

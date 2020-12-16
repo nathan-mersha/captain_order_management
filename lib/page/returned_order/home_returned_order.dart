@@ -8,11 +8,13 @@ class HomeReturnedOrderPage extends StatefulWidget {
   HomeReturnedOrderPageState createState() => HomeReturnedOrderPageState();
 }
 
-class HomeReturnedOrderPageState extends State<HomeReturnedOrderPage> with SingleTickerProviderStateMixin {
+class HomeReturnedOrderPageState extends State<HomeReturnedOrderPage>
+    with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<ReturnedOrderTableState> returnedOrderTableKey = GlobalKey();
   GlobalKey<CreateReturnedOrderViewState> createReturnedOrderKey = GlobalKey();
-  GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey = GlobalKey();
+  GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey =
+      GlobalKey();
 
   void doSomethingFromParent() {}
   @override

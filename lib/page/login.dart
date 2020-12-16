@@ -17,7 +17,8 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String currentPage = LOGIN;
 
-  final TextEditingController _passwordInputController = TextEditingController();
+  final TextEditingController _passwordInputController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -38,7 +39,8 @@ class LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   image: DecorationImage(
-                    image: AssetImage("assets/images/captain_icon_big_faded.png"),
+                    image:
+                        AssetImage("assets/images/captain_icon_big_faded.png"),
                     alignment: Alignment.topRight,
                   )),
               child: Column(
@@ -47,14 +49,18 @@ class LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Text(
                     "Customer and Order \nManagement",
-                    style: TextStyle(color: Colors.white, fontSize: 45, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 45,
+                        fontWeight: FontWeight.w800),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
                     "Captain's customer and management system, create order and\nanalyze your data.",
-                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w100),
+                    style: TextStyle(
+                        color: Colors.white70, fontWeight: FontWeight.w100),
                   ),
                   SizedBox(
                     height: 45,
@@ -63,14 +69,18 @@ class LoginPageState extends State<LoginPage> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 60),
                       child: Text(
-                        currentPage == LOGIN ? "Contact Developer" : "Login Page",
+                        currentPage == LOGIN
+                            ? "Contact Developer"
+                            : "Login Page",
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                     ),
                     color: Colors.white,
                     onPressed: () {
                       setState(() {
-                        currentPage = currentPage == CONTACT_DEVELOPER ? LOGIN : CONTACT_DEVELOPER;
+                        currentPage = currentPage == CONTACT_DEVELOPER
+                            ? LOGIN
+                            : CONTACT_DEVELOPER;
                       });
                     },
                   )
@@ -96,7 +106,8 @@ class LoginPageState extends State<LoginPage> {
           Text(
             "Please enter your\npassword",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 15),
+            style:
+                TextStyle(color: Theme.of(context).primaryColor, fontSize: 15),
           ),
           Form(
             key: _formKey,
@@ -138,7 +149,8 @@ class LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        Navigator.pushReplacementNamed(context, CRoutes.DASHBOARD);
+                        Navigator.pushReplacementNamed(
+                            context, CRoutes.DASHBOARD);
                       }
                     },
                   ),
@@ -154,7 +166,6 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 
   Widget loadSecondaryPage() {
     if (currentPage == LOGIN) {

@@ -16,7 +16,8 @@ class _StatisticsCardState extends State<StatisticsCard> {
   final RandomColor _randomColor = RandomColor();
 
   TextStyle getStatStyle() {
-    return TextStyle(fontWeight: FontWeight.w800, color: Colors.black87, fontSize: 17);
+    return TextStyle(
+        fontWeight: FontWeight.w800, color: Colors.black87, fontSize: 17);
   }
 
   @override
@@ -35,7 +36,12 @@ class _StatisticsCardState extends State<StatisticsCard> {
                 children: <Widget>[
                   Text(
                     widget.statistics.title,
-                    style: TextStyle(color: _randomColor.randomColor(colorHue: ColorHue.purple, colorBrightness: ColorBrightness.dark), fontSize: 11, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: _randomColor.randomColor(
+                            colorHue: ColorHue.purple,
+                            colorBrightness: ColorBrightness.dark),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800),
                   ),
                   SizedBox(
                     height: 20,
@@ -51,9 +57,12 @@ class _StatisticsCardState extends State<StatisticsCard> {
                           : FutureBuilder(
                               future: widget.getStat,
                               initialData: 0,
-                              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState == ConnectionState.done) {
-                                  return Text(snapshot.data.toString(), style: getStatStyle());
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  return Text(snapshot.data.toString(),
+                                      style: getStatStyle());
                                 } else {
                                   return Text(
                                     "0",
@@ -64,7 +73,10 @@ class _StatisticsCardState extends State<StatisticsCard> {
                             ),
                       Text(
                         widget.statistics.subTitle,
-                        style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.orange)),
+                        style: TextStyle(
+                            fontSize: 9,
+                            color: _randomColor.randomColor(
+                                colorHue: ColorHue.orange)),
                       )
                     ],
                   )

@@ -71,24 +71,31 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                       future: getListOfNormalOrders(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          List<NormalOrder> normalOrders = snapshot.data as List<NormalOrder>;
-                          _NormalOrderDataSource _normalOrderDataSourceVal = _NormalOrderDataSource(context, normalOrders, () {
+                          List<NormalOrder> normalOrders =
+                              snapshot.data as List<NormalOrder>;
+                          _NormalOrderDataSource _normalOrderDataSourceVal =
+                              _NormalOrderDataSource(context, normalOrders, () {
                             setState(() {
                               // updating table here.
                             });
                           }, widget.navigateTo);
                           _normalOrderDataSource = _normalOrderDataSourceVal;
                         } else {
-                          _normalOrderDataSource = _NormalOrderDataSource(context, [], () {
+                          _normalOrderDataSource =
+                              _NormalOrderDataSource(context, [], () {
                             setState(() {
                               // updating table here.
                             });
                           }, widget.navigateTo);
                         }
 
-                        if (global.normalOrderSearchHistory != null && global.normalOrderSearchHistory.isNotEmpty && _normalOrderDataSource != null) {
-                          _searchController.text = global.normalOrderSearchHistory;
-                          _normalOrderDataSource._search(global.normalOrderSearchHistory);
+                        if (global.normalOrderSearchHistory != null &&
+                            global.normalOrderSearchHistory.isNotEmpty &&
+                            _normalOrderDataSource != null) {
+                          _searchController.text =
+                              global.normalOrderSearchHistory;
+                          _normalOrderDataSource
+                              ._search(global.normalOrderSearchHistory);
                         }
                         _rowsPerPage = 7;
 
@@ -101,8 +108,10 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                     hintText: "search",
                                   ),
                                   onChanged: (String searchInputValue) {
-                                    global.normalOrderSearchHistory = searchInputValue;
-                                    _normalOrderDataSource._search(searchInputValue);
+                                    global.normalOrderSearchHistory =
+                                        searchInputValue;
+                                    _normalOrderDataSource
+                                        ._search(searchInputValue);
                                   },
                                   controller: _searchController,
                                 ),
@@ -118,7 +127,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                   })
                             ],
                             headingRowHeight: 70,
-                            header: snapshot.connectionState == ConnectionState.done
+                            header: snapshot.connectionState ==
+                                    ConnectionState.done
                                 ? Text(
                                     "List of orders",
                                     style: TextStyle(
@@ -139,12 +149,20 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                                       ),
                                       Text(
                                         "Loading orders",
-                                        style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color:
+                                                Theme.of(context).accentColor),
                                       )
                                     ],
                                   ),
                             rowsPerPage: _rowsPerPage,
-                            availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                            availableRowsPerPage: <int>[
+                              _rowsPerPage,
+                              _rowsPerPage * 2,
+                              _rowsPerPage * 5,
+                              _rowsPerPage * 10
+                            ],
                             onRowsPerPageChanged: (value) {
                               setState(() {
                                 _rowsPerPage = value;
@@ -155,55 +173,85 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
                             columnSpacing: 20,
                             columns: [
                               DataColumn(
-                                label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Customer",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  customerSortAscending = !customerSortAscending;
-                                  return _sort<String>((d) => d.customer.name, columnIndex, customerSortAscending);
+                                  customerSortAscending =
+                                      !customerSortAscending;
+                                  return _sort<String>((d) => d.customer.name,
+                                      columnIndex, customerSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Orders", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Orders",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                               ),
                               DataColumn(
-                                label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Total(br)",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   totalSortAscending = !totalSortAscending;
-                                  return _sort<num>((d) => d.totalAmount, columnIndex, totalSortAscending);
+                                  return _sort<num>((d) => d.totalAmount,
+                                      columnIndex, totalSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Remaining(br)", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Remaining(br)",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  remainingSortAscending = !remainingSortAscending;
-                                  return _sort<num>((d) => d.remainingPayment, columnIndex, remainingSortAscending);
+                                  remainingSortAscending =
+                                      !remainingSortAscending;
+                                  return _sort<num>((d) => d.remainingPayment,
+                                      columnIndex, remainingSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Paid", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Paid",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   paidSortAscending = !paidSortAscending;
-                                  return _sort<String>((d) => getPaidStatus(d), columnIndex, paidSortAscending);
+                                  return _sort<String>((d) => getPaidStatus(d),
+                                      columnIndex, paidSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Notified", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Notified",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  notifiedSortAscending = !notifiedSortAscending;
-                                  return _sort<String>((d) => d.userNotified.toString(), columnIndex, notifiedSortAscending);
+                                  notifiedSortAscending =
+                                      !notifiedSortAscending;
+                                  return _sort<String>(
+                                      (d) => d.userNotified.toString(),
+                                      columnIndex,
+                                      notifiedSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Status", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Status",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   statusSortAscending = !statusSortAscending;
-                                  return _sort<String>((d) => getOverallStatus(d), columnIndex, statusSortAscending);
+                                  return _sort<String>(
+                                      (d) => getOverallStatus(d),
+                                      columnIndex,
+                                      statusSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Date",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   dateSortAscending = !dateSortAscending;
-                                  return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                                  return _sort<DateTime>((d) => d.firstModified,
+                                      columnIndex, dateSortAscending);
                                 },
                               ),
                               DataColumn(
@@ -222,9 +270,17 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                NormalOrder normalOrder =
-                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
-                widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+                NormalOrder normalOrder = NormalOrder(
+                    advancePayment: 0,
+                    paidInFull: false,
+                    totalAmount: 0,
+                    remainingPayment: 0,
+                    userNotified: false,
+                    status: NormalOrderMainPageState.PENDING,
+                    products: []);
+                widget.navigateTo(
+                    NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER,
+                    passedNormalOrder: normalOrder);
               },
             ),
             bottom: 0,
@@ -241,7 +297,9 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     num otherCount = 0;
 
     products.forEach((Product p) {
-      p.type == CreateProductViewState.PAINT ? paintCount += 1 : otherCount += 1;
+      p.type == CreateProductViewState.PAINT
+          ? paintCount += 1
+          : otherCount += 1;
     });
 
     return Row(
@@ -295,7 +353,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     num pendingCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.PENDING) {
+      if (p.type == CreateProductViewState.PAINT &&
+          p.status == NormalOrderMainPageState.PENDING) {
         pendingCount += 1;
       }
     });
@@ -307,7 +366,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     num completedCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == NormalOrderMainPageState.COMPLETED) {
+      if (p.type == CreateProductViewState.PAINT &&
+          p.status == NormalOrderMainPageState.COMPLETED) {
         completedCount += 1;
       }
     });
@@ -316,8 +376,10 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
 
   static String getOverallStatus(NormalOrder normalOrder) {
     List<Product> products = normalOrder.products;
-    bool allCompleted = products.every((Product product) => product.status == NormalOrderMainPageState.COMPLETED);
-    bool allDelivered = products.every((Product product) => product.status == NormalOrderMainPageState.DELIVERED);
+    bool allCompleted = products.every((Product product) =>
+        product.status == NormalOrderMainPageState.COMPLETED);
+    bool allDelivered = products.every((Product product) =>
+        product.status == NormalOrderMainPageState.DELIVERED);
     if (allCompleted) {
       return NormalOrderMainPageState.COMPLETED;
     } else if (allDelivered) {
@@ -353,22 +415,28 @@ class _NormalOrderDataSource extends DataTableSource {
   final Function navigate;
   int _selectedCount = 0;
 
-  _NormalOrderDataSource(this.context, this.normalOrders, this.updateTable, this.navigate) {
+  _NormalOrderDataSource(
+      this.context, this.normalOrders, this.updateTable, this.navigate) {
     originalBatch = List.from(normalOrders ?? []);
   }
 
-  void _sort<T>(Comparable<T> Function(NormalOrder d) getField, bool ascending) {
+  void _sort<T>(
+      Comparable<T> Function(NormalOrder d) getField, bool ascending) {
     normalOrders.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
+      return ascending
+          ? Comparable.compare(aValue, bValue)
+          : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
 
   void _search(String searchInput) {
-    normalOrders = List.from(originalBatch); // Restoring products from original batch
-    normalOrders.retainWhere((NormalOrder p) => p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
+    normalOrders =
+        List.from(originalBatch); // Restoring products from original batch
+    normalOrders.retainWhere((NormalOrder p) =>
+        p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 
@@ -386,7 +454,8 @@ class _NormalOrderDataSource extends DataTableSource {
               normalOrder.customer.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-          navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
+          navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER,
+              passedNormalOrder: normalOrder);
         }),
 
         /// Orders
@@ -403,7 +472,9 @@ class _NormalOrderDataSource extends DataTableSource {
         /// Paid
         DataCell(Icon(
           Icons.check_circle,
-          color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true" ? Colors.green : Colors.black26,
+          color: NormalOrderTablePageState.getPaidStatus(normalOrder) == "true"
+              ? Colors.green
+              : Colors.black26,
           size: 17,
         )),
 
@@ -417,7 +488,8 @@ class _NormalOrderDataSource extends DataTableSource {
         /// Status
         DataCell(Icon(
           Icons.check_circle,
-          color: NormalOrderTablePageState.getStatusColor(NormalOrderTablePageState.getOverallStatus(normalOrder)),
+          color: NormalOrderTablePageState.getStatusColor(
+              NormalOrderTablePageState.getOverallStatus(normalOrder)),
           size: 17,
         )),
 
@@ -433,7 +505,8 @@ class _NormalOrderDataSource extends DataTableSource {
           ),
           onPressed: () {
             // deleting normalOrder here.
-            deleteNormalOrder(normalOrders[index]).then((value) => updateTable());
+            deleteNormalOrder(normalOrders[index])
+                .then((value) => updateTable());
           },
         ))
       ],
@@ -457,17 +530,23 @@ class _NormalOrderDataSource extends DataTableSource {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear,
+                      size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message: "Are you sure you want to delete order of\n${normalOrder.customer.name}",
+              message:
+                  "Are you sure you want to delete order of\n${normalOrder.customer.name}",
               onYes: () async {
                 // Delete normalOrder here.
 
                 String where = "${NormalOrder.ID} = ?";
-                List<String> whereArgs = [normalOrder.id]; // Querying only normalOrders
+                List<String> whereArgs = [
+                  normalOrder.id
+                ]; // Querying only normalOrders
 
-                List<NormalOrder> deleteNormalOrderList = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
+                List<NormalOrder> deleteNormalOrderList =
+                    await NormalOrderDAL.find(
+                        where: where, whereArgs: whereArgs);
 
                 await NormalOrderDAL.delete(where: where, whereArgs: whereArgs);
 

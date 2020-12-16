@@ -9,13 +9,19 @@ class StatisticsReturnedOrderView extends StatefulWidget {
   final GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey;
   final GlobalKey<ReturnedOrderTableState> returnedOrderTableKey;
 
-  const StatisticsReturnedOrderView({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey}) : super(key: statisticsReturnedOrderKey);
+  const StatisticsReturnedOrderView(
+      {this.returnedOrderTableKey,
+      this.createReturnedOrderKey,
+      this.statisticsReturnedOrderKey})
+      : super(key: statisticsReturnedOrderKey);
 
   @override
-  StatisticsReturnedOrderViewState createState() => StatisticsReturnedOrderViewState();
+  StatisticsReturnedOrderViewState createState() =>
+      StatisticsReturnedOrderViewState();
 }
 
-class StatisticsReturnedOrderViewState extends State<StatisticsReturnedOrderView> {
+class StatisticsReturnedOrderViewState
+    extends State<StatisticsReturnedOrderView> {
   @override
   Widget build(BuildContext context) {
     return Row(

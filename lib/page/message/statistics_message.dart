@@ -9,7 +9,9 @@ class StatisticsMessageView extends StatefulWidget {
   final GlobalKey<StatisticsMessageViewState> statisticsMessageKey;
   final GlobalKey<MessageTableState> messageTableKey;
 
-  const StatisticsMessageView({this.messageTableKey, this.createMessageKey, this.statisticsMessageKey}) : super(key: statisticsMessageKey);
+  const StatisticsMessageView(
+      {this.messageTableKey, this.createMessageKey, this.statisticsMessageKey})
+      : super(key: statisticsMessageKey);
 
   @override
   StatisticsMessageViewState createState() => StatisticsMessageViewState();

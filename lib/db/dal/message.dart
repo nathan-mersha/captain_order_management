@@ -23,7 +23,8 @@ class MessageDAL {
     message.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, Message.toMap(message), conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, Message.toMap(message),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return message;
   }
 
@@ -31,8 +32,12 @@ class MessageDAL {
   /// whereArgs : [2]
   static Future<List<Message>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${Message.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Message.LAST_MODIFIED} DESC");
+        ? await global.db
+            .query(TABLE_NAME, orderBy: "${Message.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME,
+            where: where,
+            whereArgs: whereArgs,
+            orderBy: "${Message.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return Message(
@@ -48,9 +53,11 @@ class MessageDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, Message message}) async {
+  static Future<void> update(
+      {String where, dynamic whereArgs, Message message}) async {
     message.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, Message.toMap(message), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, Message.toMap(message),
+        where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

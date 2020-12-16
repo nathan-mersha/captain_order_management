@@ -94,8 +94,12 @@ class NormalOrder with ChangeNotifier {
             PAID_IN_FULL: normalOrder.paidInFull,
             STATUS: normalOrder.status,
             USER_NOTIFIED: normalOrder.userNotified,
-            FIRST_MODIFIED: normalOrder.firstModified == null ? DateTime.now().toIso8601String() : normalOrder.firstModified.toIso8601String(),
-            LAST_MODIFIED: normalOrder.lastModified == null ? DateTime.now().toIso8601String() : normalOrder.lastModified.toIso8601String()
+            FIRST_MODIFIED: normalOrder.firstModified == null
+                ? DateTime.now().toIso8601String()
+                : normalOrder.firstModified.toIso8601String(),
+            LAST_MODIFIED: normalOrder.lastModified == null
+                ? DateTime.now().toIso8601String()
+                : normalOrder.lastModified.toIso8601String()
           };
   }
 

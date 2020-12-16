@@ -29,7 +29,16 @@ class SpecialOrder with ChangeNotifier {
   DateTime firstModified;
   DateTime lastModified;
 
-  SpecialOrder({this.id, this.idFS, this.employee, this.customer, this.products, this.totalAmount, this.note, this.firstModified, this.lastModified});
+  SpecialOrder(
+      {this.id,
+      this.idFS,
+      this.employee,
+      this.customer,
+      this.products,
+      this.totalAmount,
+      this.note,
+      this.firstModified,
+      this.lastModified});
 
   addProduct(Product product) {
     products.add(product);

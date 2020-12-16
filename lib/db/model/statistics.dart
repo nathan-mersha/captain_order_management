@@ -7,5 +7,9 @@ class Statistics {
   String stat;
   String subTitle;
 
-  Statistics({this.title = "statistics", this.iconData = Icons.show_chart, this.stat = "-", this.subTitle = "unknown"});
+  Statistics(
+      {this.title = "statistics",
+      this.iconData = Icons.show_chart,
+      this.stat = "-",
+      this.subTitle = "unknown"});
 }

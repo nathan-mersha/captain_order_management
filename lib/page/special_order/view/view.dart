@@ -67,24 +67,32 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                       future: getListOfSpecialOrders(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          List<SpecialOrder> specialOrders = snapshot.data as List<SpecialOrder>;
-                          _SpecialOrderDataSource _specialOrderDataSourceVal = _SpecialOrderDataSource(context, specialOrders, () {
+                          List<SpecialOrder> specialOrders =
+                              snapshot.data as List<SpecialOrder>;
+                          _SpecialOrderDataSource _specialOrderDataSourceVal =
+                              _SpecialOrderDataSource(context, specialOrders,
+                                  () {
                             setState(() {
                               // updating table here.
                             });
                           }, widget.navigateTo);
                           _specialOrderDataSource = _specialOrderDataSourceVal;
                         } else {
-                          _specialOrderDataSource = _SpecialOrderDataSource(context, [], () {
+                          _specialOrderDataSource =
+                              _SpecialOrderDataSource(context, [], () {
                             setState(() {
                               // updating table here.
                             });
                           }, widget.navigateTo);
                         }
 
-                        if (global.specialOrderSearchHistory != null && global.specialOrderSearchHistory.isNotEmpty && _specialOrderDataSource != null) {
-                          _searchController.text = global.specialOrderSearchHistory;
-                          _specialOrderDataSource._search(global.specialOrderSearchHistory);
+                        if (global.specialOrderSearchHistory != null &&
+                            global.specialOrderSearchHistory.isNotEmpty &&
+                            _specialOrderDataSource != null) {
+                          _searchController.text =
+                              global.specialOrderSearchHistory;
+                          _specialOrderDataSource
+                              ._search(global.specialOrderSearchHistory);
                         }
                         _rowsPerPage = 7;
 
@@ -97,8 +105,10 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                                     hintText: "search",
                                   ),
                                   onChanged: (String searchInputValue) {
-                                    global.specialOrderSearchHistory = searchInputValue;
-                                    _specialOrderDataSource._search(searchInputValue);
+                                    global.specialOrderSearchHistory =
+                                        searchInputValue;
+                                    _specialOrderDataSource
+                                        ._search(searchInputValue);
                                   },
                                   controller: _searchController,
                                 ),
@@ -114,7 +124,8 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                                   })
                             ],
                             headingRowHeight: 70,
-                            header: snapshot.connectionState == ConnectionState.done
+                            header: snapshot.connectionState ==
+                                    ConnectionState.done
                                 ? Text(
                                     "List of special orders",
                                     style: TextStyle(
@@ -135,12 +146,20 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                                       ),
                                       Text(
                                         "Loading orders",
-                                        style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color:
+                                                Theme.of(context).accentColor),
                                       )
                                     ],
                                   ),
                             rowsPerPage: _rowsPerPage,
-                            availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                            availableRowsPerPage: <int>[
+                              _rowsPerPage,
+                              _rowsPerPage * 2,
+                              _rowsPerPage * 5,
+                              _rowsPerPage * 10
+                            ],
                             onRowsPerPageChanged: (value) {
                               setState(() {
                                 _rowsPerPage = value;
@@ -150,34 +169,51 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                             sortAscending: _sortAscending,
                             columns: [
                               DataColumn(
-                                label: Text("Customer", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Customer",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
-                                  customerSortAscending = !customerSortAscending;
-                                  return _sort<String>((d) => d.customer.name, columnIndex, customerSortAscending);
+                                  customerSortAscending =
+                                      !customerSortAscending;
+                                  return _sort<String>((d) => d.customer.name,
+                                      columnIndex, customerSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Address", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Address",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   addressSortAscending = !addressSortAscending;
-                                  return _sort<String>((d) => d.customer.address, columnIndex, addressSortAscending);
+                                  return _sort<String>(
+                                      (d) => d.customer.address,
+                                      columnIndex,
+                                      addressSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Orders", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Orders",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                               ),
                               DataColumn(
-                                label: Text("Total(br)", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Total(br)",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   totalSortAscending = !totalSortAscending;
-                                  return _sort<num>((d) => d.totalAmount, columnIndex, totalSortAscending);
+                                  return _sort<num>((d) => d.totalAmount,
+                                      columnIndex, totalSortAscending);
                                 },
                               ),
                               DataColumn(
-                                label: Text("Date", style: TextStyle(fontWeight: FontWeight.w800)),
+                                label: Text("Date",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                                 onSort: (columnIndex, ascending) {
                                   dateSortAscending = !dateSortAscending;
-                                  return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                                  return _sort<DateTime>((d) => d.firstModified,
+                                      columnIndex, dateSortAscending);
                                 },
                               ),
                               DataColumn(
@@ -196,8 +232,11 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                SpecialOrder specialOrder = SpecialOrder(totalAmount: 0, products: []);
-                widget.navigateTo(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
+                SpecialOrder specialOrder =
+                    SpecialOrder(totalAmount: 0, products: []);
+                widget.navigateTo(
+                    SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER,
+                    passedSpecialOrder: specialOrder);
               },
             ),
             bottom: 0,
@@ -214,7 +253,9 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
     num otherCount = 0;
 
     products.forEach((Product p) {
-      p.type == CreateProductViewState.PAINT ? paintCount += 1 : otherCount += 1;
+      p.type == CreateProductViewState.PAINT
+          ? paintCount += 1
+          : otherCount += 1;
     });
 
     return Row(
@@ -268,7 +309,8 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
     num pendingCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == SpecialOrderMainPageState.PENDING) {
+      if (p.type == CreateProductViewState.PAINT &&
+          p.status == SpecialOrderMainPageState.PENDING) {
         pendingCount += 1;
       }
     });
@@ -280,7 +322,8 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
     num completedCount = 0;
 
     products.forEach((Product p) {
-      if (p.type == CreateProductViewState.PAINT && p.status == SpecialOrderMainPageState.COMPLETED) {
+      if (p.type == CreateProductViewState.PAINT &&
+          p.status == SpecialOrderMainPageState.COMPLETED) {
         completedCount += 1;
       }
     });
@@ -289,8 +332,11 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
 
   static String getOverallStatus(SpecialOrder specialOrder) {
     List<Product> products = specialOrder.products;
-    bool allCompleted = products.any((Product product) => product.status == SpecialOrderMainPageState.COMPLETED);
-    return allCompleted ? SpecialOrderMainPageState.COMPLETED : SpecialOrderMainPageState.PENDING;
+    bool allCompleted = products.any((Product product) =>
+        product.status == SpecialOrderMainPageState.COMPLETED);
+    return allCompleted
+        ? SpecialOrderMainPageState.COMPLETED
+        : SpecialOrderMainPageState.PENDING;
   }
 }
 
@@ -304,22 +350,28 @@ class _SpecialOrderDataSource extends DataTableSource {
   final Function navigate;
   int _selectedCount = 0;
 
-  _SpecialOrderDataSource(this.context, this.specialOrders, this.updateTable, this.navigate) {
+  _SpecialOrderDataSource(
+      this.context, this.specialOrders, this.updateTable, this.navigate) {
     originalBatch = List.from(specialOrders ?? []);
   }
 
-  void _sort<T>(Comparable<T> Function(SpecialOrder d) getField, bool ascending) {
+  void _sort<T>(
+      Comparable<T> Function(SpecialOrder d) getField, bool ascending) {
     specialOrders.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
+      return ascending
+          ? Comparable.compare(aValue, bValue)
+          : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
 
   void _search(String searchInput) {
-    specialOrders = List.from(originalBatch); // Restoring products from original batch
-    specialOrders.retainWhere((SpecialOrder p) => p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
+    specialOrders =
+        List.from(originalBatch); // Restoring products from original batch
+    specialOrders.retainWhere((SpecialOrder p) =>
+        p.customer.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 
@@ -337,7 +389,8 @@ class _SpecialOrderDataSource extends DataTableSource {
               specialOrder.customer.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-          navigate(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER, passedSpecialOrder: specialOrder);
+          navigate(SpecialOrderMainPageState.PAGE_CREATE_SPECIAL_ORDER,
+              passedSpecialOrder: specialOrder);
         }),
 
         /// Address
@@ -365,7 +418,8 @@ class _SpecialOrderDataSource extends DataTableSource {
           ),
           onPressed: () {
             // deleting specialOrder here.
-            deleteSpecialOrder(specialOrders[index]).then((value) => updateTable());
+            deleteSpecialOrder(specialOrders[index])
+                .then((value) => updateTable());
           },
         ))
       ],
@@ -389,19 +443,26 @@ class _SpecialOrderDataSource extends DataTableSource {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear,
+                      size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message: "Are you sure you want to delete order of\n${specialOrder.customer.name}",
+              message:
+                  "Are you sure you want to delete order of\n${specialOrder.customer.name}",
               onYes: () async {
                 // Delete specialOrder here.
 
                 String where = "${SpecialOrder.ID} = ?";
-                List<String> whereArgs = [specialOrder.id]; // Querying only specialOrders
+                List<String> whereArgs = [
+                  specialOrder.id
+                ]; // Querying only specialOrders
 
-                List<SpecialOrder> deleteSpecialOrderList = await SpecialOrderDAL.find(where: where, whereArgs: whereArgs);
+                List<SpecialOrder> deleteSpecialOrderList =
+                    await SpecialOrderDAL.find(
+                        where: where, whereArgs: whereArgs);
 
-                await SpecialOrderDAL.delete(where: where, whereArgs: whereArgs);
+                await SpecialOrderDAL.delete(
+                    where: where, whereArgs: whereArgs);
 
                 SpecialOrder deleteSpecialOrder = deleteSpecialOrderList.first;
                 if (deleteSpecialOrder.idFS != null) {

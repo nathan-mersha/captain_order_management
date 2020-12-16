@@ -31,16 +31,22 @@ class SpecialOrderDAL {
     specialOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, SpecialOrder.toMap(specialOrder), conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, SpecialOrder.toMap(specialOrder),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return specialOrder;
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<List<SpecialOrder>> find({String where, dynamic whereArgs}) async {
+  static Future<List<SpecialOrder>> find(
+      {String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
+        ? await global.db
+            .query(TABLE_NAME, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME,
+            where: where,
+            whereArgs: whereArgs,
+            orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
 
     return List.generate(maps.length, (i) {
       return SpecialOrder(
@@ -48,7 +54,8 @@ class SpecialOrderDAL {
         idFS: maps[i][SpecialOrder.ID_FS],
         employee: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.EMPLOYEE])),
         customer: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.CUSTOMER])),
-        products: Product.toModelList(jsonDecode(maps[i][SpecialOrder.PRODUCTS])),
+        products:
+            Product.toModelList(jsonDecode(maps[i][SpecialOrder.PRODUCTS])),
         totalAmount: maps[i][SpecialOrder.TOTAL_AMOUNT],
         note: maps[i][SpecialOrder.NOTE],
         firstModified: DateTime.parse(maps[i][SpecialOrder.FIRST_MODIFIED]),
@@ -59,9 +66,11 @@ class SpecialOrderDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update({String where, dynamic whereArgs, SpecialOrder specialOrder}) async {
+  static Future<void> update(
+      {String where, dynamic whereArgs, SpecialOrder specialOrder}) async {
     specialOrder.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, SpecialOrder.toMap(specialOrder), where: where, whereArgs: whereArgs);
+    await global.db.update(TABLE_NAME, SpecialOrder.toMap(specialOrder),
+        where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

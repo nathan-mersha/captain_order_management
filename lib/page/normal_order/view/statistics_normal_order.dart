@@ -9,10 +9,15 @@ class StatisticsNormalOrderView extends StatefulWidget {
   final GlobalKey<StatisticsNormalOrderViewState> statisticsCustomerKey;
   final GlobalKey<CustomerTableState> customerTableKey;
 
-  const StatisticsNormalOrderView({this.customerTableKey, this.createCustomerKey, this.statisticsCustomerKey}) : super(key: statisticsCustomerKey);
+  const StatisticsNormalOrderView(
+      {this.customerTableKey,
+      this.createCustomerKey,
+      this.statisticsCustomerKey})
+      : super(key: statisticsCustomerKey);
 
   @override
-  StatisticsNormalOrderViewState createState() => StatisticsNormalOrderViewState();
+  StatisticsNormalOrderViewState createState() =>
+      StatisticsNormalOrderViewState();
 }
 
 class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {

@@ -10,10 +10,12 @@ class SpecialOrderPaymentInformationPage extends StatefulWidget {
   SpecialOrderPaymentInformationPage({this.focus});
 
   @override
-  _SpecialOrderPaymentInformationPageState createState() => _SpecialOrderPaymentInformationPageState();
+  _SpecialOrderPaymentInformationPageState createState() =>
+      _SpecialOrderPaymentInformationPageState();
 }
 
-class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPaymentInformationPage> {
+class _SpecialOrderPaymentInformationPageState
+    extends State<SpecialOrderPaymentInformationPage> {
   SpecialOrder specialOrder;
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
@@ -29,7 +31,8 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
           children: [
             Text(
               "Payment Information",
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w800),
             ),
             SizedBox(
               height: 18,
@@ -96,6 +99,7 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
   }
 
   TextStyle getValueStyle() {
-    return TextStyle(color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 16);
+    return TextStyle(
+        color: Colors.black87, fontWeight: FontWeight.w800, fontSize: 16);
   }
 }

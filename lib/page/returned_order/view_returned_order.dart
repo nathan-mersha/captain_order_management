@@ -13,7 +13,11 @@ class ReturnedOrderTable extends StatefulWidget {
   final GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey;
   final GlobalKey<ReturnedOrderTableState> returnedOrderTableKey;
 
-  const ReturnedOrderTable({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey}) : super(key: returnedOrderTableKey);
+  const ReturnedOrderTable(
+      {this.returnedOrderTableKey,
+      this.createReturnedOrderKey,
+      this.statisticsReturnedOrderKey})
+      : super(key: returnedOrderTableKey);
 
   @override
   ReturnedOrderTableState createState() => ReturnedOrderTableState();
@@ -57,15 +61,18 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
               future: getListOfReturnedOrders(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  List<ReturnedOrder> returnedOrders = snapshot.data as List<ReturnedOrder>;
-                  _ReturnedOrderDataSource _returnedOrderDataSourceVal = _ReturnedOrderDataSource(context, returnedOrders, () {
+                  List<ReturnedOrder> returnedOrders =
+                      snapshot.data as List<ReturnedOrder>;
+                  _ReturnedOrderDataSource _returnedOrderDataSourceVal =
+                      _ReturnedOrderDataSource(context, returnedOrders, () {
                     setState(() {
                       // updating table here.
                     });
                   }, widget.createReturnedOrderKey);
                   _returnedOrderDataSource = _returnedOrderDataSourceVal;
                 } else {
-                  _returnedOrderDataSource = _ReturnedOrderDataSource(context, [], () {
+                  _returnedOrderDataSource =
+                      _ReturnedOrderDataSource(context, [], () {
                     setState(() {
                       // updating table here.
                     });
@@ -117,12 +124,19 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                               ),
                               Text(
                                 "Loading returned orders",
-                                style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Theme.of(context).accentColor),
                               )
                             ],
                           ),
                     rowsPerPage: _rowsPerPage,
-                    availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
+                    availableRowsPerPage: <int>[
+                      _rowsPerPage,
+                      _rowsPerPage * 2,
+                      _rowsPerPage * 5,
+                      _rowsPerPage * 10
+                    ],
                     onRowsPerPageChanged: (value) {
                       setState(() {
                         _rowsPerPage = value;
@@ -136,7 +150,8 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                         label: Text("Employee"),
                         onSort: (columnIndex, ascending) {
                           employeeSortAscending = !employeeSortAscending;
-                          return _sort<String>((d) => d.employee.name, columnIndex, employeeSortAscending);
+                          return _sort<String>((d) => d.employee.name,
+                              columnIndex, employeeSortAscending);
                         },
                       ),
                       DataColumn(
@@ -146,21 +161,24 @@ class ReturnedOrderTableState extends State<ReturnedOrderTable> {
                         label: Text("Count"),
                         onSort: (columnIndex, ascending) {
                           countSortAscending = !countSortAscending;
-                          return _sort<num>((d) => d.count, columnIndex, countSortAscending);
+                          return _sort<num>(
+                              (d) => d.count, columnIndex, countSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Customer"),
                         onSort: (columnIndex, ascending) {
                           customerSortAscending = !customerSortAscending;
-                          return _sort<String>((d) => d.customer.name, columnIndex, customerSortAscending);
+                          return _sort<String>((d) => d.customer.name,
+                              columnIndex, customerSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Date"),
                         onSort: (columnIndex, ascending) {
                           dateSortAscending = !dateSortAscending;
-                          return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
+                          return _sort<DateTime>((d) => d.firstModified,
+                              columnIndex, dateSortAscending);
                         },
                       ),
                       DataColumn(
@@ -185,22 +203,28 @@ class _ReturnedOrderDataSource extends DataTableSource {
   final GlobalKey<CreateReturnedOrderViewState> createReturnedOrderKey;
   int _selectedCount = 0;
 
-  _ReturnedOrderDataSource(this.context, this.returnedOrders, this.updateTable, this.createReturnedOrderKey) {
+  _ReturnedOrderDataSource(this.context, this.returnedOrders, this.updateTable,
+      this.createReturnedOrderKey) {
     originalBatch = List.from(returnedOrders);
   }
 
-  void _sort<T>(Comparable<T> Function(ReturnedOrder d) getField, bool ascending) {
+  void _sort<T>(
+      Comparable<T> Function(ReturnedOrder d) getField, bool ascending) {
     returnedOrders.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
+      return ascending
+          ? Comparable.compare(aValue, bValue)
+          : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
 
   void _search(String searchInput) {
-    returnedOrders = List.from(originalBatch); // Restoring returned order from original batch
-    returnedOrders.retainWhere((ReturnedOrder r) => r.product.name.toLowerCase().contains(searchInput.toLowerCase()));
+    returnedOrders = List.from(
+        originalBatch); // Restoring returned order from original batch
+    returnedOrders.retainWhere((ReturnedOrder r) =>
+        r.product.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 
@@ -213,7 +237,10 @@ class _ReturnedOrderDataSource extends DataTableSource {
         children: [
           Row(
             children: [
-              product.isGallonBased ? Icon(Icons.check_circle, size: 9, color: Theme.of(context).primaryColorLight) : Container(),
+              product.isGallonBased
+                  ? Icon(Icons.check_circle,
+                      size: 9, color: Theme.of(context).primaryColorLight)
+                  : Container(),
               SizedBox(
                 width: 5,
               ),
@@ -248,11 +275,14 @@ class _ReturnedOrderDataSource extends DataTableSource {
               returnedOrder.employee.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
-          createReturnedOrderKey.currentState.passForUpdate(returnedOrders[index]);
+          createReturnedOrderKey.currentState
+              .passForUpdate(returnedOrders[index]);
         }),
         DataCell(buildProductView(returnedOrder.product)),
         DataCell(Text(returnedOrder.count.toString() ?? "-")),
-        DataCell(Text(returnedOrder.customer == null ? "-" : returnedOrder.customer.name)),
+        DataCell(Text(returnedOrder.customer == null
+            ? "-"
+            : returnedOrder.customer.name)),
         DataCell(Text(DateFormat.yMMMd().format(returnedOrder.firstModified))),
         DataCell(IconButton(
           icon: Icon(
@@ -262,7 +292,8 @@ class _ReturnedOrderDataSource extends DataTableSource {
           ),
           onPressed: () {
             // deleting returnedOrder here.
-            deleteReturnedOrder(returnedOrders[index]).then((value) => updateTable());
+            deleteReturnedOrder(returnedOrders[index])
+                .then((value) => updateTable());
           },
         ))
       ],
@@ -286,21 +317,29 @@ class _ReturnedOrderDataSource extends DataTableSource {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear,
+                      size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message: "Are you sure you want to delete returnedOrder of\n${returnedOrder.employee.name}",
+              message:
+                  "Are you sure you want to delete returnedOrder of\n${returnedOrder.employee.name}",
               onYes: () async {
                 // Delete returnedOrder here.
 
                 String where = "${ReturnedOrder.ID} = ?";
-                List<String> whereArgs = [returnedOrder.id]; // Querying only returnedOrders
+                List<String> whereArgs = [
+                  returnedOrder.id
+                ]; // Querying only returnedOrders
 
-                List<ReturnedOrder> deleteReturnedOrderList = await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
+                List<ReturnedOrder> deleteReturnedOrderList =
+                    await ReturnedOrderDAL.find(
+                        where: where, whereArgs: whereArgs);
 
-                await ReturnedOrderDAL.delete(where: where, whereArgs: whereArgs);
+                await ReturnedOrderDAL.delete(
+                    where: where, whereArgs: whereArgs);
 
-                ReturnedOrder deleteReturnedOrder = deleteReturnedOrderList.first;
+                ReturnedOrder deleteReturnedOrder =
+                    deleteReturnedOrderList.first;
                 if (deleteReturnedOrder.idFS != null) {
 //                  Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(deleteReturnedOrder.idFS).delete();
                 }

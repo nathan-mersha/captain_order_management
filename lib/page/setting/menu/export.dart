@@ -23,7 +23,10 @@ class _ExportSettingsState extends State<ExportSettings> {
             width: double.infinity,
             child: Text(
               "Export Database",
-              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800),
             ),
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             color: Colors.black45),
@@ -54,19 +57,26 @@ class _ExportSettingsState extends State<ExportSettings> {
 
                         /// Create export directory
                         Directory dir = await getExternalStorageDirectory();
-                        String exportDirectory = "${DateTime.now().toString()}_kapci_backup";
-                        Directory exportFile = await Directory("${dir.parent.parent.parent.parent.path}/Download/$exportDirectory").create();
-                        Directory exportPictureFile = await Directory("${dir.parent.parent.parent.parent.path}/Download/$exportDirectory/Pictures").create();
+                        String exportDirectory =
+                            "${DateTime.now().toString()}_kapci_backup";
+                        Directory exportFile = await Directory(
+                                "${dir.parent.parent.parent.parent.path}/Download/$exportDirectory")
+                            .create();
+                        Directory exportPictureFile = await Directory(
+                                "${dir.parent.parent.parent.parent.path}/Download/$exportDirectory/Pictures")
+                            .create();
 
                         /// Copy Images directory
-                        Directory imageDirectory = Directory("/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures");
+                        Directory imageDirectory = Directory(
+                            "/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures");
                         if (imageDirectory.existsSync()) {
                           copyDirectory(imageDirectory, exportPictureFile);
                         }
 
                         /// Copy Database file
                         String path = await getDatabasesPath();
-                        File sourceFile = File("$path/${global.DB_NAME}"); // source file
+                        File sourceFile =
+                            File("$path/${global.DB_NAME}"); // source file
                         String newPath = "${exportFile.path}/${global.DB_NAME}";
                         await copyFile(sourceFile, newPath);
 
@@ -79,7 +89,9 @@ class _ExportSettingsState extends State<ExportSettings> {
                         /// Delete Original file
                         exportFile.deleteSync(recursive: true);
 
-                        CNotifications.showSnackBar(context, "Successfuly exported data", "success", () {}, backgroundColor: Colors.green);
+                        CNotifications.showSnackBar(context,
+                            "Successfuly exported data", "success", () {},
+                            backgroundColor: Colors.green);
                         setState(() {
                           _exporting = false;
                         });
@@ -114,14 +126,17 @@ class _ExportSettingsState extends State<ExportSettings> {
     return newFile;
   }
 
-  void copyDirectory(Directory source, Directory destination) => source.listSync(recursive: false).forEach((var entity) {
+  void copyDirectory(Directory source, Directory destination) =>
+      source.listSync(recursive: false).forEach((var entity) {
         if (entity is Directory) {
-          var newDirectory = Directory(path.join(destination.absolute.path, path.basename(entity.path)));
+          var newDirectory = Directory(
+              path.join(destination.absolute.path, path.basename(entity.path)));
           newDirectory.createSync();
 
           copyDirectory(entity.absolute, newDirectory);
         } else if (entity is File) {
-          entity.copySync(path.join(destination.path, path.basename(entity.path)));
+          entity.copySync(
+              path.join(destination.path, path.basename(entity.path)));
         }
       });
 }

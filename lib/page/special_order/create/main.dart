@@ -11,10 +11,12 @@ class SpecialOrderCreateMainPage extends StatefulWidget {
   SpecialOrderCreateMainPage({this.specialOrder, this.navigateTo});
 
   @override
-  _SpecialOrderCreateMainPageState createState() => _SpecialOrderCreateMainPageState();
+  _SpecialOrderCreateMainPageState createState() =>
+      _SpecialOrderCreateMainPageState();
 }
 
-class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage> {
+class _SpecialOrderCreateMainPageState
+    extends State<SpecialOrderCreateMainPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -45,7 +47,8 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                       Expanded(flex: 3, child: ProductViewPage()),
 
                       // Customer and Payment information page
-                      Expanded(flex: 1, child: SpecialOrderPaymentInformationPage()),
+                      Expanded(
+                          flex: 1, child: SpecialOrderPaymentInformationPage()),
                     ],
                   ),
                 )),

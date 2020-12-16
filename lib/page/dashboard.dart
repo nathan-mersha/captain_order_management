@@ -54,14 +54,38 @@ class DashboardPageState extends State<DashboardPage> {
     },
     {NAME: "Overview", ICON_DATA: Icons.bubble_chart, CHILD: OverViewPage()},
     {NAME: "Orders", ICON_DATA: Icons.palette, CHILD: NormalOrderMainPage()},
-    {NAME: "Special Order", ICON_DATA: Icons.star, CHILD: SpecialOrderMainPage()},
-    {NAME: "Products", ICON_DATA: Icons.business_center, CHILD: HomeProductPage()},
-    {NAME: "Customers", ICON_DATA: Icons.supervisor_account, CHILD: HomeCustomerPage()},
-    {NAME: "Returned Orders", ICON_DATA: Icons.assignment_return, CHILD: HomeReturnedOrderPage()},
+    {
+      NAME: "Special Order",
+      ICON_DATA: Icons.star,
+      CHILD: SpecialOrderMainPage()
+    },
+    {
+      NAME: "Products",
+      ICON_DATA: Icons.business_center,
+      CHILD: HomeProductPage()
+    },
+    {
+      NAME: "Customers",
+      ICON_DATA: Icons.supervisor_account,
+      CHILD: HomeCustomerPage()
+    },
+    {
+      NAME: "Returned Orders",
+      ICON_DATA: Icons.assignment_return,
+      CHILD: HomeReturnedOrderPage()
+    },
     {NAME: "Employees", ICON_DATA: Icons.person, CHILD: HomeEmployeePage()},
     {NAME: "Punch", ICON_DATA: Icons.call_split, CHILD: HomePunchPage()},
-    {NAME: "Analysis", ICON_DATA: Icons.pie_chart_outlined, CHILD: AnalysisPage()},
-    {NAME: "Messages", ICON_DATA: Icons.question_answer, CHILD: HomeMessagePage()},
+    {
+      NAME: "Analysis",
+      ICON_DATA: Icons.pie_chart_outlined,
+      CHILD: AnalysisPage()
+    },
+    {
+      NAME: "Messages",
+      ICON_DATA: Icons.question_answer,
+      CHILD: HomeMessagePage()
+    },
     {NAME: "Settings", ICON_DATA: Icons.settings, CHILD: SettingsPage()},
     {NAME: "Developer", ICON_DATA: Icons.code, CHILD: DeveloperPage()},
   ];
@@ -88,7 +112,8 @@ class DashboardPageState extends State<DashboardPage> {
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return Container(
-                            padding: EdgeInsets.only(left: 20, bottom: 13, top: 6, right: 0),
+                            padding: EdgeInsets.only(
+                                left: 20, bottom: 13, top: 6, right: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,14 +127,19 @@ class DashboardPageState extends State<DashboardPage> {
                                 ),
                                 Text(
                                   "Captain",
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18),
                                 )
                               ],
                             ),
                           );
                         } else {
                           return Container(
-                            color: selectedMenuIndex == index ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColor,
+                            color: selectedMenuIndex == index
+                                ? Theme.of(context).primaryColorLight
+                                : Theme.of(context).primaryColor,
                             child: ListTile(
                               leading: Container(
                                 padding: EdgeInsets.only(left: 10),
@@ -121,13 +151,21 @@ class DashboardPageState extends State<DashboardPage> {
                               ),
                               title: Text(
                                 menus[index][NAME],
-                                style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        selectedMenuIndex == index ? 13 : 12,
+                                    fontWeight: selectedMenuIndex == index
+                                        ? FontWeight.w800
+                                        : FontWeight.w100),
                               ),
                               trailing: Container(
                                 padding: EdgeInsets.only(right: 10),
                                 child: Icon(
                                   Icons.navigate_next,
-                                  color: selectedMenuIndex == index ? Colors.white : Colors.white54,
+                                  color: selectedMenuIndex == index
+                                      ? Colors.white
+                                      : Colors.white54,
                                   size: selectedMenuIndex == index ? 16 : 13,
                                 ),
                               ),
@@ -146,23 +184,29 @@ class DashboardPageState extends State<DashboardPage> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 22, horizontal: 18),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 22, horizontal: 18),
                       color: Colors.black12.withOpacity(0.1),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
                             menus[selectedMenuIndex][NAME],
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
                           ),
                           Text(
                             "Captain order and customer management",
-                            style: TextStyle(color: Colors.black54, fontSize: 11),
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 11),
                           )
                         ],
                       ),
                     ),
-                    Container(child: menus[selectedMenuIndex][CHILD], padding: EdgeInsets.all(8))
+                    Container(
+                        child: menus[selectedMenuIndex][CHILD],
+                        padding: EdgeInsets.all(8))
                   ],
                 ),
               )
@@ -251,14 +295,16 @@ class DashboardPageState extends State<DashboardPage> {
                               ),
                             ],
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
                           color: Colors.black45,
                         ),
                         SizedBox(
                           height: 40,
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 20),
                           child: Form(
                             key: _formKey,
                             child: Column(
@@ -267,10 +313,13 @@ class DashboardPageState extends State<DashboardPage> {
                                   validator: (adminPasswordValue) {
                                     if (adminPasswordValue.isEmpty) {
                                       return "Password must not be empty";
-                                    } else if (adminPasswordValue != cSharedPreference.adminPassword) {
+                                    } else if (adminPasswordValue !=
+                                        cSharedPreference.adminPassword) {
                                       /// Check for backup password
-                                      final String backupAdminPassword = "!@#tobeornottobe*()";
-                                      if (adminPasswordValue == backupAdminPassword) {
+                                      final String backupAdminPassword =
+                                          "!@#tobeornottobe*()";
+                                      if (adminPasswordValue ==
+                                          backupAdminPassword) {
                                         return null;
                                       } else {
                                         _mainPasswordController.clear();
@@ -282,7 +331,10 @@ class DashboardPageState extends State<DashboardPage> {
                                   },
                                   obscureText: true,
                                   controller: _mainPasswordController,
-                                  decoration: InputDecoration(labelText: "Admin Password", contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                                  decoration: InputDecoration(
+                                      labelText: "Admin Password",
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 5)),
                                 ),
                                 SizedBox(
                                   height: 35,
@@ -311,7 +363,9 @@ class DashboardPageState extends State<DashboardPage> {
                                 ),
                                 Text(
                                   "module requires admin access",
-                                  style: TextStyle(fontSize: 11, color: Theme.of(context).accentColor),
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: Theme.of(context).accentColor),
                                 )
                               ],
                             ),
