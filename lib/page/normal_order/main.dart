@@ -14,9 +14,9 @@ class NormalOrderMainPageState extends State<NormalOrderMainPage> {
 
   String currentPage = PAGE_VIEW_NORMAL_ORDER;
 
-  static const String PENDING = "Pending"; // values not translatables
-  static const String COMPLETED = "Completed"; // value not translatable
-  static const String DELIVERED = "Delivered"; // value not translatable
+  static const String PENDING = "a_Pending"; // values not translatables
+  static const String COMPLETED = "b_Completed"; // value not translatable
+  static const String DELIVERED = "c_Delivered"; // value not translatable
   NormalOrder normalOrder = NormalOrder(
       advancePayment: 0,
       paidInFull: false,

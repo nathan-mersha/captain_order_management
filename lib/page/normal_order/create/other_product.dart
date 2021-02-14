@@ -42,9 +42,9 @@ class CreateNormalOrderOtherProductPageState
   );
 
   // Status type
-  static const String PENDING = "Pending"; // values not translatables
-  static const String COMPLETED = "Completed"; // value not translatable
-  static const String DELIVERED = "Delivered"; // value not translatable
+  static const String PENDING = "a_Pending"; // values not translatables
+  static const String COMPLETED = "b_Completed"; // value not translatable
+  static const String DELIVERED = "c_Delivered"; // value not translatable
   List<String> statusTypes = [PENDING, COMPLETED, DELIVERED];
   Map<String, String> statusTypeValues;
   Map<String, String> measurementTypesValues;

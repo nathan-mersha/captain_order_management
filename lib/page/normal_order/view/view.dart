@@ -43,13 +43,13 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
     _sortAscending = ascending;
   }
 
+
   Future<List<NormalOrder>> getListOfNormalOrders() async {
-    print("here get list");
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
-    print("normal orders ");
-    print(normalOrders);
     return normalOrders;
   }
+
+
 
   @override
   void dispose() {
@@ -383,6 +383,7 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
         product.status == NormalOrderMainPageState.COMPLETED);
     bool allDelivered = products.every((Product product) =>
         product.status == NormalOrderMainPageState.DELIVERED);
+
     if (allCompleted) {
       return NormalOrderMainPageState.COMPLETED;
     } else if (allDelivered) {

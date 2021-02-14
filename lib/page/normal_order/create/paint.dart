@@ -557,7 +557,6 @@ class CreateNormalOrderPaintPageState
 
       if (allPaintsCompleted &&
           cSharedPreference.sendNotificationAutomatically) {
-        print("Hiere");
         String firstName = normalOrder.customer.name.split(" ").first;
         String smsMessage =
             "ሰላም ${firstName.length > 11 ? firstName.substring(0, 11) : firstName} በ ${DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now())} ያዘዙት ቀለም ደርሷል መጥተው ይውሰዱ. ካፕሲ የመኪና ቀለሞች!";
