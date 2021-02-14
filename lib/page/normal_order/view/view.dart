@@ -44,7 +44,10 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
   }
 
   Future<List<NormalOrder>> getListOfNormalOrders() async {
+    print("here get list");
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    print("normal orders ");
+    print(normalOrders);
     return normalOrders;
   }
 

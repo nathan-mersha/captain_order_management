@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/punch.dart';
@@ -28,8 +30,11 @@ class PunchDAL {
     punch.firstModified = DateTime.now();
     punch.lastModified = DateTime.now();
 
+    Map<String, dynamic> punchMapped = Punch.toMap(punch);
+    punchMapped[Punch.EMPLOYEE] = punch.employee == null ? null : punch.employee.id;
+    
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, Punch.toMap(punch),
+    await global.db.insert(TABLE_NAME, punchMapped,
         conflictAlgorithm: ConflictAlgorithm.replace);
     return punch;
   }
@@ -45,19 +50,30 @@ class PunchDAL {
             whereArgs: whereArgs,
             orderBy: "${Punch.LAST_MODIFIED} DESC");
 
-    return List.generate(maps.length, (i) {
-      return Punch(
-        id: maps[i][Punch.ID],
-        idFS: maps[i][Punch.ID_FS],
-        employee: Personnel.toModel(jsonDecode(maps[i][Punch.EMPLOYEE])),
-        product: Product.toModel(jsonDecode(maps[i][Punch.PRODUCT])),
-        type: maps[i][Punch.TYPE],
-        weight: maps[i][Punch.WEIGHT],
-        note: maps[i][Punch.NOTE],
-        firstModified: DateTime.parse(maps[i][Punch.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(maps[i][Punch.LAST_MODIFIED]),
+    List<Punch> parsedList = [];
+    final c = new Completer<List<Punch>>();
+
+    maps.forEach((Map<String, dynamic> element) async{ 
+      Punch punch = Punch(
+        id: element[Punch.ID],
+        idFS: element[Punch.ID_FS],
+        employee : await NormalOrderDAL.getPersonnel(element[Personnel.EMPLOYEE]),
+        product: Product.toModel(jsonDecode(element[Punch.PRODUCT])),
+        type: element[Punch.TYPE],
+        weight: element[Punch.WEIGHT],
+        note: element[Punch.NOTE],
+        firstModified: DateTime.parse(element[Punch.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(element[Punch.LAST_MODIFIED]),
       );
+
+      parsedList.add(punch);
+      if(maps.length == parsedList.length){
+        c.complete(parsedList);
+      }
     });
+
+    return c.future;
+    
   }
 
   /// where : "id = ?"

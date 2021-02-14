@@ -93,9 +93,9 @@ class CSharedPreference {
   set paintProductSeeded(bool paintProductSeeded) =>
       pref.setBool(PAINT_PRODUCT_SEEDED, paintProductSeeded);
 
-  String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "main";
-  String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "admin";
-  bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? false;
+  String get mainPassword => pref.getString(MAIN_PASSWORD) ?? "tobeornottobe";
+  String get adminPassword => pref.getString(ADMIN_PASSWORD) ?? "tobeornottobe";
+  bool get mainPasswordEnabled => pref.getBool(MAIN_PASSWORD_ENABLED) ?? true;
 
   bool get systemLocked => pref.getBool(SYSTEM_LOCKED) ?? false;
   bool get sendNotificationAutomatically =>

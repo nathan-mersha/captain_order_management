@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/returned_order.dart';
 import 'package:sqflite/sqflite.dart';
@@ -29,8 +30,12 @@ class ReturnedOrderDAL {
     returnedOrder.firstModified = DateTime.now();
     returnedOrder.lastModified = DateTime.now();
 
+    Map<String, dynamic> returnedOrderMapped = ReturnedOrder.toMap(returnedOrder);
+    returnedOrderMapped[ReturnedOrder.EMPLOYEE] = returnedOrder.employee == null ? null : returnedOrder.employee.id;
+    returnedOrderMapped[ReturnedOrder.CUSTOMER] = returnedOrder.customer == null ? null : returnedOrder.customer.id;
+    
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, ReturnedOrder.toMap(returnedOrder),
+    await global.db.insert(TABLE_NAME, returnedOrderMapped,
         conflictAlgorithm: ConflictAlgorithm.replace);
     return returnedOrder;
   }
@@ -47,21 +52,30 @@ class ReturnedOrderDAL {
             whereArgs: whereArgs,
             orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC");
 
-    return List.generate(maps.length, (i) {
-      return ReturnedOrder(
-        id: maps[i][ReturnedOrder.ID],
-        idFS: maps[i][ReturnedOrder.ID_FS],
-        employee:
-            Personnel.toModel(jsonDecode(maps[i][ReturnedOrder.EMPLOYEE])),
-        customer:
-            Personnel.toModel(jsonDecode(maps[i][ReturnedOrder.CUSTOMER])),
-        product: Product.toModel(jsonDecode(maps[i][ReturnedOrder.PRODUCT])),
-        count: maps[i][ReturnedOrder.COUNT],
-        note: maps[i][ReturnedOrder.NOTE],
-        firstModified: DateTime.parse(maps[i][ReturnedOrder.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(maps[i][ReturnedOrder.LAST_MODIFIED]),
+
+    List<ReturnedOrder> parsedList = [];
+    final c = new Completer<List<ReturnedOrder>>();
+    
+    maps.forEach((Map<String, dynamic> element) async{
+      ReturnedOrder returnedOrder = ReturnedOrder(
+        id: element[ReturnedOrder.ID],
+        idFS: element[ReturnedOrder.ID_FS],
+        employee :  await NormalOrderDAL.getPersonnel(element[ReturnedOrder.EMPLOYEE]),
+        customer :  await NormalOrderDAL.getPersonnel(element[ReturnedOrder.CUSTOMER]),
+        product: Product.toModel(jsonDecode(element[ReturnedOrder.PRODUCT])),
+        count: element[ReturnedOrder.COUNT],
+        note: element[ReturnedOrder.NOTE],
+        firstModified: DateTime.parse(element[ReturnedOrder.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(element[ReturnedOrder.LAST_MODIFIED]),
       );
+      parsedList.add(returnedOrder);
+      if(maps.length == parsedList.length){
+        c.complete(parsedList);
+      }
     });
+
+    return c.future;
+   
   }
 
   /// where : "id = ?"

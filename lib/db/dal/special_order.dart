@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
@@ -30,9 +32,11 @@ class SpecialOrderDAL {
     specialOrder.firstModified = DateTime.now();
     specialOrder.lastModified = DateTime.now();
 
+    Map<String, dynamic> specialOrderMapped = SpecialOrder.toMap(specialOrder);
+    specialOrderMapped[SpecialOrder.CUSTOMER] = specialOrder.customer == null ? null : specialOrder.customer.id;
+    specialOrderMapped[SpecialOrder.EMPLOYEE] = specialOrder.employee == null ? null : specialOrder.employee.id;
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, SpecialOrder.toMap(specialOrder),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, specialOrderMapped, conflictAlgorithm: ConflictAlgorithm.replace);
     return specialOrder;
   }
 
@@ -48,20 +52,31 @@ class SpecialOrderDAL {
             whereArgs: whereArgs,
             orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
 
-    return List.generate(maps.length, (i) {
-      return SpecialOrder(
-        id: maps[i][SpecialOrder.ID],
-        idFS: maps[i][SpecialOrder.ID_FS],
-        employee: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.EMPLOYEE])),
-        customer: Personnel.toModel(jsonDecode(maps[i][SpecialOrder.CUSTOMER])),
+    List<SpecialOrder> parsedList = [];
+    final c = Completer<List<SpecialOrder>>();
+    
+    maps.forEach((Map<String, dynamic> element) async{ 
+      SpecialOrder specialOrder = SpecialOrder(
+        id: element[SpecialOrder.ID],
+        idFS: element[SpecialOrder.ID_FS],
+        employee: await NormalOrderDAL.getPersonnel(element[SpecialOrder.EMPLOYEE]),
+        customer: await NormalOrderDAL.getPersonnel(element[SpecialOrder.CUSTOMER]),
         products:
-            Product.toModelList(jsonDecode(maps[i][SpecialOrder.PRODUCTS])),
-        totalAmount: maps[i][SpecialOrder.TOTAL_AMOUNT],
-        note: maps[i][SpecialOrder.NOTE],
-        firstModified: DateTime.parse(maps[i][SpecialOrder.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(maps[i][SpecialOrder.LAST_MODIFIED]),
+        Product.toModelList(jsonDecode(element[SpecialOrder.PRODUCTS])),
+        totalAmount: element[SpecialOrder.TOTAL_AMOUNT],
+        note: element[SpecialOrder.NOTE],
+        firstModified: DateTime.parse(element[SpecialOrder.FIRST_MODIFIED]),
+        lastModified: DateTime.parse(element[SpecialOrder.LAST_MODIFIED]),
       );
+
+      parsedList.add(specialOrder);
+      if(maps.length == parsedList.length){
+        c.complete(parsedList);
+      }
     });
+
+    return c.future;
+
   }
 
   /// where : "id = ?"

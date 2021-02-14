@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:flutter/material.dart';
@@ -85,8 +86,11 @@ class NormalOrder with ChangeNotifier {
         : {
             ID: normalOrder.id,
             ID_FS: normalOrder.idFS,
-            EMPLOYEE: jsonEncode(Personnel.toMap(normalOrder.employee)),
-            CUSTOMER: jsonEncode(Personnel.toMap(normalOrder.customer)),
+
+            // todo : change begin
+            EMPLOYEE: normalOrder.employee == null ? null : normalOrder.employee.id,
+            CUSTOMER: normalOrder.customer.id,
+            // todo : change end
             PRODUCTS: jsonEncode(Product.toMapList(normalOrder.products)),
             TOTAL_AMOUNT: normalOrder.totalAmount,
             ADVANCE_PAYMENT: normalOrder.advancePayment,
@@ -104,16 +108,21 @@ class NormalOrder with ChangeNotifier {
   }
 
   /// Converts Map to Model
-  static NormalOrder toModel(dynamic map) {
-    print("Input employee : ${map[EMPLOYEE] is String}");
+  static Future<NormalOrder> toModel(dynamic map) async{
+
+    String where = "${Personnel.ID} = ?";
+    List<String> whereArgsEmployee = [Personnel.toModel(map[EMPLOYEE]).id]; // Querying employee by id
+    List<String> whereArgsCustomer = [Personnel.toModel(map[CUSTOMER]).id]; // Querying customer by id
+    List<Personnel> employees = await PersonnelDAL.find(where: where, whereArgs: whereArgsEmployee);
+    List<Personnel> customers = await PersonnelDAL.find(where: where, whereArgs: whereArgsCustomer);
 
     return map == null
         ? null
         : NormalOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: Personnel.toModel(map[EMPLOYEE]),
-            customer: Personnel.toModel(map[CUSTOMER]),
+            employee: employees.first,
+            customer: customers.first,
             products: Product.toModelList(jsonDecode(map[PRODUCTS])),
             totalAmount: map[TOTAL_AMOUNT],
             advancePayment: map[ADVANCE_PAYMENT],
@@ -126,10 +135,11 @@ class NormalOrder with ChangeNotifier {
   }
 
   /// Changes List of Map to List of Model
-  static List<NormalOrder> toModelList(List<dynamic> maps) {
+  static Future<List<NormalOrder>> toModelList(List<dynamic> maps) async{
     List<NormalOrder> modelList = [];
-    maps.forEach((dynamic map) {
-      modelList.add(toModel(map));
+    maps.forEach((dynamic map) async{
+
+      modelList.add(await toModel(map));
     });
     return modelList;
   }

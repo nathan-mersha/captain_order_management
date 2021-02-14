@@ -270,7 +270,7 @@ class CreateNormalOrderPaintPageState
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                RaisedButton(
+                ElevatedButton(
                     child: Text(
                       "Update",
                       style:
@@ -297,7 +297,7 @@ class CreateNormalOrderPaintPageState
                             NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
                       }
                     }),
-                OutlineButton(
+                OutlinedButton(
                   child: Text(
                     "Cancel",
                     style: TextStyle(

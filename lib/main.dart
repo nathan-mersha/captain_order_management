@@ -59,7 +59,6 @@ class MyAppState extends State<MyApp> {
       PermissionGroup.phone,
       PermissionGroup.storage,
       PermissionGroup.camera,
-      PermissionGroup.sms
     ]);
   }
 

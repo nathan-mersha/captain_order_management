@@ -367,32 +367,32 @@ class CreateProductViewState extends State<CreateProductView> {
           onTap: () {
             showDialog(
               context: context,
-              child: AlertDialog(
-                title: const Text('Pick a color!'),
-                content: SingleChildScrollView(
-                  child: ColorPicker(
-                    pickerColor: pickerColor,
-                    onColorChanged: (changedColor) {
-                      pickerColor = changedColor;
-                    },
-                    showLabel: true,
-                    pickerAreaHeightPercent: 0.8,
-                  ),
+              builder: (BuildContext context) { return AlertDialog(
+              title: const Text('Pick a color!'),
+              content: SingleChildScrollView(
+                child: ColorPicker(
+                  pickerColor: pickerColor,
+                  onColorChanged: (changedColor) {
+                    pickerColor = changedColor;
+                  },
+                  showLabel: true,
+                  pickerAreaHeightPercent: 0.8,
                 ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: const Text('Select'),
-                    onPressed: () {
-                      setState(() {
-                        product.colorValue = pickerColor.value.toString();
-                        _colorValueController.text =
-                            pickerColor.value.toString();
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
               ),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Select'),
+                  onPressed: () {
+                    setState(() {
+                      product.colorValue = pickerColor.value.toString();
+                      _colorValueController.text =
+                          pickerColor.value.toString();
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ); },
             );
           },
           child: TextFormField(
