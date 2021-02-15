@@ -114,10 +114,12 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: returnsData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
+
                     return ListTile(
                       title: Text(
                         returnsData[index].employee.name,
@@ -138,18 +140,26 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                         ],
                       ),
                       dense: true,
-                      leading: returnsData[index].employee.profileImage == null
-                          ? Icon(
-                              Icons.person_outline_rounded,
-                              color: Colors.black54,
-                            )
-                          : ClipOval(
-                              child: Image.file(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
+                        SizedBox(width: 7,),
+                        returnsData[index].employee.profileImage == null
+                            ? Icon(
+                          Icons.person_outline_rounded,
+                          color: Colors.black54,
+                        )
+                            : ClipOval(
+                            child: Image.file(
                               File(returnsData[index].employee.profileImage),
                               fit: BoxFit.cover,
                               height: 30,
                               width: 30,
-                            )),
+                            ))
+                      ],),
                     );
                   },
                 )),

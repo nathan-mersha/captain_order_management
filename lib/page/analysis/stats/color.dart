@@ -119,11 +119,13 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: paintsData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
                     return ListTile(
+
                       title: Text(
                         paintsData[index].product.name,
                         style: TextStyle(fontSize: 12),
@@ -149,14 +151,22 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
                         ],
                       ),
                       dense: true,
-                      leading: Icon(
-                        Icons.circle,
-                        size: 30,
-                        color: paintsData[index].product.colorValue == null
-                            ? Colors.black12
-                            : Color(int.parse(
-                                paintsData[index].product.colorValue)),
-                      ),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
+                        SizedBox(width: 7,), // todo : change
+                        Icon(
+                          Icons.circle,
+                          size: 30,
+                          color: paintsData[index].product.colorValue == null
+                              ? Colors.black12
+                              : Color(int.parse(
+                              paintsData[index].product.colorValue)),
+                        )
+                      ],),
                     );
                   },
                 )),

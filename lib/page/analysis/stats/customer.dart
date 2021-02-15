@@ -113,11 +113,20 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: customerData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
+
                     return ListTile(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11),)
+                      ],),
                       title: Text(
                         customerData[index].address,
                         style: TextStyle(fontSize: 12),

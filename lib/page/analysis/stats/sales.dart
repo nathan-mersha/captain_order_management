@@ -118,10 +118,12 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: salesData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
+
                     return ListTile(
                       title: Text(
                         salesData[index].personnel.name,
@@ -147,18 +149,26 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                           ),
                         ],
                       ),
-                      leading: salesData[index].personnel.profileImage == null
-                          ? Icon(
-                              Icons.person_outline_rounded,
-                              color: Colors.black54,
-                            )
-                          : ClipOval(
-                              child: Image.file(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
+                          SizedBox(width: 7,), // todo : change
+                        salesData[index].personnel.profileImage == null
+                            ? Icon(
+                          Icons.person_outline_rounded,
+                          color: Colors.black54,
+                        )
+                            : ClipOval(
+                            child: Image.file(
                               File(salesData[index].personnel.profileImage),
                               fit: BoxFit.cover,
                               height: 30,
                               width: 30,
-                            )),
+                            ))
+                      ],),
                       dense: true,
                     );
                   },

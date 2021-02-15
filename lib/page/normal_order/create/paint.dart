@@ -528,7 +528,7 @@ class CreateNormalOrderPaintPageState
                 });
                 CNotifications.showSnackBar(
                     context,
-                    "Successfuly removed ${paintProduct.name}",
+                    "Successfully removed ${paintProduct.name}",
                     "success",
                     () {},
                     backgroundColor: Colors.red);

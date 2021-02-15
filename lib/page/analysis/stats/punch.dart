@@ -133,10 +133,12 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: punchData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
+
                     return ListTile(
                       title: Text(
                         punchData[index].employee.name,
@@ -146,18 +148,26 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
                         "${punchData[index].weight.toStringAsFixed(2)} gm",
                         style: TextStyle(fontSize: 11),
                       ),
-                      leading: punchData[index].employee.profileImage == null
-                          ? Icon(
-                              Icons.person_outline_rounded,
-                              color: Colors.black54,
-                            )
-                          : ClipOval(
-                              child: Image.file(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
+                        SizedBox(width: 7,),
+                        punchData[index].employee.profileImage == null
+                            ? Icon(
+                          Icons.person_outline_rounded,
+                          color: Colors.black54,
+                        )
+                            : ClipOval(
+                            child: Image.file(
                               File(punchData[index].employee.profileImage),
                               fit: BoxFit.cover,
                               height: 30,
                               width: 30,
-                            )),
+                            ))
+                      ],),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,

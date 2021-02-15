@@ -113,10 +113,12 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
           children: <Widget>[
             Container(
                 height: 495,
-                padding: EdgeInsets.only(right: 20, left: 20, top: 5),
+                padding: EdgeInsets.only(right: 20, left: 0, top: 5),
                 child: ListView.builder(
                   itemCount: returnsData.length,
                   itemBuilder: (context, index) {
+                    int currentIndex = index + 1;
+
                     return ListTile(
                       title: Text(
                         returnsData[index].product.name,
@@ -138,14 +140,22 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
                         ],
                       ),
                       dense: true,
-                      leading: Icon(
-                        Icons.circle,
-                        size: 30,
-                        color: returnsData[index].product.colorValue == null
-                            ? Colors.black12
-                            : Color(int.parse(
-                                returnsData[index].product.colorValue)),
-                      ),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),),
+                        SizedBox(width: 7,),
+                        Icon(
+                          Icons.circle,
+                          size: 30,
+                          color: returnsData[index].product.colorValue == null
+                              ? Colors.black12
+                              : Color(int.parse(
+                              returnsData[index].product.colorValue)),
+                        )
+                      ],),
                     );
                   },
                 )),
