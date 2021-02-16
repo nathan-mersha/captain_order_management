@@ -14,6 +14,9 @@ class CSharedPreference {
   static const SEND_NOTIFICATION_AUTOMATICALLY =
       "SEND_NOTIFICATION_AUTOMATICALLY";
 
+  // Export path
+  static const EXPORT_PATH = "EXPORT_PATH";
+
   // User locale
   static const CURRENT_THEME = "CURRENT_THEME";
   static const CURRENT_LANGUAGE = "CURRENT_LANGUAGE";
@@ -54,6 +57,9 @@ class CSharedPreference {
       pref.setBool(SYSTEM_LOCKED, systemLocked);
   set sendNotificationAutomatically(bool sendNotificationAutomatically) => pref
       .setBool(SEND_NOTIFICATION_AUTOMATICALLY, sendNotificationAutomatically);
+
+  // Export path
+  set exportPath(String path) => pref.setString(EXPORT_PATH, path);
 
   // User locale
   set currentTheme(String currentTheme) =>
@@ -100,6 +106,8 @@ class CSharedPreference {
   bool get systemLocked => pref.getBool(SYSTEM_LOCKED) ?? false;
   bool get sendNotificationAutomatically =>
       pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
+
+  String get exportPath => pref.getString(EXPORT_PATH);
 
   String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
 

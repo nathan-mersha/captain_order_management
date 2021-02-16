@@ -6,8 +6,10 @@ import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/returned_order.dart';
 import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/page/setting/menu/export.dart';
 import 'package:captain/route.dart';
 import 'package:captain/rsr/theme/c_theme.dart';
+import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +32,8 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  bool cronInit = false;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
@@ -65,7 +69,19 @@ class MyAppState extends State<MyApp> {
   Future initializeSharedPreference() async {
     global.cSP = await SharedPreferences.getInstance();
     global.db = await createTable();
+    backupByCron();
     return true;
+  }
+
+  /// Backup system data every day at 2:00
+  void backupByCron(){
+    // every time at 2
+    if(!cronInit){
+      Cron()..schedule(Schedule.parse('* 2 * * * *'), () {
+        ExportSettingsState.exportData(deletePreviousVersion: true);
+      });
+      cronInit = true;
+    }
   }
 
   Future<Database> createTable() async {
