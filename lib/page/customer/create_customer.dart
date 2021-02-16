@@ -102,7 +102,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                             if (phoneNumberValue.isEmpty) {
                               return "Phone number must not be empty";
                             } else if (phoneNumberValue.length != 10 && phoneNumberValue.length != 12) {
-                              return "valid 0911234567 or 251911234567";
+                              return "Valid 0911234567 or 251911234567";
                             } else {
                               return null;
                             }

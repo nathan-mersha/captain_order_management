@@ -98,6 +98,12 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     String wherePaint = "${Product.TYPE} = ?";
     List<String> whereArgsPaint = [CreateProductViewState.PAINT]; // Querying only paint type
     _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+
+    String lastPaintId = cSharedPreference.lastOrderPaint;
+    if(lastPaintId != null){
+      Product lastPaint = _paints.firstWhere((Product element) => element.id == lastPaintId);
+      _paints.insert(0, lastPaint);
+    }
     setState(() {});
     return true;
   }
@@ -228,6 +234,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   // No customer added
                   CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                 } else {
+                  // saving the last paint and product
+                  cSharedPreference.lastOrderPaint = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
+                  cSharedPreference.lastOrderProduct = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS)?.id;
+
                   // Everything seems ok
                   NormalOrderDAL.create(normalOrder).then((value) {
                     widget.navigateTo(NormalOrderMainPageState.PAGE_VIEW_NORMAL_ORDER);
@@ -294,7 +304,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 //    }
 
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated : ${normalOrder.customer.name}", "success", () {},
+    CNotifications.showSnackBar(context, "Successfully updated : ${normalOrder.customer.name}", "success", () {},
         backgroundColor: Theme.of(context).accentColor);
   }
 

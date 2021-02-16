@@ -1,6 +1,7 @@
 import 'package:captain/db/dal/product.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/normal_order/main.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/widget/c_dialog.dart';
@@ -19,6 +20,8 @@ class CreateNormalOrderOtherProductPage extends StatefulWidget {
 }
 
 class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOtherProductPage> {
+  CSharedPreference cSharedPreference = CSharedPreference();
+
   final _paintOrderFormKey = GlobalKey<FormState>();
 
   NormalOrder normalOrder;
@@ -80,6 +83,14 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     String wherePaint = "${Product.TYPE} = ?";
     List<String> whereArgsPaint = [CreateProductViewState.OTHER_PRODUCTS]; // Querying only paint type
     _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+
+    String lastProductId = GetCSPInstance.cSharedPreference.lastOrderProduct;
+    if(lastProductId != null){
+      Product lastProduct = _otherProducts.firstWhere((Product element) => element.id == lastProductId);
+      _otherProducts.insert(0, lastProduct);
+    }
+
+
     setState(() {});
     return true;
   }

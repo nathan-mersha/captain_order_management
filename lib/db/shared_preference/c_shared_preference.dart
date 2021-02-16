@@ -16,6 +16,9 @@ class CSharedPreference {
   // Export path
   static const EXPORT_PATH = "EXPORT_PATH";
 
+  static const LAST_ORDER_PRODUCT = "LAST_ORDER_PRODUCT";
+  static const LAST_ORDER_PAINT = "LAST_ORDER_PAINT";
+
   // User locale
   static const CURRENT_THEME = "CURRENT_THEME";
   static const CURRENT_LANGUAGE = "CURRENT_LANGUAGE";
@@ -54,6 +57,10 @@ class CSharedPreference {
   // Export path
   set exportPath(String path) => pref.setString(EXPORT_PATH, path);
 
+  // Last normal order product
+  set lastOrderProduct(String productId) => pref.setString(LAST_ORDER_PRODUCT, productId);
+  set lastOrderPaint(String productId) => pref.setString(LAST_ORDER_PAINT, productId);
+
   // User locale
   set currentTheme(String currentTheme) => pref.setString(CURRENT_THEME, currentTheme);
   set currentLanguage(String currentLanguage) => pref.setString(CURRENT_LANGUAGE, currentLanguage);
@@ -85,6 +92,9 @@ class CSharedPreference {
   bool get sendNotificationAutomatically => pref.getBool(SEND_NOTIFICATION_AUTOMATICALLY) ?? true;
 
   String get exportPath => pref.getString(EXPORT_PATH);
+
+  String get lastOrderProduct => pref.getString(LAST_ORDER_PRODUCT);
+  String get lastOrderPaint => pref.getString(LAST_ORDER_PAINT);
 
   String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
 

@@ -6,6 +6,7 @@ import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
+import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/product/create_product.dart';
 import 'package:captain/page/special_order/main.dart';
 import 'package:captain/rsr/export/pdf_exporter.dart';
@@ -26,6 +27,8 @@ class ProductInputPage extends StatefulWidget {
 }
 
 class ProductInputPageState extends State<ProductInputPage> {
+  CSharedPreference cSharedPreference = CSharedPreference();
+
   final _paintOrderFormKey = GlobalKey<FormState>();
 
   SpecialOrder specialOrder;
@@ -90,6 +93,13 @@ class ProductInputPageState extends State<ProductInputPage> {
 
   Future<bool> _assignPaintData() async {
     _paints = await ProductDAL.find();
+
+    String lastPaintId = cSharedPreference.lastOrderPaint;
+    if(lastPaintId != null){
+      Product lastPaint = _paints.firstWhere((Product element) => element.id == lastPaintId);
+      _paints.insert(0, lastPaint);
+    }
+    
     setState(() {});
     return true;
   }
