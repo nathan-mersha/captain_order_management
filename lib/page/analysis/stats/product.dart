@@ -58,9 +58,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                paintsData[0].product.name, paintsData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].count)),
       ),
     ));
   }
@@ -92,8 +90,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
         id: 'Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (ColorAnalysisModel val, _) => val.product.name,
         measureFn: (ColorAnalysisModel val, _) => val.totalLitter,
@@ -105,8 +102,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -126,12 +122,17 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
-                      ],),
+                          Text(
+                            "${currentIndex.toString()}.",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ), // todo : change
+                        ],
+                      ),
                       title: Text(
                         paintsData[index].product.name,
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w800),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
                       ),
                       subtitle: Text(
                         "${paintsData[index].product.unitPrice.toStringAsFixed(2)} br per ${paintsData[index].product.unitOfMeasurement}",
@@ -143,13 +144,11 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
                         children: [
                           Text(
                             "sold ${paintsData[index].count.toStringAsFixed(0)} times",
-                            style:
-                                TextStyle(fontSize: 11, color: Colors.black38),
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
                           ),
                           Text(
                             "${paintsData[index].totalLitter.toStringAsFixed(0)} ${paintsData[index].product.unitOfMeasurement.toLowerCase()} sold",
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.black87),
+                            style: TextStyle(fontSize: 12, color: Colors.black87),
                           ),
                         ],
                       ),
@@ -172,17 +171,14 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
         if (product.type == CreateProductViewState.OTHER_PRODUCTS) {
           // Doing analysis for paint values only
           /// Checking if the paint exist -1 no, any other value >= 0 yes.
-          int index =
-              paintsData.indexWhere((ColorAnalysisModel paintAnalysisModel) {
+          int index = paintsData.indexWhere((ColorAnalysisModel paintAnalysisModel) {
             return paintAnalysisModel.product.id == product.id;
           });
 
           /// Product does not exist
           if (index == -1) {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(
-                product: product,
-                count: 1,
-                totalLitter: double.parse(product.quantityInCart.toString()));
+            ColorAnalysisModel colorAnalysisModelNew =
+                ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
             paintsData.add(colorAnalysisModelNew);
           }
 
@@ -191,8 +187,7 @@ class _ProductAnalysisState extends State<ProductAnalysis> {
             ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(
                 product: product,
                 count: paintsData[index].count + 1,
-                totalLitter: paintsData[index].totalLitter +
-                    double.parse(product.quantityInCart.toString()));
+                totalLitter: paintsData[index].totalLitter + double.parse(product.quantityInCart.toString()));
 
             // Removing and re-inserting data
             paintsData.removeAt(index);

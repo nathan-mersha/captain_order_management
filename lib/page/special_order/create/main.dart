@@ -11,12 +11,23 @@ class SpecialOrderCreateMainPage extends StatefulWidget {
   SpecialOrderCreateMainPage({this.specialOrder, this.navigateTo});
 
   @override
-  _SpecialOrderCreateMainPageState createState() =>
-      _SpecialOrderCreateMainPageState();
+  _SpecialOrderCreateMainPageState createState() => _SpecialOrderCreateMainPageState();
 }
 
-class _SpecialOrderCreateMainPageState
-    extends State<SpecialOrderCreateMainPage> {
+class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage> {
+  FocusNode _focusPayment = FocusNode();
+  bool focusOnLowerElements = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusPayment.addListener(() {
+      setState(() {
+        focusOnLowerElements = _focusPayment.hasFocus;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -44,11 +55,10 @@ class _SpecialOrderCreateMainPageState
                     children: [
                       // Other product
                       /// Not visible when focus
-                      Expanded(flex: 3, child: ProductViewPage()),
+                      Visibility(child: Expanded(flex: 5, child: ProductViewPage()), visible: !focusOnLowerElements,),
 
                       // Customer and Payment information page
-                      Expanded(
-                          flex: 1, child: SpecialOrderPaymentInformationPage()),
+                      Expanded(flex: 2, child: SpecialOrderPaymentInformationPage(focus: _focusPayment,)),
                     ],
                   ),
                 )),

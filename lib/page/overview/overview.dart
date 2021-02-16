@@ -37,31 +37,19 @@ class _OverViewPageState extends State<OverViewPage> {
                       getStat: getTotalOrderCount(),
                     ),
                     StatisticsCard(
-                      Statistics(
-                          title: "Cusotmers",
-                          subTitle: "total customers",
-                          iconData: Icons.supervisor_account),
+                      Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account),
                       getStat: getCustomerCount(),
                     ),
                     StatisticsCard(
-                      Statistics(
-                          title: "Returned Orders",
-                          subTitle: "total returned orders",
-                          iconData: Icons.assignment_return),
+                      Statistics(title: "Returned Orders", subTitle: "total returned orders", iconData: Icons.assignment_return),
                       getStat: getTotalReturnedOrdersCount(),
                     ),
                     StatisticsCard(
-                      Statistics(
-                          title: "Punch in",
-                          subTitle: "total punch in",
-                          iconData: Icons.arrow_back),
+                      Statistics(title: "Punch in", subTitle: "total punch in", iconData: Icons.arrow_back),
                       getStat: getPunchInCount(),
                     ),
                     StatisticsCard(
-                      Statistics(
-                          title: "Punch out",
-                          subTitle: "total punch out",
-                          iconData: Icons.arrow_forward),
+                      Statistics(title: "Punch out", subTitle: "total punch out", iconData: Icons.arrow_forward),
                       getStat: getPunchOutCount(),
                     ),
                   ],
@@ -113,16 +101,14 @@ class _OverViewPageState extends State<OverViewPage> {
   Future<num> getPunchInCount() async {
     String where = "${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_IN]; //
-    List<Punch> punches =
-        await PunchDAL.find(where: where, whereArgs: whereArgs);
+    List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;
   }
 
   Future<num> getPunchOutCount() async {
     String where = "${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_OUT]; //
-    List<Punch> punches =
-        await PunchDAL.find(where: where, whereArgs: whereArgs);
+    List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;
   }
 

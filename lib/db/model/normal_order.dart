@@ -74,6 +74,8 @@ class NormalOrder with ChangeNotifier {
     if (remainingPayment == 0) {
       this.paidInFull = true;
       this.advancePayment = this.totalAmount;
+    }else{
+      this.paidInFull = false;
     }
     notifyListeners();
   }
@@ -85,11 +87,8 @@ class NormalOrder with ChangeNotifier {
         : {
             ID: normalOrder.id,
             ID_FS: normalOrder.idFS,
-
-            // todo : change begin
             EMPLOYEE: normalOrder.employee == null ? null : normalOrder.employee.id,
-            CUSTOMER: normalOrder.customer.id,
-            // todo : change end
+            CUSTOMER: normalOrder.customer == null ? null : normalOrder.customer.id,
             PRODUCTS: jsonEncode(Product.toMapList(normalOrder.products)),
             TOTAL_AMOUNT: normalOrder.totalAmount,
             ADVANCE_PAYMENT: normalOrder.advancePayment,
@@ -97,18 +96,13 @@ class NormalOrder with ChangeNotifier {
             PAID_IN_FULL: normalOrder.paidInFull,
             STATUS: normalOrder.status,
             USER_NOTIFIED: normalOrder.userNotified,
-            FIRST_MODIFIED: normalOrder.firstModified == null
-                ? DateTime.now().toIso8601String()
-                : normalOrder.firstModified.toIso8601String(),
-            LAST_MODIFIED: normalOrder.lastModified == null
-                ? DateTime.now().toIso8601String()
-                : normalOrder.lastModified.toIso8601String()
+            FIRST_MODIFIED: normalOrder.firstModified == null ? DateTime.now().toIso8601String() : normalOrder.firstModified.toIso8601String(),
+            LAST_MODIFIED: normalOrder.lastModified == null ? DateTime.now().toIso8601String() : normalOrder.lastModified.toIso8601String()
           };
   }
 
   /// Converts Map to Model
-  static Future<NormalOrder> toModel(dynamic map) async{
-
+  static Future<NormalOrder> toModel(dynamic map) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgsEmployee = [Personnel.toModel(map[EMPLOYEE]).id]; // Querying employee by id
     List<String> whereArgsCustomer = [Personnel.toModel(map[CUSTOMER]).id]; // Querying customer by id
@@ -120,8 +114,8 @@ class NormalOrder with ChangeNotifier {
         : NormalOrder(
             id: map[ID],
             idFS: map[ID_FS],
-            employee: employees.first,
-            customer: customers.first,
+            employee: employees.isEmpty ? null : employees.first,
+            customer: customers.isEmpty ? null : customers.first,
             products: Product.toModelList(jsonDecode(map[PRODUCTS])),
             totalAmount: map[TOTAL_AMOUNT],
             advancePayment: map[ADVANCE_PAYMENT],
@@ -134,10 +128,9 @@ class NormalOrder with ChangeNotifier {
   }
 
   /// Changes List of Map to List of Model
-  static Future<List<NormalOrder>> toModelList(List<dynamic> maps) async{
+  static Future<List<NormalOrder>> toModelList(List<dynamic> maps) async {
     List<NormalOrder> modelList = [];
-    maps.forEach((dynamic map) async{
-
+    maps.forEach((dynamic map) async {
       modelList.add(await toModel(map));
     });
     return modelList;

@@ -17,10 +17,12 @@ class SpecialOrderMainPageState extends State<SpecialOrderMainPage> {
   static const String PENDING = "Pending"; // values not translatables
   static const String COMPLETED = "Completed"; // value not translatable
   static const String DELIVERED = "Delivered"; // value not translatable
-  SpecialOrder specialOrder = SpecialOrder(totalAmount: 0, products: []);
+  SpecialOrder specialOrder = SpecialOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, products: []);
 
   @override
   Widget build(BuildContext context) {
+
+    print("from special order / main : ${specialOrder.remainingPayment}");
     return Container(
         child: currentPage == PAGE_CREATE_SPECIAL_ORDER
             ? SpecialOrderCreateMainPage(
@@ -34,8 +36,7 @@ class SpecialOrderMainPageState extends State<SpecialOrderMainPage> {
     setState(() {
       currentPage = pageName;
       if (passedSpecialOrder != null) {
-        specialOrder =
-            passedSpecialOrder; // normal order passed for update reasons
+        specialOrder = passedSpecialOrder; // normal order passed for update reasons
       }
     });
   }

@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 
 class CustomerNotificationSettings extends StatefulWidget {
   @override
-  _CustomerNotificationSettingsState createState() =>
-      _CustomerNotificationSettingsState();
+  _CustomerNotificationSettingsState createState() => _CustomerNotificationSettingsState();
 }
 
-class _CustomerNotificationSettingsState
-    extends State<CustomerNotificationSettings> {
+class _CustomerNotificationSettingsState extends State<CustomerNotificationSettings> {
   CSharedPreference cSharedPreference = CSharedPreference();
 
   @override
@@ -19,10 +17,7 @@ class _CustomerNotificationSettingsState
             width: double.infinity,
             child: Text(
               "Customer Notifications",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800),
+              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
             ),
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             color: Colors.black45),
@@ -40,8 +35,7 @@ class _CustomerNotificationSettingsState
                         value: cSharedPreference.sendNotificationAutomatically,
                         onChanged: (bool) {
                           setState(() {
-                            cSharedPreference.sendNotificationAutomatically =
-                                bool;
+                            cSharedPreference.sendNotificationAutomatically = bool;
                           });
                         }),
                     SizedBox(

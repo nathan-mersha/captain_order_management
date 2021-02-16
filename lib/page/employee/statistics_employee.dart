@@ -9,11 +9,7 @@ class StatisticsEmployeeView extends StatefulWidget {
   final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
   final GlobalKey<EmployeeTableState> employeeTableKey;
 
-  const StatisticsEmployeeView(
-      {this.employeeTableKey,
-      this.createEmployeeKey,
-      this.statisticsEmployeeKey})
-      : super(key: statisticsEmployeeKey);
+  const StatisticsEmployeeView({this.employeeTableKey, this.createEmployeeKey, this.statisticsEmployeeKey}) : super(key: statisticsEmployeeKey);
 
   @override
   StatisticsEmployeeViewState createState() => StatisticsEmployeeViewState();

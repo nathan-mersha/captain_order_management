@@ -33,35 +33,28 @@ class ReturnedOrderDAL {
     Map<String, dynamic> returnedOrderMapped = ReturnedOrder.toMap(returnedOrder);
     returnedOrderMapped[ReturnedOrder.EMPLOYEE] = returnedOrder.employee == null ? null : returnedOrder.employee.id;
     returnedOrderMapped[ReturnedOrder.CUSTOMER] = returnedOrder.customer == null ? null : returnedOrder.customer.id;
-    
+
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, returnedOrderMapped,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, returnedOrderMapped, conflictAlgorithm: ConflictAlgorithm.replace);
     return returnedOrder;
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<List<ReturnedOrder>> find(
-      {String where, dynamic whereArgs}) async {
+  static Future<List<ReturnedOrder>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db
-            .query(TABLE_NAME, orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME,
-            where: where,
-            whereArgs: whereArgs,
-            orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC");
-
+        ? await global.db.query(TABLE_NAME, orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${ReturnedOrder.LAST_MODIFIED} DESC");
 
     List<ReturnedOrder> parsedList = [];
     final c = new Completer<List<ReturnedOrder>>();
-    
-    maps.forEach((Map<String, dynamic> element) async{
+
+    maps.forEach((Map<String, dynamic> element) async {
       ReturnedOrder returnedOrder = ReturnedOrder(
         id: element[ReturnedOrder.ID],
         idFS: element[ReturnedOrder.ID_FS],
-        employee :  await NormalOrderDAL.getPersonnel(element[ReturnedOrder.EMPLOYEE]),
-        customer :  await NormalOrderDAL.getPersonnel(element[ReturnedOrder.CUSTOMER]),
+        employee: await NormalOrderDAL.getPersonnel(element[ReturnedOrder.EMPLOYEE]),
+        customer: await NormalOrderDAL.getPersonnel(element[ReturnedOrder.CUSTOMER]),
         product: Product.toModel(jsonDecode(element[ReturnedOrder.PRODUCT])),
         count: element[ReturnedOrder.COUNT],
         note: element[ReturnedOrder.NOTE],
@@ -69,22 +62,24 @@ class ReturnedOrderDAL {
         lastModified: DateTime.parse(element[ReturnedOrder.LAST_MODIFIED]),
       );
       parsedList.add(returnedOrder);
-      if(maps.length == parsedList.length){
+      if (maps.length == parsedList.length) {
         c.complete(parsedList);
       }
     });
 
     return c.future;
-   
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update(
-      {String where, dynamic whereArgs, ReturnedOrder returnedOrder}) async {
+  static Future<void> update({String where, dynamic whereArgs, ReturnedOrder returnedOrder}) async {
     returnedOrder.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, ReturnedOrder.toMap(returnedOrder),
-        where: where, whereArgs: whereArgs);
+
+    Map<String, dynamic> returnedOrderMapped = ReturnedOrder.toMap(returnedOrder);
+    returnedOrderMapped[ReturnedOrder.EMPLOYEE] = returnedOrder.employee == null ? null : returnedOrder.employee.id;
+    returnedOrderMapped[ReturnedOrder.CUSTOMER] = returnedOrder.customer == null ? null : returnedOrder.customer.id;
+
+    await global.db.update(TABLE_NAME, returnedOrderMapped, where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

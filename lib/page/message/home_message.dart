@@ -8,8 +8,7 @@ class HomeMessagePage extends StatefulWidget {
   HomeMessagePageState createState() => HomeMessagePageState();
 }
 
-class HomeMessagePageState extends State<HomeMessagePage>
-    with SingleTickerProviderStateMixin {
+class HomeMessagePageState extends State<HomeMessagePage> with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<MessageTableState> messageTableKey = GlobalKey();
   GlobalKey<CreateMessageViewState> createMessageKey = GlobalKey();

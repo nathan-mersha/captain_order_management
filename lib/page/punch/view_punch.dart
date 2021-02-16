@@ -13,9 +13,7 @@ class PunchTable extends StatefulWidget {
   final GlobalKey<StatisticsPunchViewState> statisticsPunchKey;
   final GlobalKey<PunchTableState> punchTableKey;
 
-  const PunchTable(
-      {this.punchTableKey, this.createPunchKey, this.statisticsPunchKey})
-      : super(key: punchTableKey);
+  const PunchTable({this.punchTableKey, this.createPunchKey, this.statisticsPunchKey}) : super(key: punchTableKey);
 
   @override
   PunchTableState createState() => PunchTableState();
@@ -61,8 +59,7 @@ class PunchTableState extends State<PunchTable> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<Punch> punchs = snapshot.data as List<Punch>;
-                  _PunchDataSource _punchDataSourceVal =
-                      _PunchDataSource(context, punchs, () {
+                  _PunchDataSource _punchDataSourceVal = _PunchDataSource(context, punchs, () {
                     setState(() {
                       // updating table here.
                     });
@@ -121,19 +118,12 @@ class PunchTableState extends State<PunchTable> {
                               ),
                               Text(
                                 "Loading punchs",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Theme.of(context).accentColor),
+                                style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
                               )
                             ],
                           ),
                     rowsPerPage: _rowsPerPage,
-                    availableRowsPerPage: <int>[
-                      _rowsPerPage,
-                      _rowsPerPage * 2,
-                      _rowsPerPage * 5,
-                      _rowsPerPage * 10
-                    ],
+                    availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
                     onRowsPerPageChanged: (value) {
                       setState(() {
                         _rowsPerPage = value;
@@ -147,8 +137,7 @@ class PunchTableState extends State<PunchTable> {
                         label: Text("Employee"),
                         onSort: (columnIndex, ascending) {
                           employeeSortAscending = !employeeSortAscending;
-                          return _sort<String>((d) => d.employee.name,
-                              columnIndex, employeeSortAscending);
+                          return _sort<String>((d) => d.employee.name, columnIndex, employeeSortAscending);
                         },
                       ),
                       DataColumn(
@@ -158,24 +147,21 @@ class PunchTableState extends State<PunchTable> {
                         label: Text("Type"),
                         onSort: (columnIndex, ascending) {
                           typeSortAscending = !typeSortAscending;
-                          return _sort<String>(
-                              (d) => d.type, columnIndex, typeSortAscending);
+                          return _sort<String>((d) => d.type, columnIndex, typeSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Weight (gm)"),
                         onSort: (columnIndex, ascending) {
                           weightSortAscending = !weightSortAscending;
-                          return _sort<num>((d) => d.weight, columnIndex,
-                              weightSortAscending);
+                          return _sort<num>((d) => d.weight, columnIndex, weightSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Date"),
                         onSort: (columnIndex, ascending) {
                           dateSortAscending = !dateSortAscending;
-                          return _sort<DateTime>((d) => d.firstModified,
-                              columnIndex, dateSortAscending);
+                          return _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
                         },
                       ),
                       DataColumn(
@@ -200,8 +186,7 @@ class _PunchDataSource extends DataTableSource {
   final GlobalKey<CreatePunchViewState> createPunchKey;
   int _selectedCount = 0;
 
-  _PunchDataSource(
-      this.context, this.punchs, this.updateTable, this.createPunchKey) {
+  _PunchDataSource(this.context, this.punchs, this.updateTable, this.createPunchKey) {
     originalBatch = List.from(punchs);
   }
 
@@ -209,17 +194,14 @@ class _PunchDataSource extends DataTableSource {
     punchs.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      return ascending
-          ? Comparable.compare(aValue, bValue)
-          : Comparable.compare(bValue, aValue);
+      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
 
   void _search(String searchInput) {
     punchs = List.from(originalBatch); // Restoring punches from original batch
-    punchs.retainWhere((Punch p) =>
-        p.product.name.toLowerCase().contains(searchInput.toLowerCase()));
+    punchs.retainWhere((Punch p) => p.product.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
   }
 
@@ -231,10 +213,7 @@ class _PunchDataSource extends DataTableSource {
         children: [
           Row(
             children: [
-              product.isGallonBased
-                  ? Icon(Icons.check_circle,
-                      size: 9, color: Theme.of(context).primaryColorLight)
-                  : Container(),
+              product.isGallonBased ? Icon(Icons.check_circle, size: 9, color: Theme.of(context).primaryColorLight) : Container(),
               SizedBox(
                 width: 5,
               ),
@@ -275,13 +254,9 @@ class _PunchDataSource extends DataTableSource {
         DataCell(Row(
           children: [
             Icon(
-              punch.type == CreatePunchViewState.PUNCH_IN
-                  ? Icons.arrow_back
-                  : Icons.arrow_forward,
+              punch.type == CreatePunchViewState.PUNCH_IN ? Icons.arrow_back : Icons.arrow_forward,
               size: 15,
-              color: punch.type == CreatePunchViewState.PUNCH_IN
-                  ? Colors.red
-                  : Colors.green,
+              color: punch.type == CreatePunchViewState.PUNCH_IN ? Colors.red : Colors.green,
             ),
             SizedBox(
               width: 10,
@@ -326,20 +301,17 @@ class _PunchDataSource extends DataTableSource {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear,
-                      size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message:
-                  "Are you sure you want to delete punch of\n${punch.employee.name}",
+              message: "Are you sure you want to delete punch of\n${punch.employee.name}",
               onYes: () async {
                 // Delete punch here.
 
                 String where = "${Punch.ID} = ?";
                 List<String> whereArgs = [punch.id]; // Querying only punchs
 
-                List<Punch> deletePunchList =
-                    await PunchDAL.find(where: where, whereArgs: whereArgs);
+                List<Punch> deletePunchList = await PunchDAL.find(where: where, whereArgs: whereArgs);
 
                 await PunchDAL.delete(where: where, whereArgs: whereArgs);
 

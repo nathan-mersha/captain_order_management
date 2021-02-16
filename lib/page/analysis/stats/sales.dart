@@ -62,9 +62,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                salesData[0].personnel.name, salesData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(salesData[0].personnel.name, salesData[0].count)),
       ),
     ));
   }
@@ -96,8 +94,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
         id: 'Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (SalesAnalysisModel val, _) => val.personnel.name,
         measureFn: (SalesAnalysisModel val, _) => val.totalAmount,
@@ -109,8 +106,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -127,8 +123,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                     return ListTile(
                       title: Text(
                         salesData[index].personnel.name,
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w800),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
                       ),
                       subtitle: Text(
                         "${salesData[index].personnel.phoneNumber}",
@@ -144,8 +139,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                           ),
                           Text(
                             "${salesData[index].count.toStringAsFixed(0)} times",
-                            style:
-                                TextStyle(fontSize: 11, color: Colors.black38),
+                            style: TextStyle(fontSize: 11, color: Colors.black38),
                           ),
                         ],
                       ),
@@ -154,21 +148,29 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
-                          SizedBox(width: 7,), // todo : change
-                        salesData[index].personnel.profileImage == null
-                            ? Icon(
-                          Icons.person_outline_rounded,
-                          color: Colors.black54,
-                        )
-                            : ClipOval(
-                            child: Image.file(
-                              File(salesData[index].personnel.profileImage),
-                              fit: BoxFit.cover,
-                              height: 30,
-                              width: 30,
-                            ))
-                      ],),
+                          Text(
+                            "${currentIndex.toString()}.",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ), // todo : change
+                          SizedBox(
+                            width: 7,
+                          ), // todo : change
+                          salesData[index].personnel.profileImage == null
+                              ? Icon(
+                                  Icons.person_outline_rounded,
+                                  color: Colors.black54,
+                                )
+                              : ClipOval(
+                                  child: Image.file(
+                                  File(salesData[index].personnel.profileImage),
+                                  fit: BoxFit.cover,
+                                  height: 30,
+                                  width: 30,
+                                ))
+                        ],
+                      ),
                       dense: true,
                     );
                   },
@@ -192,20 +194,15 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
 
       /// Customer does not exist
       if (index == -1) {
-        SalesAnalysisModel colorAnalysisModelNew = SalesAnalysisModel(
-            personnel: normalOrder.customer,
-            count: 1,
-            totalAmount: normalOrder.totalAmount);
+        SalesAnalysisModel colorAnalysisModelNew =
+            SalesAnalysisModel(personnel: normalOrder.customer, count: 1, totalAmount: normalOrder.totalAmount);
         salesData.add(colorAnalysisModelNew);
       }
 
       /// Product already exists in the analysis data
       else {
         SalesAnalysisModel colorAnalysisModelNew = SalesAnalysisModel(
-            personnel: normalOrder.customer,
-            count: salesData[index].count + 1,
-            totalAmount:
-                salesData[index].totalAmount + normalOrder.totalAmount);
+            personnel: normalOrder.customer, count: salesData[index].count + 1, totalAmount: salesData[index].totalAmount + normalOrder.totalAmount);
 
         // Removing and re-inserting data
         salesData.removeAt(index);

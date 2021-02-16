@@ -82,12 +82,8 @@ class ProductInputPageState extends State<ProductInputPage> {
   Future<bool> _assignPersonnelData() async {
     // Assigning employees data.
     String wherePersonnel = "${Personnel.TYPE} = ?";
-    List<String> whereArgsCustomers = [
-      Personnel.CUSTOMER
-    ]; // Querying only customers
-    _customers = await PersonnelDAL.find(
-        where: wherePersonnel,
-        whereArgs: whereArgsCustomers); // Assign customers
+    List<String> whereArgsCustomers = [Personnel.CUSTOMER]; // Querying only customers
+    _customers = await PersonnelDAL.find(where: wherePersonnel, whereArgs: whereArgsCustomers); // Assign customers
     setState(() {});
     return true;
   }
@@ -102,12 +98,8 @@ class ProductInputPageState extends State<ProductInputPage> {
   Widget build(BuildContext context) {
     specialOrder = Provider.of<SpecialOrder>(context);
 
-    if (specialOrder.customer != null &&
-        specialOrder.customer.name != null &&
-        specialOrder.customer.name.isNotEmpty) {
-      _customerController.text = specialOrder.customer.name.length > 17
-          ? specialOrder.customer.name.substring(0, 17)
-          : specialOrder.customer.name;
+    if (specialOrder.customer != null && specialOrder.customer.name != null && specialOrder.customer.name.isNotEmpty) {
+      _customerController.text = specialOrder.customer.name.length > 17 ? specialOrder.customer.name.substring(0, 17) : specialOrder.customer.name;
     }
     return WillPopScope(
         child: Container(
@@ -120,23 +112,16 @@ class ProductInputPageState extends State<ProductInputPage> {
                     child: Card(
                       margin: EdgeInsets.all(0),
                       color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              topRight: Radius.circular(5))),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
                               "Paint Order - ${specialOrder.products.length.toString()}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800),
+                              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                             ),
                             SizedBox(
                               height: 25,
@@ -158,12 +143,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                                         lastModified: specialOrder.lastModified,
                                         context: context);
                                   } else {
-                                    CNotifications.showSnackBar(
-                                        context,
-                                        "No customer has been selected",
-                                        "ok",
-                                        () {},
-                                        backgroundColor: Colors.red);
+                                    CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                                   }
                                 },
                               ),
@@ -225,19 +205,14 @@ class ProductInputPageState extends State<ProductInputPage> {
                 // don't need to validate form as the corresponding product type form already do.
                 if (specialOrder.products.length == 0) {
                   // No products added
-                  CNotifications.showSnackBar(context,
-                      "No products have been added in cart", "ok", () {},
-                      backgroundColor: Colors.red);
+                  CNotifications.showSnackBar(context, "No products have been added in cart", "ok", () {}, backgroundColor: Colors.red);
                 } else if (specialOrder.customer == null) {
                   // No customer added
-                  CNotifications.showSnackBar(
-                      context, "No customer has been selected", "ok", () {},
-                      backgroundColor: Colors.red);
+                  CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                 } else {
                   // Everything seems ok
                   SpecialOrderDAL.create(specialOrder).then((value) {
-                    widget.navigateTo(
-                        SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
+                    widget.navigateTo(SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
                   });
                 }
               },
@@ -248,41 +223,31 @@ class ProductInputPageState extends State<ProductInputPage> {
                 RaisedButton(
                     child: Text(
                       "Update",
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
                     ),
                     onPressed: () async {
                       if (specialOrder.products.length == 0) {
                         // No products added
-                        CNotifications.showSnackBar(context,
-                            "No products have been added in cart", "ok", () {},
-                            backgroundColor: Colors.red);
+                        CNotifications.showSnackBar(context, "No products have been added in cart", "ok", () {}, backgroundColor: Colors.red);
                       } else if (specialOrder.customer == null) {
                         // No customer added
-                        CNotifications.showSnackBar(context,
-                            "No customer has been selected", "ok", () {},
-                            backgroundColor: Colors.red);
+                        CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                       } else {
                         setState(() {
                           _doingCRUD = true;
                         });
 
                         await updateSpecialOrder(context);
-                        widget.navigateTo(
-                            SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
+                        widget.navigateTo(SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
                       }
                     }),
                 OutlineButton(
                   child: Text(
                     "Cancel",
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: Theme.of(context).accentColor),
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
                   ),
                   onPressed: () {
-                    widget.navigateTo(
-                        SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
+                    widget.navigateTo(SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
                   },
                 ),
               ],
@@ -310,11 +275,7 @@ class ProductInputPageState extends State<ProductInputPage> {
     }
 
     // Showing notification
-    CNotifications.showSnackBar(
-        context,
-        "Successfully updated : ${specialOrder.customer.name}",
-        "success",
-        () {},
+    CNotifications.showSnackBar(context, "Successfully updated : ${specialOrder.customer.name}", "success", () {},
         backgroundColor: Theme.of(context).accentColor);
   }
 
@@ -341,11 +302,7 @@ class ProductInputPageState extends State<ProductInputPage> {
 
   Widget buildForm() {
     return Container(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          right: 30,
-          left: 30,
-          top: 10),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 30, left: 30, top: 10),
       child: Form(
           key: _paintOrderFormKey,
           child: SingleChildScrollView(
@@ -357,9 +314,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                       maxLines: 1,
                       decoration: InputDecoration(
                           hintText: "customer name",
-                          icon: specialOrder == null ||
-                                  specialOrder.customer == null ||
-                                  specialOrder.customer.profileImage == null
+                          icon: specialOrder == null || specialOrder.customer == null || specialOrder.customer.profileImage == null
                               ? Icon(
                                   Icons.person_pin,
                                   color: Colors.black12,
@@ -375,8 +330,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                                 ))),
                   suggestionsCallback: (pattern) async {
                     return _customers.where((Personnel customer) {
-                      return customer.name.toLowerCase().startsWith(
-                          pattern.toLowerCase()); // Apples to apples
+                      return customer.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
                     });
                   },
                   itemBuilder: (context, Personnel suggestedCustomer) {
@@ -408,8 +362,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   },
                   noItemsFoundBuilder: (BuildContext context) {
                     return Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
                       child: Text(
                         "No customer found",
                       ),
@@ -427,9 +380,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                       controller: _paintController,
                       maxLines: 1,
                       decoration: InputDecoration(
-                          errorText: _noPaintValue
-                              ? "Product value is required"
-                              : null,
+                          errorText: _noPaintValue ? "Product value is required" : null,
                           hintText: "Select product",
                           labelText: "Product",
                           icon: Icon(
@@ -440,13 +391,11 @@ class ProductInputPageState extends State<ProductInputPage> {
                                     _currentOnEditPaint.colorValue == null ||
                                     _currentOnEditPaint.colorValue == "-"
                                 ? Colors.black12
-                                : Color(
-                                    int.parse(_currentOnEditPaint.colorValue)),
+                                : Color(int.parse(_currentOnEditPaint.colorValue)),
                           ))),
                   suggestionsCallback: (pattern) async {
                     return _paints.where((Product paint) {
-                      return paint.name.toLowerCase().startsWith(
-                          pattern.toLowerCase()); // Apples to apples
+                      return paint.name.toLowerCase().startsWith(pattern.toLowerCase()); // Apples to apples
                     });
                   },
                   itemBuilder: (context, Product suggestedPaint) {
@@ -454,16 +403,12 @@ class ProductInputPageState extends State<ProductInputPage> {
                       dense: true,
                       leading: Icon(Icons.circle,
                           size: 30,
-                          color: suggestedPaint.colorValue != null &&
-                                  suggestedPaint.colorValue != "-"
+                          color: suggestedPaint.colorValue != null && suggestedPaint.colorValue != "-"
                               ? Color(int.parse(suggestedPaint.colorValue))
                               : Colors.black12),
                       title: Text(
                         suggestedPaint.name,
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w800),
+                        style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
                       ),
                     );
                   },
@@ -475,8 +420,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   },
                   noItemsFoundBuilder: (BuildContext context) {
                     return Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
                       child: Text(
                         "No paint found",
                       ),
@@ -510,8 +454,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   decoration: InputDecoration(
                       labelText: "Volume",
                       contentPadding: EdgeInsets.symmetric(vertical: 5),
-                      suffix: Text(
-                          _currentOnEditPaint.unitOfMeasurement ?? "liter")),
+                      suffix: Text(_currentOnEditPaint.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(
@@ -537,10 +480,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   onFieldSubmitted: (unitPriceValue) {
                     _currentOnEditPaint.unitPrice = num.parse(unitPriceValue);
                   },
-                  decoration: InputDecoration(
-                      labelText: "Unit price",
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
-                      suffix: Text("br")),
+                  decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br")),
                 ),
 
                 SizedBox(
@@ -560,21 +500,14 @@ class ProductInputPageState extends State<ProductInputPage> {
                             // Every thing seems good.
                             setState(() {
                               _noPaintValue = false;
-                              _currentOnEditPaint.quantityInCart =
-                                  num.parse(_volumeController.text);
+                              _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
                               specialOrder.addProduct(_currentOnEditPaint);
-                              CNotifications.showSnackBar(
-                                  context,
-                                  "Successfuly added : ${_currentOnEditPaint.name}",
-                                  "success",
-                                  () {},
-                                  backgroundColor:
-                                      Theme.of(context).accentColor);
+                              CNotifications.showSnackBar(context, "Successfully added : ${_currentOnEditPaint.name}", "success", () {},
+                                  backgroundColor: Theme.of(context).accentColor);
 
-                              _currentOnEditPaint.status =
-                                  SpecialOrderMainPageState.PENDING;
+                              _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
                               _currentOnEditPaint = Product(
-                                status: SpecialOrderMainPageState.DELIVERED,
+                                status: SpecialOrderMainPageState.PENDING,
                                 quantityInCart: 0,
                                 unitPrice: 0,
                               );
@@ -585,8 +518,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                       },
                       child: Text(
                         "add",
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor, fontSize: 12),
+                        style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
               ],

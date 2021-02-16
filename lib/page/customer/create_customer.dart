@@ -16,11 +16,7 @@ class CreateCustomerView extends StatefulWidget {
   final GlobalKey<StatisticsCustomerViewState> statisticsCustomerKey;
   final GlobalKey<CustomerTableState> customerTableKey;
 
-  const CreateCustomerView(
-      {this.customerTableKey,
-      this.createCustomerKey,
-      this.statisticsCustomerKey})
-      : super(key: createCustomerKey);
+  const CreateCustomerView({this.customerTableKey, this.createCustomerKey, this.statisticsCustomerKey}) : super(key: createCustomerKey);
 
   @override
   CreateCustomerViewState createState() => CreateCustomerViewState();
@@ -46,8 +42,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -58,28 +53,19 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${customer.id == null ? "Create" : "Update"} Customer",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    right: 20,
-                    left: 20),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -109,17 +95,13 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                           onFieldSubmitted: (nameValue) {
                             customer.name = nameValue;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Name",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Name", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
                           validator: (phoneNumberValue) {
                             if (phoneNumberValue.isEmpty) {
                               return "Phone number must not be empty";
-                            } else if (phoneNumberValue.length != 10 &&
-                                phoneNumberValue.length != 12) {
+                            } else if (phoneNumberValue.length != 10 && phoneNumberValue.length != 12) {
                               return "valid 0911234567 or 251911234567";
                             } else {
                               return null;
@@ -133,17 +115,11 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                           onFieldSubmitted: (phoneNumberValue) {
                             customer.phoneNumber = phoneNumberValue;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Phone number",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Phone number", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                              labelText: "Email",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Email", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                           controller: _emailController,
                           onChanged: (emailValue) {
                             customer.email = emailValue;
@@ -155,9 +131,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
                           clearOnSubmit: false,
-                          decoration: InputDecoration(
-                              labelText: "Address",
-                              contentPadding: EdgeInsets.all(0)),
+                          decoration: InputDecoration(labelText: "Address", contentPadding: EdgeInsets.all(0)),
                           controller: _addressController,
                           textSubmitted: (String addressValue) {
                             customer.address = addressValue;
@@ -177,9 +151,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                                   ),
                                   Text(
                                     "Address must not be empty",
-                                    style: TextStyle(
-                                        color: Colors.red.shade800,
-                                        fontSize: 12),
+                                    style: TextStyle(color: Colors.red.shade800, fontSize: 12),
                                   )
                                 ],
                               )),
@@ -192,16 +164,10 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                             customer.addressDetail = addressDetailValue;
                           },
                           controller: _addressDetailController,
-                          decoration: InputDecoration(
-                              labelText: "Address detail",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Address detail", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(
-                              labelText: "Note",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                           controller: _noteController,
                           onChanged: (noteValue) {
                             customer.note = noteValue;
@@ -260,10 +226,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                         RaisedButton(
                             child: Text(
                               "Update",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
                             ),
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -286,10 +249,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
                         OutlineButton(
                           child: Text(
                             "Cancel",
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Theme.of(context).accentColor),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
                             cleanFields();
@@ -339,9 +299,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     Personnel createdCustomer = await PersonnelDAL.create(customer);
 
     /// Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfully created : ${customer.name}", "success", () {},
-        backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfully created : ${customer.name}", "success", () {}, backgroundColor: Colors.green);
 
     createInFSAndUpdateLocally(createdCustomer);
   }
@@ -349,21 +307,18 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   Future createInFSAndUpdateLocally(Personnel customer) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [customer.id]; // Querying only customers
-    PersonnelDAL.find(where: where, whereArgs: whereArgs)
-        .then((List<Personnel> personnel) async {
+    PersonnelDAL.find(where: where, whereArgs: whereArgs).then((List<Personnel> personnel) async {
       Personnel queriedCustomer = personnel.first;
 
       /// Creating data to fire store
       dynamic customerMap = Personnel.toMap(queriedCustomer);
-      customerMap[Personnel.PROFILE_IMAGE] =
-          null; // setting profile image to null, takes too much space, and takes time uploading object
+      customerMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
 //      DocumentReference docRef = await Firestore.instance.collection(Personnel.CUSTOMER).add(customerMap);
 //      queriedCustomer.idFS = docRef.documentID;
 
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [queriedCustomer.id]; // Querying only customers
-      PersonnelDAL.update(
-          where: where, whereArgs: whereArgs, personnel: queriedCustomer);
+      PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: queriedCustomer);
     });
   }
 
@@ -371,8 +326,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     /// Query and update user
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [customer.id];
-    await PersonnelDAL.update(
-        where: where, whereArgs: whereArgs, personnel: customer);
+    await PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: customer);
 
     /// Updating contacts
     Contact contact = Contact(
@@ -388,8 +342,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
 
     /// Updating from fire store
     dynamic customerMap = Personnel.toMap(customer);
-    customerMap[Personnel.PROFILE_IMAGE] =
-        null; // setting profile image to null, takes too much space, and takes time uploading object
+    customerMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
 
     // Updating to fire store if fire store generated id is present in doc.
     if (customer.idFS != null) {
@@ -397,20 +350,16 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     }
 
     // Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfuly updated : ${customer.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfuly updated : ${customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   void _pickImage() async {
-    PickedFile file =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
       customer.profileImage = file.path;
       print("File path : ${file.path}");
       // /storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures/scaled_image_picker5090651803202677501.jpg
-      setState(
-          () {}); // not assigning profile image in set state to reduce lag.
+      setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
 
@@ -469,8 +418,7 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
   void passForUpdate(Personnel customerUpdateData) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [customerUpdateData.id]; // Querying only customers
-    List<Personnel> personnel =
-        await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+    List<Personnel> personnel = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       customer = personnel.first;

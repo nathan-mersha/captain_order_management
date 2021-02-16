@@ -58,9 +58,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                manufacturerData[0].manufacturer, manufacturerData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(manufacturerData[0].manufacturer, manufacturerData[0].count)),
       ),
     ));
   }
@@ -92,8 +90,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
         id: 'Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (ManufacturerAnalysisModel val, _) => val.manufacturer ?? "-",
         measureFn: (ManufacturerAnalysisModel val, _) => val.count,
@@ -105,8 +102,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -146,15 +142,13 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
         if (product.type == CreateProductViewState.PAINT) {
           // Doing analysis for paint values only
           /// Checking if the paint exist -1 no, any other value >= 0 yes.
-          int index = manufacturerData
-              .indexWhere((ManufacturerAnalysisModel paintAnalysisModel) {
+          int index = manufacturerData.indexWhere((ManufacturerAnalysisModel paintAnalysisModel) {
             return paintAnalysisModel.manufacturer == product.manufacturer;
           });
 
           /// Product does not exist
           if (index == -1) {
-            ManufacturerAnalysisModel colorAnalysisModelNew =
-                ManufacturerAnalysisModel(
+            ManufacturerAnalysisModel colorAnalysisModelNew = ManufacturerAnalysisModel(
               manufacturer: product.manufacturer,
               count: 1,
             );
@@ -163,8 +157,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
 
           /// Product already exists in the analysis data
           else {
-            ManufacturerAnalysisModel colorAnalysisModelNew =
-                ManufacturerAnalysisModel(
+            ManufacturerAnalysisModel colorAnalysisModelNew = ManufacturerAnalysisModel(
               manufacturer: product.manufacturer,
               count: manufacturerData[index].count + 1,
             );

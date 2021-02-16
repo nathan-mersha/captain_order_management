@@ -1,6 +1,8 @@
+import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/page/special_order/main.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,18 +60,15 @@ class ProductViewPageState extends State<ProductViewPage> {
       CreateProductViewState.PIECE: "piece",
       CreateProductViewState.PACKAGE: "package"
     };
-    statusTypeValues = {
-      PENDING: "pending",
-      COMPLETED: "completed",
-      DELIVERED: "delivered"
-    };
+    statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
   }
+
+  bool allDelivered = false;
 
   @override
   Widget build(BuildContext context) {
     specialOrder = Provider.of<SpecialOrder>(context);
 
-    print("Specila ordre length : ${specialOrder.products.length}");
     return Container(
         height: 625,
         child: Card(
@@ -80,18 +79,30 @@ class ProductViewPageState extends State<ProductViewPage> {
                 child: Card(
                   margin: EdgeInsets.all(0),
                   color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5))),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    child: Text(
-                      "Other Products",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Other Products",
+                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                        ),
+                        AbsorbPointer(
+                          absorbing: specialOrder.products.isEmpty,
+                          child: Switch(
+                              value: allDelivered,
+                              onChanged: (bool changedValue) {
+                                specialOrder.products.forEach((Product product) {
+                                  product.status = changedValue ? SpecialOrderMainPageState.DELIVERED : SpecialOrderMainPageState.PENDING;
+                                });
+                                setState(() {
+                                  allDelivered = changedValue;
+                                });
+                              }),
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -164,34 +175,31 @@ class ProductViewPageState extends State<ProductViewPage> {
                         label: Container(
                       child: Text("Unit", style: dataColumnStyle()),
                     )),
-                    DataColumn(
-                        label: Container(
-                      child: Text("Maker", style: dataColumnStyle()),
-                    )),
 
                     /// Defines the paint type, auto-cryl/metalic
                     DataColumn(
                       label: Text("Unit Price", style: dataColumnStyle()),
                     ), // Defines volume of the paint in ltr
+                    DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
+
                     DataColumn(
-                        label: Text("SubTotal", style: dataColumnStyle())),
+                        label: Container(
+                      child: Text("Delivered", style: dataColumnStyle()),
+                    )),
                   ],
                   rows: specialOrder.products.map((Product otherProduct) {
                     return DataRow(cells: [
                       DataCell(SizedBox(
                         child: GestureDetector(
-                          child: otherProduct.type ==
-                                  CreateProductViewState.PAINT
+                          child: otherProduct.type == CreateProductViewState.PAINT
                               ? Row(
                                   children: [
                                     Icon(
                                       Icons.circle,
                                       size: 10,
-                                      color: otherProduct == null ||
-                                              otherProduct.colorValue == null
+                                      color: otherProduct == null || otherProduct.colorValue == null
                                           ? Colors.black12
-                                          : Color(int.parse(
-                                              otherProduct.colorValue)),
+                                          : Color(int.parse(otherProduct.colorValue)),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -199,20 +207,14 @@ class ProductViewPageState extends State<ProductViewPage> {
                                     Expanded(
                                       child: Text(
                                         otherProduct.name ?? "-",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color:
-                                                Theme.of(context).primaryColor),
-//                              overflow: TextOverflow.fade,
+                                        style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
                                       ),
                                     )
                                   ],
                                 )
                               : Text(
                                   otherProduct.name ?? "-",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Theme.of(context).primaryColor),
+                                  style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
                                 ),
                           onLongPress: () {
                             removePaintProductFromCart(otherProduct);
@@ -222,8 +224,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                       )),
                       DataCell(GestureDetector(
                         child: Container(
-                          child: Text(otherProduct.quantityInCart.toString(),
-                              style: dataCellStyle()),
+                          child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
                         ),
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
@@ -231,24 +232,22 @@ class ProductViewPageState extends State<ProductViewPage> {
                       )),
                       DataCell(GestureDetector(
                         child: Container(
-                          child: Text(otherProduct.unitOfMeasurement.toString(),
-                              style: dataCellStyle()),
+                          child: Text(otherProduct.unitOfMeasurement.toString(), style: dataCellStyle()),
                         ),
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
                         },
                       )),
-                      DataCell(Text(
-                          otherProduct.manufacturer != null &&
-                                  otherProduct.manufacturer.isNotEmpty
-                              ? otherProduct.manufacturer
-                              : "-",
-                          style: dataCellStyle())),
-                      DataCell(Text("${oCCy.format(otherProduct.unitPrice)} br",
-                          style: dataCellStyle())),
-                      DataCell(Text(
-                          "${oCCy.format(otherProduct.calculateSubTotal())} br",
-                          style: dataCellStyle())),
+                      DataCell(Text("${oCCy.format(otherProduct.unitPrice)} br", style: dataCellStyle())),
+                      DataCell(Text("${oCCy.format(otherProduct.calculateSubTotal())} br", style: dataCellStyle())),
+                      DataCell(Switch(
+                        value: otherProduct.status == SpecialOrderMainPageState.DELIVERED,
+                        onChanged: (bool changedValue) {
+                          setState(() {
+                            otherProduct.status = changedValue ? SpecialOrderMainPageState.DELIVERED : SpecialOrderMainPageState.PENDING;
+                          });
+                        },
+                      ))
                     ]);
                   }).toList(),
                 )
@@ -274,8 +273,7 @@ class ProductViewPageState extends State<ProductViewPage> {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear,
-                      size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
               message: "Are you sure you want to delete \n${otherProduct.name}",
@@ -286,12 +284,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                 setState(() {
                   specialOrder.removeProduct(otherProduct);
                 });
-                CNotifications.showSnackBar(
-                    context,
-                    "Successfuly removed ${otherProduct.name}",
-                    "success",
-                    () {},
-                    backgroundColor: Colors.red);
+                CNotifications.showSnackBar(context, "Successfully removed ${otherProduct.name}", "success", () {}, backgroundColor: Colors.red);
 
                 return null;
               },

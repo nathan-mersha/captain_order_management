@@ -32,10 +32,9 @@ class PunchDAL {
 
     Map<String, dynamic> punchMapped = Punch.toMap(punch);
     punchMapped[Punch.EMPLOYEE] = punch.employee == null ? null : punch.employee.id;
-    
+
     // Get a reference to the database.
-    await global.db.insert(TABLE_NAME, punchMapped,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await global.db.insert(TABLE_NAME, punchMapped, conflictAlgorithm: ConflictAlgorithm.replace);
     return punch;
   }
 
@@ -43,21 +42,17 @@ class PunchDAL {
   /// whereArgs : [2]
   static Future<List<Punch>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db
-            .query(TABLE_NAME, orderBy: "${Punch.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME,
-            where: where,
-            whereArgs: whereArgs,
-            orderBy: "${Punch.LAST_MODIFIED} DESC");
+        ? await global.db.query(TABLE_NAME, orderBy: "${Punch.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Punch.LAST_MODIFIED} DESC");
 
     List<Punch> parsedList = [];
     final c = new Completer<List<Punch>>();
 
-    maps.forEach((Map<String, dynamic> element) async{ 
+    maps.forEach((Map<String, dynamic> element) async {
       Punch punch = Punch(
         id: element[Punch.ID],
         idFS: element[Punch.ID_FS],
-        employee : await NormalOrderDAL.getPersonnel(element[Personnel.EMPLOYEE]),
+        employee: await NormalOrderDAL.getPersonnel(element[Personnel.EMPLOYEE]),
         product: Product.toModel(jsonDecode(element[Punch.PRODUCT])),
         type: element[Punch.TYPE],
         weight: element[Punch.WEIGHT],
@@ -67,22 +62,23 @@ class PunchDAL {
       );
 
       parsedList.add(punch);
-      if(maps.length == parsedList.length){
+      if (maps.length == parsedList.length) {
         c.complete(parsedList);
       }
     });
 
     return c.future;
-    
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update(
-      {String where, dynamic whereArgs, Punch punch}) async {
+  static Future<void> update({String where, dynamic whereArgs, Punch punch}) async {
     punch.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, Punch.toMap(punch),
-        where: where, whereArgs: whereArgs);
+
+    Map<String, dynamic> punchMapped = Punch.toMap(punch);
+    punchMapped[Punch.EMPLOYEE] = punch.employee == null ? null : punch.employee.id;
+
+    await global.db.update(TABLE_NAME, punchMapped, where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

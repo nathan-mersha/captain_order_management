@@ -35,35 +35,26 @@ class NormalOrderDAL {
     normalOrder.lastModified = DateTime.now();
 
     // Get a reference to the database.
-    // todo : change begin
     /// Assigning customer and employee id reference than actual object
     Map<String, dynamic> normalOrderMapped = NormalOrder.toMap(normalOrder);
     normalOrderMapped[NormalOrder.CUSTOMER] = normalOrder.customer == null ? null : normalOrder.customer.id;
     normalOrderMapped[NormalOrder.EMPLOYEE] = normalOrder.employee == null ? null : normalOrder.employee.id;
-    // todo : change end
-    await global.db.insert(TABLE_NAME, normalOrderMapped, // todo : change
-        conflictAlgorithm: ConflictAlgorithm.replace);
+
+    await global.db.insert(TABLE_NAME, normalOrderMapped, conflictAlgorithm: ConflictAlgorithm.replace);
     return normalOrder;
   }
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<List<NormalOrder>> find(
-      {String where, dynamic whereArgs}) async {
+  static Future<List<NormalOrder>> find({String where, dynamic whereArgs}) async {
     final List<Map<String, dynamic>> maps = where == null
-        ? await global.db
-            .query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME,
-            where: where,
-            whereArgs: whereArgs,
-            orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
+        ? await global.db.query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
+        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
 
-    // todo : change
     List<NormalOrder> parsedList = [];
     final c = Completer<List<NormalOrder>>();
 
-    maps.forEach((Map<String, dynamic> element) async{
-      
+    maps.forEach((Map<String, dynamic> element) async {
       NormalOrder normalOrder = NormalOrder(
         id: element[NormalOrder.ID],
         idFS: element[NormalOrder.ID_FS],
@@ -81,33 +72,35 @@ class NormalOrderDAL {
       );
 
       parsedList.add(normalOrder);
-      if(maps.length == parsedList.length){
+      if (maps.length == parsedList.length) {
         c.complete(parsedList);
       }
     });
 
     return c.future;
-
   }
 
-  static Future<Personnel> getPersonnel(String id) async{
-    print("personnel id : $id");
-    if(id == null){
+  static Future<Personnel> getPersonnel(String id) async {
+    if (id == null) {
       return null;
-    }else{
+    } else {
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [id];
-      List<Personnel> personnel = await PersonnelDAL.find(where: where,whereArgs: whereArgs);
-      return personnel.first;
+      List<Personnel> personnel = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+      return personnel.length > 0 ? personnel.first : null;
     }
   }
+
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<void> update(
-      {String where, dynamic whereArgs, NormalOrder normalOrder}) async {
+  static Future<void> update({String where, dynamic whereArgs, NormalOrder normalOrder}) async {
     normalOrder.lastModified = DateTime.now();
-    await global.db.update(TABLE_NAME, NormalOrder.toMap(normalOrder),
-        where: where, whereArgs: whereArgs);
+
+    Map<String, dynamic> normalOrderMapped = NormalOrder.toMap(normalOrder);
+    normalOrderMapped[NormalOrder.CUSTOMER] = normalOrder.customer == null ? null : normalOrder.customer.id;
+    normalOrderMapped[NormalOrder.EMPLOYEE] = normalOrder.employee == null ? null : normalOrder.employee.id;
+
+    await global.db.update(TABLE_NAME, normalOrderMapped, where: where, whereArgs: whereArgs);
   }
 
   /// where : "id = ?"

@@ -16,11 +16,7 @@ class CreateEmployeeView extends StatefulWidget {
   final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
   final GlobalKey<EmployeeTableState> employeeTableKey;
 
-  const CreateEmployeeView(
-      {this.employeeTableKey,
-      this.createEmployeeKey,
-      this.statisticsEmployeeKey})
-      : super(key: createEmployeeKey);
+  const CreateEmployeeView({this.employeeTableKey, this.createEmployeeKey, this.statisticsEmployeeKey}) : super(key: createEmployeeKey);
 
   @override
   CreateEmployeeViewState createState() => CreateEmployeeViewState();
@@ -46,8 +42,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -58,28 +53,19 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${employee.id == null ? "Create" : "Update"} Employee",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    right: 20,
-                    left: 20),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -109,17 +95,13 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           onFieldSubmitted: (nameValue) {
                             employee.name = nameValue;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Name",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Name", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
                           validator: (phoneNumberValue) {
                             if (phoneNumberValue.isEmpty) {
                               return "Phone number must not be empty";
-                            } else if (phoneNumberValue.length != 10 &&
-                                phoneNumberValue.length != 12) {
+                            } else if (phoneNumberValue.length != 10 && phoneNumberValue.length != 12) {
                               return "valid 0911234567 or 251911234567";
                             } else {
                               return null;
@@ -133,17 +115,11 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                           onFieldSubmitted: (phoneNumberValue) {
                             employee.phoneNumber = phoneNumberValue;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Phone number",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Phone number", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                              labelText: "Email",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Email", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                           controller: _emailController,
                           onChanged: (emailValue) {
                             employee.email = emailValue;
@@ -155,9 +131,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         SimpleAutoCompleteTextField(
                           suggestions: AddisAbabaRegions.regions,
                           clearOnSubmit: false,
-                          decoration: InputDecoration(
-                              labelText: "Address",
-                              contentPadding: EdgeInsets.all(0)),
+                          decoration: InputDecoration(labelText: "Address", contentPadding: EdgeInsets.all(0)),
                           controller: _addressController,
                           textSubmitted: (String addressValue) {
                             employee.address = addressValue;
@@ -177,9 +151,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                                   ),
                                   Text(
                                     "Address must not be empty",
-                                    style: TextStyle(
-                                        color: Colors.red.shade800,
-                                        fontSize: 12),
+                                    style: TextStyle(color: Colors.red.shade800, fontSize: 12),
                                   )
                                 ],
                               )),
@@ -192,16 +164,10 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                             employee.addressDetail = addressDetailValue;
                           },
                           controller: _addressDetailController,
-                          decoration: InputDecoration(
-                              labelText: "Address detail",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Address detail", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(
-                              labelText: "Note",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Note", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                           controller: _noteController,
                           onChanged: (noteValue) {
                             employee.note = noteValue;
@@ -260,10 +226,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         RaisedButton(
                             child: Text(
                               "Update",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
                             ),
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -286,10 +249,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
                         OutlineButton(
                           child: Text(
                             "Cancel",
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Theme.of(context).accentColor),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
                             cleanFields();
@@ -334,9 +294,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     Personnel createdEmployee = await PersonnelDAL.create(employee);
 
     /// Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfuly created : ${employee.name}", "success", () {},
-        backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfuly created : ${employee.name}", "success", () {}, backgroundColor: Colors.green);
 
     createInFSAndUpdateLocally(createdEmployee);
   }
@@ -344,21 +302,18 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   Future createInFSAndUpdateLocally(Personnel employee) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [employee.id]; // Querying only employees
-    PersonnelDAL.find(where: where, whereArgs: whereArgs)
-        .then((List<Personnel> personnel) async {
+    PersonnelDAL.find(where: where, whereArgs: whereArgs).then((List<Personnel> personnel) async {
       Personnel queriedEmployee = personnel.first;
 
       /// Creating data to fire store
       dynamic employeeMap = Personnel.toMap(queriedEmployee);
-      employeeMap[Personnel.PROFILE_IMAGE] =
-          null; // setting profile image to null, takes too much space, and takes time uploading object
+      employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
 //      DocumentReference docRef = await Firestore.instance.collection(Personnel.EMPLOYEE).add(employeeMap);
 //      queriedEmployee.idFS = docRef.documentID;
 
       String where = "${Personnel.ID} = ?";
       List<String> whereArgs = [queriedEmployee.id]; // Querying only employees
-      PersonnelDAL.update(
-          where: where, whereArgs: whereArgs, personnel: queriedEmployee);
+      PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: queriedEmployee);
     });
   }
 
@@ -366,8 +321,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     /// Query and update user
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [employee.id];
-    await PersonnelDAL.update(
-        where: where, whereArgs: whereArgs, personnel: employee);
+    await PersonnelDAL.update(where: where, whereArgs: whereArgs, personnel: employee);
 
     /// Updating contacts
     Contact contact = Contact(
@@ -383,8 +337,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
 
     /// Updating from fire store
     dynamic employeeMap = Personnel.toMap(employee);
-    employeeMap[Personnel.PROFILE_IMAGE] =
-        null; // setting profile image to null, takes too much space, and takes time uploading object
+    employeeMap[Personnel.PROFILE_IMAGE] = null; // setting profile image to null, takes too much space, and takes time uploading object
 
     // Updating to fire store if fire store generated id is present in doc.
     if (employee.idFS != null) {
@@ -392,18 +345,14 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
     }
 
     // Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfuly updated : ${employee.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfuly updated : ${employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   void _pickImage() async {
-    PickedFile file =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
       employee.profileImage = file.path;
-      setState(
-          () {}); // not assigning profile image in set state to reduce lag.
+      setState(() {}); // not assigning profile image in set state to reduce lag.
     }
   }
 
@@ -460,8 +409,7 @@ class CreateEmployeeViewState extends State<CreateEmployeeView> {
   void passForUpdate(Personnel employeeUpdateData) async {
     String where = "${Personnel.ID} = ?";
     List<String> whereArgs = [employeeUpdateData.id]; // Querying only employees
-    List<Personnel> personnel =
-        await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+    List<Personnel> personnel = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       employee = personnel.first;

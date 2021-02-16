@@ -31,54 +31,14 @@ class _AnalysisPageState extends State<AnalysisPage> {
 
   int selectedMenuIndex = PRODUCT;
   List menus = [
-    {
-      NAME: "Returned",
-      DESCRIPTION: "Return counts of product",
-      ICON: Icons.assignment_return,
-      CHILD: ReturnedOrderAnalysis()
-    },
-    {
-      NAME: "Color",
-      DESCRIPTION: "Color codes by sale",
-      ICON: Icons.color_lens,
-      CHILD: ColorAnalysis()
-    },
-    {
-      NAME: "Product",
-      DESCRIPTION: "Which product is being sold",
-      ICON: Icons.business_center,
-      CHILD: ProductAnalysis()
-    },
-    {
-      NAME: "Employee",
-      DESCRIPTION: "Employees grade by returns",
-      ICON: Icons.person,
-      CHILD: EmployeeAnalysis()
-    },
-    {
-      NAME: "Maker",
-      DESCRIPTION: "Sales by manufacturer",
-      ICON: Icons.precision_manufacturing_outlined,
-      CHILD: ManufacturerAnalysis()
-    },
-    {
-      NAME: "Customer",
-      DESCRIPTION: "Customers by address",
-      ICON: Icons.supervisor_account,
-      CHILD: CustomerAnalysis()
-    },
-    {
-      NAME: "Punch",
-      DESCRIPTION: "Punch in/out by employee",
-      ICON: Icons.call_split,
-      CHILD: PunchAnalysis()
-    },
-    {
-      NAME: "Sales",
-      DESCRIPTION: "Customers are buying products",
-      ICON: Icons.supervisor_account,
-      CHILD: SalesAnalysis()
-    },
+    {NAME: "Returned", DESCRIPTION: "Return counts of product", ICON: Icons.assignment_return, CHILD: ReturnedOrderAnalysis()},
+    {NAME: "Color", DESCRIPTION: "Color codes by sale", ICON: Icons.color_lens, CHILD: ColorAnalysis()},
+    {NAME: "Product", DESCRIPTION: "Which product is being sold", ICON: Icons.business_center, CHILD: ProductAnalysis()},
+    {NAME: "Employee", DESCRIPTION: "Employees grade by returns", ICON: Icons.person, CHILD: EmployeeAnalysis()},
+    {NAME: "Maker", DESCRIPTION: "Sales by manufacturer", ICON: Icons.precision_manufacturing_outlined, CHILD: ManufacturerAnalysis()},
+    {NAME: "Customer", DESCRIPTION: "Customers by address", ICON: Icons.supervisor_account, CHILD: CustomerAnalysis()},
+    {NAME: "Punch", DESCRIPTION: "Punch in/out by employee", ICON: Icons.call_split, CHILD: PunchAnalysis()},
+    {NAME: "Sales", DESCRIPTION: "Customers are buying products", ICON: Icons.supervisor_account, CHILD: SalesAnalysis()},
   ];
 
   @override
@@ -93,8 +53,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
               child: Container(
                 child: GridView.builder(
                   scrollDirection: Axis.vertical,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
                   itemCount: menus.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
@@ -105,9 +64,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                       },
                       child: Card(
                         elevation: isSelected(index) ? 3 : 0.5,
-                        color: isSelected(index)
-                            ? Theme.of(context).primaryColor
-                            : Colors.white,
+                        color: isSelected(index) ? Theme.of(context).primaryColor : Colors.white,
                         child: Container(
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,39 +76,27 @@ class _AnalysisPageState extends State<AnalysisPage> {
                                     menus[index][NAME],
                                     style: TextStyle(
                                         fontSize: isSelected(index) ? 13 : 12,
-                                        color: isSelected(index)
-                                            ? Colors.white
-                                            : Theme.of(context).primaryColor,
-                                        fontWeight: isSelected(index)
-                                            ? FontWeight.w600
-                                            : FontWeight.w200),
+                                        color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
+                                        fontWeight: isSelected(index) ? FontWeight.w600 : FontWeight.w200),
                                   ),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         menus[index][DESCRIPTION],
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: isSelected(index)
-                                                ? Colors.white
-                                                : Colors.black54),
+                                        style: TextStyle(fontSize: 10, color: isSelected(index) ? Colors.white : Colors.black54),
                                         textAlign: TextAlign.left,
                                       ),
                                     ],
                                   )
                                 ],
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               )),
                               Icon(
                                 menus[index][ICON],
                                 size: isSelected(index) ? 21 : 15,
-                                color: isSelected(index)
-                                    ? Colors.white
-                                    : Theme.of(context).primaryColor,
+                                color: isSelected(index) ? Colors.white : Theme.of(context).primaryColor,
                               )
                             ],
                           ),

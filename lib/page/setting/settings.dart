@@ -34,24 +34,9 @@ class _SettingsPageState extends State<SettingsPage> {
   int selectedMenuIndex = LOCK_FEATURES;
 
   List menus = [
-    {
-      NAME: "Admin Features",
-      ICON: Icons.security,
-      DESCRIPTION: "lock the features available only for admin",
-      CHILD: LockFeaturesSettings()
-    },
-    {
-      NAME: "Theme",
-      ICON: Icons.style,
-      DESCRIPTION: "change styling of your application",
-      CHILD: ThemeSettings()
-    },
-    {
-      NAME: "Main Password",
-      ICON: Icons.lock_rounded,
-      DESCRIPTION: "set main password to lock the application",
-      CHILD: MainPasswordSettings()
-    },
+    {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
+    {NAME: "Theme", ICON: Icons.style, DESCRIPTION: "change styling of your application", CHILD: ThemeSettings()},
+    {NAME: "Main Password", ICON: Icons.lock_rounded, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
     {
       NAME: "Admin Password",
       ICON: Icons.admin_panel_settings,
@@ -64,30 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
       DESCRIPTION: "Notify customer customers when order is completed",
       CHILD: CustomerNotificationSettings()
     },
-    {
-      NAME: "Paint Price",
-      ICON: Icons.format_paint,
-      DESCRIPTION: "Setup default price for paint",
-      CHILD: DefaultPaintPriceSettings()
-    },
-    {
-      NAME: "Export",
-      ICON: Icons.arrow_forward,
-      DESCRIPTION: "Export your database for future restore",
-      CHILD: ExportSettings()
-    },
-    {
-      NAME: "Import",
-      ICON: Icons.arrow_back,
-      DESCRIPTION: "Import your database and restore your content",
-      CHILD: ImportSettings()
-    },
-    {
-      NAME: "Developer",
-      ICON: Icons.code,
-      DESCRIPTION: "Who was the software developed by",
-      CHILD: DeveloperPage()
-    },
+    {NAME: "Paint Price", ICON: Icons.format_paint, DESCRIPTION: "Setup default price for paint", CHILD: DefaultPaintPriceSettings()},
+    {NAME: "Export", ICON: Icons.arrow_forward, DESCRIPTION: "Export your database for future restore", CHILD: ExportSettings()},
+    {NAME: "Import", ICON: Icons.arrow_back, DESCRIPTION: "Import your database and restore your content", CHILD: ImportSettings()},
+    {NAME: "Developer", ICON: Icons.code, DESCRIPTION: "Who was the software developed by", CHILD: DeveloperPage()},
   ];
   @override
   Widget build(BuildContext context) {
@@ -103,9 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          color: selectedMenuIndex == index
-                              ? Colors.black.withOpacity(0.07)
-                              : Colors.white,
+                          color: selectedMenuIndex == index ? Colors.black.withOpacity(0.07) : Colors.white,
                           child: ListTile(
                             leading: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -119,17 +82,12 @@ class _SettingsPageState extends State<SettingsPage> {
                               menus[index][NAME],
                               style: TextStyle(
                                   color: Colors.black87,
-                                  fontSize:
-                                      selectedMenuIndex == index ? 14 : 15,
-                                  fontWeight: selectedMenuIndex == index
-                                      ? FontWeight.w800
-                                      : FontWeight.w100),
+                                  fontSize: selectedMenuIndex == index ? 14 : 15,
+                                  fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                             ),
                             subtitle: Text(
                               menus[index][DESCRIPTION],
-                              style: TextStyle(
-                                  fontSize:
-                                      selectedMenuIndex == index ? 12 : 11),
+                              style: TextStyle(fontSize: selectedMenuIndex == index ? 12 : 11),
                             ),
                             onTap: () {
                               setState(() {

@@ -19,8 +19,7 @@ class Exporter {
   }
 
   TextStyle getValueStyle(ttf) {
-    return TextStyle(
-        color: PdfColor.fromInt(0xff404040), fontSize: 16, font: ttf);
+    return TextStyle(color: PdfColor.fromInt(0xff404040), fontSize: 16, font: ttf);
   }
 
   TextStyle getTableTitleStyle(ttf) {
@@ -28,8 +27,7 @@ class Exporter {
   }
 
   TextStyle getTitleStyle(ttf) {
-    return TextStyle(
-        fontSize: 13, lineSpacing: 10, fontWeight: FontWeight.bold, font: ttf);
+    return TextStyle(fontSize: 13, lineSpacing: 10, fontWeight: FontWeight.bold, font: ttf);
   }
 
   Future<bool> toPdf(
@@ -64,15 +62,10 @@ class Exporter {
                                 fontSize: 19,
                                 font: ttf,
                               )),
-                          Text("Address : Gofa , Addis Ababa",
-                              style: companyValuesStyle(ttf),
-                              textAlign: TextAlign.right),
-                          Text("Tel : +251911780428",
-                              style: companyValuesStyle(ttf)),
-                          Text("www.kemsadhub.com",
-                              style: companyValuesStyle(ttf)),
-                          Text(DateFormat.yMMMd().format(lastModified),
-                              style: companyValuesStyle(ttf)),
+                          Text("Address : Gofa , Addis Ababa", style: companyValuesStyle(ttf), textAlign: TextAlign.right),
+                          Text("Tel : +251911780428", style: companyValuesStyle(ttf)),
+                          Text("www.kemsadhub.com", style: companyValuesStyle(ttf)),
+                          Text(DateFormat.yMMMd().format(lastModified), style: companyValuesStyle(ttf)),
                         ],
                       )
                     ],
@@ -82,67 +75,43 @@ class Exporter {
                 Divider(),
                 SizedBox(height: 20),
                 Align(
-                    child: Text("Customer",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text("Customer", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)),
                     alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
                 Table(children: [
                   TableRow(children: [Text("Name"), Text(customer.name)]),
-                  TableRow(children: [
-                    Text("Phone number"),
-                    Text(customer.phoneNumber)
-                  ]),
-                  TableRow(children: [
-                    Text("Address"),
-                    Text(customer.address ?? "-")
-                  ]),
-                  TableRow(children: [
-                    Text("Address Detail"),
-                    Text(customer.addressDetail ?? "-")
-                  ]),
-                  TableRow(
-                      children: [Text("Email"), Text(customer.email ?? "-")])
+                  TableRow(children: [Text("Phone number"), Text(customer.phoneNumber)]),
+                  TableRow(children: [Text("Address"), Text(customer.address ?? "-")]),
+                  TableRow(children: [Text("Address Detail"), Text(customer.addressDetail ?? "-")]),
+                  TableRow(children: [Text("Email"), Text(customer.email ?? "-")])
                 ]),
 
                 SizedBox(height: 28),
                 Align(
-                    child: Text("Products",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text("Products", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)),
                     alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
-                Table(
-                    border: TableBorder(color: PdfColor.fromInt(0xffbfbfbf)),
-                    children: createProductRow(products, ttf)),
+                Table(border: TableBorder(color: PdfColor.fromInt(0xffbfbfbf)), children: createProductRow(products, ttf)),
                 SizedBox(height: 28),
                 Align(
-                    child: Text("Payment",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text("Payment", textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold)),
                     alignment: Alignment.centerLeft),
                 SizedBox(height: 8),
 
                 Table(children: [
                   TableRow(children: [
                     Text("Total"),
-                    Text("${oCCy.format(totalAmount ?? 0)} br",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold))
+                    Text("${oCCy.format(totalAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
                   ]),
                   TableRow(children: [
                     Text("Advance"),
-                    Text("${oCCy.format(advanceAmount ?? 0)} br",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold))
+                    Text("${oCCy.format(advanceAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
                   ]),
                   TableRow(children: [
                     Text("Remaining"),
-                    Text("${oCCy.format(remainingAmount ?? 0)} br",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold))
+                    Text("${oCCy.format(remainingAmount ?? 0)} br", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
                   ]),
                 ]),
 
@@ -152,8 +121,7 @@ class Exporter {
           );
         }));
 
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdf.save());
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
     return true;
   }
 

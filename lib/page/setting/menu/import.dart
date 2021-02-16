@@ -26,10 +26,7 @@ class _ImportSettingsState extends State<ImportSettings> {
             width: double.infinity,
             child: Text(
               "Restore Database",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800),
+              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
             ),
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             color: Colors.black45),
@@ -44,25 +41,16 @@ class _ImportSettingsState extends State<ImportSettings> {
               child: Column(
                 children: [
                   OutlineButton(
-                      child: Text(restoreFile == null
-                          ? "Pick a file"
-                          : restoreFile.path
-                              .split("/")
-                              .last
-                              .replaceAll("_kapci_backup.zip", "")),
+                      child: Text(restoreFile == null ? "Pick a file" : restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", "")),
                       onPressed: () async {
                         setState(() {
                           _importing = true;
                         });
 
-                        FilePickerResult result = await FilePicker.platform
-                            .pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: ["zip"]);
+                        FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
 
                         print("File path : ${result.files.single.path}");
-                        if (result.files.single.path
-                            .endsWith("_kapci_backup.zip")) {
+                        if (result.files.single.path.endsWith("_kapci_backup.zip")) {
                           print("File is okay");
                           restoreFile = File(result.files.single.path);
                         } else {
@@ -93,35 +81,30 @@ class _ImportSettingsState extends State<ImportSettings> {
                   ),
                   restoreFile != null
                       ? RaisedButton(
-                          color:
-                              restoreFile == null ? Colors.black54 : Colors.red,
+                          color: restoreFile == null ? Colors.black54 : Colors.red,
                           onPressed: () async {
                             if (restoreFile != null) {
                               setState(() {
                                 _importing = true;
                               });
 
-                              String picturesPathOriginal =
-                                  "/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures";
+                              String picturesPathOriginal = "/storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures";
 
                               /// Delete Current Pictures directory
-                              Directory imageDirectoryOld =
-                                  Directory(picturesPathOriginal);
+                              Directory imageDirectoryOld = Directory(picturesPathOriginal);
                               if (imageDirectoryOld.existsSync()) {
                                 imageDirectoryOld.deleteSync(recursive: true);
                               }
 
                               /// Delete Current DB directory
                               String path = await getDatabasesPath();
-                              Directory databaseOld =
-                                  Directory("$path/${global.DB_NAME}");
+                              Directory databaseOld = Directory("$path/${global.DB_NAME}");
                               if (databaseOld.existsSync()) {
                                 databaseOld.deleteSync(recursive: true);
                               }
 
                               /// Extract file
-                              Directory extractDirectory =
-                                  await getTemporaryDirectory();
+                              Directory extractDirectory = await getTemporaryDirectory();
                               // Read the Zip file from disk.
                               final bytes = restoreFile.readAsBytesSync();
 
@@ -136,30 +119,23 @@ class _ImportSettingsState extends State<ImportSettings> {
                                     ..createSync(recursive: true)
                                     ..writeAsBytesSync(data);
                                 } else {
-                                  Directory(
-                                      "${extractDirectory.path}/$filename")
-                                    ..create(recursive: true);
+                                  Directory("${extractDirectory.path}/$filename")..create(recursive: true);
                                 }
                               }
 
                               /// Copy pictures
                               await Directory(picturesPathOriginal).create();
-                              copyDirectory(
-                                  Directory(
-                                      "${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/Pictures"),
+                              copyDirectory(Directory("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/Pictures"),
                                   Directory(picturesPathOriginal));
 
                               /// Copy DB
                               String dbPath = await getDatabasesPath();
-                              String newPath =
-                                  File("$dbPath/${global.DB_NAME}").path;
-                              File sourceFile = File(
-                                  "${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
+                              String newPath = File("$dbPath/${global.DB_NAME}").path;
+                              File sourceFile =
+                                  File("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
                               await copyFile(sourceFile, newPath);
 
-                              CNotifications.showSnackBar(context,
-                                  "Successfuly restored data", "success", () {},
-                                  backgroundColor: Colors.green);
+                              CNotifications.showSnackBar(context, "Successfuly restored data", "success", () {}, backgroundColor: Colors.green);
 
                               setState(() {
                                 restoreFile = null;
@@ -167,11 +143,7 @@ class _ImportSettingsState extends State<ImportSettings> {
                               });
                             } else {
                               // Something is wrong
-                              CNotifications.showSnackBar(
-                                  context,
-                                  "Invalid format, restore file looks like ***_kapci_backup.zip",
-                                  "failed",
-                                  () {},
+                              CNotifications.showSnackBar(context, "Invalid format, restore file looks like ***_kapci_backup.zip", "failed", () {},
                                   backgroundColor: Colors.red);
                             }
                           },
@@ -189,17 +161,14 @@ class _ImportSettingsState extends State<ImportSettings> {
     );
   }
 
-  void copyDirectory(Directory source, Directory destination) =>
-      source.listSync(recursive: false).forEach((var entity) {
+  void copyDirectory(Directory source, Directory destination) => source.listSync(recursive: false).forEach((var entity) {
         if (entity is Directory) {
-          var newDirectory = Directory(
-              path.join(destination.absolute.path, path.basename(entity.path)));
+          var newDirectory = Directory(path.join(destination.absolute.path, path.basename(entity.path)));
           newDirectory.createSync();
 
           copyDirectory(entity.absolute, newDirectory);
         } else if (entity is File) {
-          entity.copySync(
-              path.join(destination.path, path.basename(entity.path)));
+          entity.copySync(path.join(destination.path, path.basename(entity.path)));
         }
       });
 
@@ -210,8 +179,7 @@ class _ImportSettingsState extends State<ImportSettings> {
 
   Widget buildRestoreDate() {
     try {
-      String dateTimeText =
-          restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", "");
+      String dateTimeText = restoreFile.path.split("/").last.replaceAll("_kapci_backup.zip", "");
       print("date time text : ${dateTimeText}");
       print("date time now : ${DateTime.now().toString()}");
       return Text(

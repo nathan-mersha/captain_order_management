@@ -36,8 +36,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     requestPermissions();
 
@@ -45,10 +44,7 @@ class MyAppState extends State<MyApp> {
         builder: (context, projectSnap) {
           if (projectSnap.data == true) {
             return AppBuilder(builder: (context) {
-              return MaterialApp(
-                  title: "Captain",
-                  theme: CTheme.getTheme(),
-                  routes: CRoutes().routes);
+              return MaterialApp(title: "Captain", theme: CTheme.getTheme(), routes: CRoutes().routes);
             });
           } else {
             return LoadingApp();
@@ -74,12 +70,13 @@ class MyAppState extends State<MyApp> {
   }
 
   /// Backup system data every day at 2:00
-  void backupByCron(){
+  void backupByCron() {
     // every time at 2
-    if(!cronInit){
-      Cron()..schedule(Schedule.parse('* 2 * * * *'), () {
-        ExportSettingsState.exportData(deletePreviousVersion: true);
-      });
+    if (!cronInit) {
+      Cron()
+        ..schedule(Schedule.parse('* 2 * * * *'), () {
+          ExportSettingsState.exportData(deletePreviousVersion: true);
+        });
       cronInit = true;
     }
   }
@@ -126,8 +123,7 @@ class LoadingApp extends StatelessWidget {
           Text(
             "initializing captain",
             textDirection: TextDirection.ltr,
-            style: TextStyle(
-                color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
           ),
         ],
       ),

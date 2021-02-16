@@ -15,9 +15,7 @@ class CreateProductView extends StatefulWidget {
   final GlobalKey<StatisticsProductViewState> statisticsProductKey;
   final GlobalKey<ProductTableState> productTableKey;
 
-  const CreateProductView(
-      {this.productTableKey, this.createProductKey, this.statisticsProductKey})
-      : super(key: createProductKey);
+  const CreateProductView({this.productTableKey, this.createProductKey, this.statisticsProductKey}) : super(key: createProductKey);
 
   @override
   CreateProductViewState createState() => CreateProductViewState();
@@ -25,11 +23,7 @@ class CreateProductView extends StatefulWidget {
 
 class CreateProductViewState extends State<CreateProductView> {
   final _formKey = GlobalKey<FormState>();
-  Product product = Product(
-      type: PAINT,
-      unitOfMeasurement: LITER,
-      paintType: METALIC,
-      isGallonBased: true); // Assigning default product values here
+  Product product = Product(type: PAINT, unitOfMeasurement: LITER, paintType: METALIC, isGallonBased: true); // Assigning default product values here
 
   // Product types
   static const String PAINT = "Paint"; // values not translatables
@@ -72,8 +66,7 @@ class CreateProductViewState extends State<CreateProductView> {
     setPaintTypeUnitPrice();
 
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -84,29 +77,19 @@ class CreateProductViewState extends State<CreateProductView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${product.id == null ? "Create" : "Update"} Product",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    right: 20,
-                    left: 20,
-                    top: 15),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20, top: 15),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -130,15 +113,12 @@ class CreateProductViewState extends State<CreateProductView> {
                                 Icons.keyboard_arrow_down,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              items: productTypes.map<DropdownMenuItem<String>>(
-                                  (String productValue) {
+                              items: productTypes.map<DropdownMenuItem<String>>((String productValue) {
                                 return DropdownMenuItem(
                                   child: Row(
                                     children: [
                                       Icon(
-                                        productValue == PAINT
-                                            ? Icons.invert_colors
-                                            : Icons.shopping_basket,
+                                        productValue == PAINT ? Icons.invert_colors : Icons.shopping_basket,
                                         size: 15,
                                         color: Theme.of(context).accentColor,
                                       ),
@@ -180,15 +160,10 @@ class CreateProductViewState extends State<CreateProductView> {
                           onFieldSubmitted: (nameValue) {
                             product.name = nameValue;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Name",
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 5)),
+                          decoration: InputDecoration(labelText: "Name", contentPadding: EdgeInsets.symmetric(vertical: 5)),
                         ),
 
-                        product.type == PAINT
-                            ? buildForPaintProduct()
-                            : buildForOtherProduct(),
+                        product.type == PAINT ? buildForPaintProduct() : buildForOtherProduct(),
 
                         TextFormField(
                           validator: (unitPriceValue) {
@@ -213,8 +188,7 @@ class CreateProductViewState extends State<CreateProductView> {
                           decoration: InputDecoration(
                               labelText: "Unit price",
                               contentPadding: EdgeInsets.symmetric(vertical: 5),
-                              suffix: Text(
-                                  "br per ${product.unitOfMeasurement ?? LITER}")),
+                              suffix: Text("br per ${product.unitOfMeasurement ?? LITER}")),
                         ),
 
                         product.type == PAINT
@@ -225,15 +199,13 @@ class CreateProductViewState extends State<CreateProductView> {
                                     value: product.isGallonBased,
                                     onChanged: (bool isGallonBasedValue) {
                                       setState(() {
-                                        product.isGallonBased =
-                                            isGallonBasedValue;
+                                        product.isGallonBased = isGallonBasedValue;
                                       });
                                     },
                                   ),
                                   Text(
                                     "gallon based",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.black87),
+                                    style: TextStyle(fontSize: 12, color: Colors.black87),
                                   )
                                 ],
                               )
@@ -279,10 +251,7 @@ class CreateProductViewState extends State<CreateProductView> {
                         RaisedButton(
                             child: Text(
                               "Update",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white),
                             ),
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -296,10 +265,7 @@ class CreateProductViewState extends State<CreateProductView> {
                         OutlineButton(
                           child: Text(
                             "Cancel",
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Theme.of(context).accentColor),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
                             cleanFields();
@@ -334,8 +300,7 @@ class CreateProductViewState extends State<CreateProductView> {
                 Icons.keyboard_arrow_down,
                 color: Theme.of(context).primaryColor,
               ),
-              items: measurementTypes
-                  .map<DropdownMenuItem<String>>((String measurementValue) {
+              items: measurementTypes.map<DropdownMenuItem<String>>((String measurementValue) {
                 return DropdownMenuItem(
                   child: Row(
                     children: [
@@ -367,39 +332,37 @@ class CreateProductViewState extends State<CreateProductView> {
           onTap: () {
             showDialog(
               context: context,
-              builder: (BuildContext context) { return AlertDialog(
-              title: const Text('Pick a color!'),
-              content: SingleChildScrollView(
-                child: ColorPicker(
-                  pickerColor: pickerColor,
-                  onColorChanged: (changedColor) {
-                    pickerColor = changedColor;
-                  },
-                  showLabel: true,
-                  pickerAreaHeightPercent: 0.8,
-                ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: const Text('Select'),
-                  onPressed: () {
-                    setState(() {
-                      product.colorValue = pickerColor.value.toString();
-                      _colorValueController.text =
-                          pickerColor.value.toString();
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ); },
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Pick a color!'),
+                  content: SingleChildScrollView(
+                    child: ColorPicker(
+                      pickerColor: pickerColor,
+                      onColorChanged: (changedColor) {
+                        pickerColor = changedColor;
+                      },
+                      showLabel: true,
+                      pickerAreaHeightPercent: 0.8,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: const Text('Select'),
+                      onPressed: () {
+                        setState(() {
+                          product.colorValue = pickerColor.value.toString();
+                          _colorValueController.text = pickerColor.value.toString();
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
             );
           },
           child: TextFormField(
-            style: TextStyle(
-                fontSize: 12,
-                color: Color(int.parse(product.colorValue ?? "0xfffffffff")),
-                fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 12, color: Color(int.parse(product.colorValue ?? "0xfffffffff")), fontWeight: FontWeight.w800),
             controller: _colorValueController,
             validator: (colorValue) {
               if (colorValue.isEmpty) {
@@ -437,8 +400,7 @@ class CreateProductViewState extends State<CreateProductView> {
                 Icons.keyboard_arrow_down,
                 color: Theme.of(context).primaryColor,
               ),
-              items: paintTypes
-                  .map<DropdownMenuItem<String>>((String paintTypeValue) {
+              items: paintTypes.map<DropdownMenuItem<String>>((String paintTypeValue) {
                 return DropdownMenuItem(
                   child: Row(
                     children: [
@@ -460,8 +422,7 @@ class CreateProductViewState extends State<CreateProductView> {
         SimpleAutoCompleteTextField(
           suggestions: KapciManufacturers.VALUES,
           clearOnSubmit: false,
-          decoration: InputDecoration(
-              labelText: "Manufacturer", contentPadding: EdgeInsets.all(0)),
+          decoration: InputDecoration(labelText: "Manufacturer", contentPadding: EdgeInsets.all(0)),
           textCapitalization: TextCapitalization.none,
           controller: _manufacturerController,
           textSubmitted: (String manufacturerValue) {
@@ -480,11 +441,7 @@ class CreateProductViewState extends State<CreateProductView> {
       /// Clearing data
       _doingCRUD = false;
       // Assigning default product values on clearing fields here.
-      product = Product(
-          type: PAINT,
-          unitOfMeasurement: LITER,
-          paintType: METALIC,
-          isGallonBased: true);
+      product = Product(type: PAINT, unitOfMeasurement: LITER, paintType: METALIC, isGallonBased: true);
       clearInputs();
     });
 
@@ -505,17 +462,14 @@ class CreateProductViewState extends State<CreateProductView> {
     Product createdProduct = await ProductDAL.create(product);
 
     /// Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfuly created : ${product.name}", "success", () {},
-        backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfuly created : ${product.name}", "success", () {}, backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdProduct);
   }
 
   Future createInFSAndUpdateLocally(Product product) async {
     String where = "${Product.ID} = ?";
     List<String> whereArgs = [product.id]; // Querying only products
-    ProductDAL.find(where: where, whereArgs: whereArgs)
-        .then((List<Product> product) async {
+    ProductDAL.find(where: where, whereArgs: whereArgs).then((List<Product> product) async {
       Product queriedProduct = product.first;
 
       /// Creating data to fire store
@@ -524,8 +478,7 @@ class CreateProductViewState extends State<CreateProductView> {
 //      queriedProduct.idFS = docRef.documentID;
       String where = "${Product.ID} = ?";
       List<String> whereArgs = [queriedProduct.id]; // Querying only products
-      ProductDAL.update(
-          where: where, whereArgs: whereArgs, product: queriedProduct);
+      ProductDAL.update(where: where, whereArgs: whereArgs, product: queriedProduct);
     });
   }
 
@@ -534,11 +487,8 @@ class CreateProductViewState extends State<CreateProductView> {
     num metalicPrice = cSP.metalicPricePerLitter;
     num autoCrylPrice = cSP.autoCrylPricePerLitter;
 
-    if (product.id == null &&
-        product.type == PAINT &&
-        _manuallyAdjustPaintPrice == false) {
-      product.unitPrice =
-          product.paintType == METALIC ? metalicPrice : autoCrylPrice;
+    if (product.id == null && product.type == PAINT && _manuallyAdjustPaintPrice == false) {
+      product.unitPrice = product.paintType == METALIC ? metalicPrice : autoCrylPrice;
       _unitPriceController.text = product.unitPrice.toString();
     }
   }
@@ -547,8 +497,7 @@ class CreateProductViewState extends State<CreateProductView> {
     /// Query and update user
     String where = "${Product.ID} = ?";
     List<String> whereArgs = [product.id];
-    await ProductDAL.update(
-        where: where, whereArgs: whereArgs, product: product);
+    await ProductDAL.update(where: where, whereArgs: whereArgs, product: product);
 
     /// Updating from fire store
     // dynamic productMap = Product.toMap(product);
@@ -557,9 +506,7 @@ class CreateProductViewState extends State<CreateProductView> {
 //      Firestore.instance.collection(Product.COLLECTION_NAME).document(product.idFS).updateData(productMap);
     }
     // Showing notification
-    CNotifications.showSnackBar(
-        context, "Successfuly updated : ${product.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfuly updated : ${product.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   void clearInputs() {
@@ -572,8 +519,7 @@ class CreateProductViewState extends State<CreateProductView> {
   void passForUpdate(Product productUpdateData) async {
     String where = "${Product.ID} = ?";
     List<String> whereArgs = [productUpdateData.id]; // Querying only products
-    List<Product> products =
-        await ProductDAL.find(where: where, whereArgs: whereArgs);
+    List<Product> products = await ProductDAL.find(where: where, whereArgs: whereArgs);
 
     setState(() {
       product = products.first;

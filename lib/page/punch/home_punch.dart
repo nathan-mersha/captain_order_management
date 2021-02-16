@@ -8,8 +8,7 @@ class HomePunchPage extends StatefulWidget {
   HomePunchPageState createState() => HomePunchPageState();
 }
 
-class HomePunchPageState extends State<HomePunchPage>
-    with SingleTickerProviderStateMixin {
+class HomePunchPageState extends State<HomePunchPage> with SingleTickerProviderStateMixin {
   // Global keys for views
   GlobalKey<PunchTableState> punchTableKey = GlobalKey();
   GlobalKey<CreatePunchViewState> createPunchKey = GlobalKey();

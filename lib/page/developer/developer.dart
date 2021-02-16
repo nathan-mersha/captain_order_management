@@ -24,10 +24,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
           Text(
             "Kelem Designs",
             textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black87,
-                fontSize: 17,
-                fontWeight: FontWeight.w800),
+            style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.w800),
           ),
           SizedBox(
             height: 16,

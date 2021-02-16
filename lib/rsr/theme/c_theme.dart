@@ -15,41 +15,13 @@ class CTheme {
   static const String accentColor = "accentColor";
 
   static const THEME_MAP = {
-    TSEHAY: {
-      primaryColor: Color(0xffd4aa00),
-      primaryColorLight: Color(0xffe8aa00),
-      accentColor: Color(0xff00a287)
-    },
-    BERTUKAN: {
-      primaryColor: Color(0xffff6600),
-      primaryColorLight: Color(0xffff9900),
-      accentColor: Color(0xff104ba9)
-    },
-    WEYNE: {
-      primaryColor: Color(0xff6100b5),
-      primaryColorLight: Color(0xff6100ce),
-      accentColor: Color(0xffa00074)
-    },
-    BUNA: {
-      primaryColor: Color(0xff502d16),
-      primaryColorLight: Color(0xff784421),
-      accentColor: Color(0xff1d4413)
-    },
-    WEHA: {
-      primaryColor: Color(0xff003399),
-      primaryColorLight: Color(0xff3366cc),
-      accentColor: Color(0xffe66400)
-    },
-    KETEL: {
-      primaryColor: Color(0xff669900),
-      primaryColorLight: Color(0xff99cc33),
-      accentColor: Color(0xffa00074)
-    },
-    LELIT: {
-      primaryColor: Color(0xff404040),
-      primaryColorLight: Color(0xff808080),
-      accentColor: Color(0xff6100b5)
-    },
+    TSEHAY: {primaryColor: Color(0xffd4aa00), primaryColorLight: Color(0xffe8aa00), accentColor: Color(0xff00a287)},
+    BERTUKAN: {primaryColor: Color(0xffff6600), primaryColorLight: Color(0xffff9900), accentColor: Color(0xff104ba9)},
+    WEYNE: {primaryColor: Color(0xff6100b5), primaryColorLight: Color(0xff6100ce), accentColor: Color(0xffa00074)},
+    BUNA: {primaryColor: Color(0xff502d16), primaryColorLight: Color(0xff784421), accentColor: Color(0xff1d4413)},
+    WEHA: {primaryColor: Color(0xff003399), primaryColorLight: Color(0xff3366cc), accentColor: Color(0xffe66400)},
+    KETEL: {primaryColor: Color(0xff669900), primaryColorLight: Color(0xff99cc33), accentColor: Color(0xffa00074)},
+    LELIT: {primaryColor: Color(0xff404040), primaryColorLight: Color(0xff808080), accentColor: Color(0xff6100b5)},
   };
 
   static Color backGroundColor = Color(0xfff2f2f2);

@@ -57,9 +57,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                returnsData[0].product.name, returnsData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].product.name, returnsData[0].count)),
       ),
     ));
   }
@@ -91,8 +89,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
         id: 'Returned Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (ReturnedOrderAnalysisModel val, _) => val.product.name,
         measureFn: (ReturnedOrderAnalysisModel val, _) => val.count,
@@ -104,8 +101,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -132,11 +128,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(returnsData[index].count.toStringAsFixed(0)),
-                          Text(
-                              returnsData[index].product.isGallonBased
-                                  ? "gallon"
-                                  : "-",
-                              style: TextStyle(fontSize: 10)),
+                          Text(returnsData[index].product.isGallonBased ? "gallon" : "-", style: TextStyle(fontSize: 10)),
                         ],
                       ),
                       dense: true,
@@ -145,17 +137,24 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),),
-                        SizedBox(width: 7,),
-                        Icon(
-                          Icons.circle,
-                          size: 30,
-                          color: returnsData[index].product.colorValue == null
-                              ? Colors.black12
-                              : Color(int.parse(
-                              returnsData[index].product.colorValue)),
-                        )
-                      ],),
+                          Text(
+                            "${currentIndex.toString()}.",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 7,
+                          ),
+                          Icon(
+                            Icons.circle,
+                            size: 30,
+                            color: returnsData[index].product.colorValue == null
+                                ? Colors.black12
+                                : Color(int.parse(returnsData[index].product.colorValue)),
+                          )
+                        ],
+                      ),
                     );
                   },
                 )),
@@ -173,23 +172,17 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
       // if product already exist increment count
       // else add product
 
-      int index = returnsData
-          .indexWhere((ReturnedOrderAnalysisModel returnedOrderAnalysisModel) {
-        return returnedOrderAnalysisModel.product.id ==
-            returnedOrder.product.id;
+      int index = returnsData.indexWhere((ReturnedOrderAnalysisModel returnedOrderAnalysisModel) {
+        return returnedOrderAnalysisModel.product.id == returnedOrder.product.id;
       });
 
       if (index == -1) {
         // Product does not exist
-        ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew =
-            ReturnedOrderAnalysisModel(
-                product: returnedOrder.product, count: 1);
+        ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew = ReturnedOrderAnalysisModel(product: returnedOrder.product, count: 1);
         returnsData.add(returnedOrderAnalysisModelNew);
       } else {
         ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew =
-            ReturnedOrderAnalysisModel(
-                product: returnedOrder.product,
-                count: returnsData[index].count + 1);
+            ReturnedOrderAnalysisModel(product: returnedOrder.product, count: returnsData[index].count + 1);
 
         returnsData.removeAt(index);
         returnsData.insert(index, returnedOrderAnalysisModelNew);

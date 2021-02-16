@@ -9,9 +9,7 @@ class StatisticsProductView extends StatefulWidget {
   final GlobalKey<StatisticsProductViewState> statisticsProductKey;
   final GlobalKey<ProductTableState> productTableKey;
 
-  const StatisticsProductView(
-      {this.productTableKey, this.createProductKey, this.statisticsProductKey})
-      : super(key: statisticsProductKey);
+  const StatisticsProductView({this.productTableKey, this.createProductKey, this.statisticsProductKey}) : super(key: statisticsProductKey);
 
   @override
   StatisticsProductViewState createState() => StatisticsProductViewState();

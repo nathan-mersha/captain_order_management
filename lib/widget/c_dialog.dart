@@ -10,14 +10,7 @@ class CDialog extends StatefulWidget {
   final Widget widgetYes;
   final Widget widgetNo;
 
-  CDialog(
-      {this.message,
-      this.onYes,
-      this.onNo,
-      this.font,
-      this.textAlign,
-      this.widgetYes,
-      this.widgetNo});
+  CDialog({this.message, this.onYes, this.onNo, this.font, this.textAlign, this.widgetYes, this.widgetNo});
 
   @override
   State<StatefulWidget> createState() {
@@ -31,8 +24,7 @@ class _CDialogState extends State<CDialog> {
   final double _iconHeight = 32;
   final double _textFontSize = 21;
   final EdgeInsets _containerMargin = EdgeInsets.symmetric(horizontal: 300);
-  final EdgeInsets _containerPadding =
-      EdgeInsets.symmetric(horizontal: 17, vertical: 24);
+  final EdgeInsets _containerPadding = EdgeInsets.symmetric(horizontal: 17, vertical: 24);
   final double _spacing1 = 40;
 
   @override
@@ -44,8 +36,7 @@ class _CDialogState extends State<CDialog> {
         children: <Widget>[
           Card(
             margin: _containerMargin,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
             color: Colors.white,
             child: Center(
               child: Container(
@@ -56,12 +47,9 @@ class _CDialogState extends State<CDialog> {
                       widget.message,
                       style: TextStyle(
                         color: Colors.black54,
-                        fontSize:
-                            widget.font == null ? _textFontSize : widget.font,
+                        fontSize: widget.font == null ? _textFontSize : widget.font,
                       ),
-                      textAlign: widget.textAlign == null
-                          ? TextAlign.center
-                          : widget.textAlign,
+                      textAlign: widget.textAlign == null ? TextAlign.center : widget.textAlign,
                       maxLines: 5,
                     ),
                     SizedBox(
@@ -92,8 +80,7 @@ class _CDialogState extends State<CDialog> {
                                   onPressed: widget.onYes,
                                 ),
                               ),
-                              Container(
-                                  height: 60, width: 3, color: Colors.black26),
+                              Container(height: 60, width: 3, color: Colors.black26),
                               Expanded(
                                 child: FlatButton(
                                   child: widget.widgetNo != null

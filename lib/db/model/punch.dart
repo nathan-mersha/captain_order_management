@@ -28,16 +28,7 @@ class Punch {
   DateTime firstModified;
   DateTime lastModified;
 
-  Punch(
-      {this.id,
-      this.idFS,
-      this.employee,
-      this.product,
-      this.type,
-      this.weight,
-      this.note,
-      this.firstModified,
-      this.lastModified});
+  Punch({this.id, this.idFS, this.employee, this.product, this.type, this.weight, this.note, this.firstModified, this.lastModified});
 
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Punch punch) {

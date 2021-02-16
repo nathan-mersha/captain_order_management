@@ -9,9 +9,7 @@ class StatisticsPunchView extends StatefulWidget {
   final GlobalKey<StatisticsPunchViewState> statisticsPunchKey;
   final GlobalKey<PunchTableState> punchTableKey;
 
-  const StatisticsPunchView(
-      {this.punchTableKey, this.createPunchKey, this.statisticsPunchKey})
-      : super(key: statisticsPunchKey);
+  const StatisticsPunchView({this.punchTableKey, this.createPunchKey, this.statisticsPunchKey}) : super(key: statisticsPunchKey);
 
   @override
   StatisticsPunchViewState createState() => StatisticsPunchViewState();

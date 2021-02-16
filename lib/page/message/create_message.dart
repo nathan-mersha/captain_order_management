@@ -13,9 +13,7 @@ class CreateMessageView extends StatefulWidget {
   final GlobalKey<CreateMessageViewState> createMessageKey;
   final GlobalKey<StatisticsMessageViewState> statisticsMessageKey;
 
-  const CreateMessageView(
-      {this.messageTableKey, this.createMessageKey, this.statisticsMessageKey})
-      : super(key: createMessageKey);
+  const CreateMessageView({this.messageTableKey, this.createMessageKey, this.statisticsMessageKey}) : super(key: createMessageKey);
 
   @override
   CreateMessageViewState createState() => CreateMessageViewState();
@@ -42,11 +40,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
     super.initState();
     // Separating keys to values for translatable.
     // translatable values
-    recipientTypeValues = {
-      ALL: "all",
-      CUSTOMERS: "customers",
-      EMPLOYEES: "employees"
-    };
+    recipientTypeValues = {ALL: "all", CUSTOMERS: "customers", EMPLOYEES: "employees"};
   }
 
   @override
@@ -58,8 +52,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -70,28 +63,19 @@ class CreateMessageViewState extends State<CreateMessageView> {
               child: Card(
                 margin: EdgeInsets.all(0),
                 color: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   child: Text(
                     "${message.id == null ? "Create" : "Update"} Message",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
             ),
             Container(
                 height: 425,
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    right: 20,
-                    left: 20),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, right: 20, left: 20),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
@@ -117,9 +101,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
                                 Icons.keyboard_arrow_down,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              items: recipientTypes
-                                  .map<DropdownMenuItem<String>>(
-                                      (String recipientValue) {
+                              items: recipientTypes.map<DropdownMenuItem<String>>((String recipientValue) {
                                 return DropdownMenuItem(
                                   child: Text(
                                     recipientTypeValues[recipientValue],
@@ -223,12 +205,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
       createInFSAndUpdateLocally(createdMessage);
 
       /// Showing notification
-      CNotifications.showSnackBar(
-          context,
-          "Successfuly created message to ${message.recipient}",
-          "success",
-          () {},
-          backgroundColor: Colors.green);
+      CNotifications.showSnackBar(context, "Successfuly created message to ${message.recipient}", "success", () {}, backgroundColor: Colors.green);
       // cleaning fields if device is able to send message
       cleanFields();
     }
@@ -237,8 +214,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
   Future createInFSAndUpdateLocally(Message message) async {
     String where = "${Message.ID} = ?";
     List<String> whereArgs = [message.id]; // Querying only messages
-    MessageDAL.find(where: where, whereArgs: whereArgs)
-        .then((List<Message> message) async {
+    MessageDAL.find(where: where, whereArgs: whereArgs).then((List<Message> message) async {
       Message queriedMessage = message.first;
 
       /// Creating data to fire store
@@ -248,8 +224,7 @@ class CreateMessageViewState extends State<CreateMessageView> {
 
       String where = "${Message.ID} = ?";
       List<String> whereArgs = [queriedMessage.id]; // Querying only messages
-      MessageDAL.update(
-          where: where, whereArgs: whereArgs, message: queriedMessage);
+      MessageDAL.update(where: where, whereArgs: whereArgs, message: queriedMessage);
     });
   }
 

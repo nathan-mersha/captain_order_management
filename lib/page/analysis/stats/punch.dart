@@ -61,9 +61,7 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                punchData[0].employee.name, punchData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(punchData[0].employee.name, punchData[0].count)),
       ),
     ));
   }
@@ -95,37 +93,30 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
         id: 'Punch In',
         colorFn: (_, __) {
           Color primary = Colors.red;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (PunchAnalysisModel val, _) => val.employee.name,
         measureFn: (PunchAnalysisModel val, _) => val.weight,
         displayName: "Analysis In",
-        data: punchData
-            .where((element) => element.type == CreatePunchViewState.PUNCH_IN)
-            .toList(),
+        data: punchData.where((element) => element.type == CreatePunchViewState.PUNCH_IN).toList(),
       ),
       charts.Series<PunchAnalysisModel, String>(
         id: 'Punch Out',
         colorFn: (_, __) {
           Color primary = Colors.green;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (PunchAnalysisModel val, _) => val.employee.name,
         measureFn: (PunchAnalysisModel val, _) => val.weight,
         displayName: "Analysis Out",
-        data: punchData
-            .where((element) => element.type == CreatePunchViewState.PUNCH_OUT)
-            .toList(),
+        data: punchData.where((element) => element.type == CreatePunchViewState.PUNCH_OUT).toList(),
       )
     ];
   }
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -153,42 +144,42 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
-                        SizedBox(width: 7,),
-                        punchData[index].employee.profileImage == null
-                            ? Icon(
-                          Icons.person_outline_rounded,
-                          color: Colors.black54,
-                        )
-                            : ClipOval(
-                            child: Image.file(
-                              File(punchData[index].employee.profileImage),
-                              fit: BoxFit.cover,
-                              height: 30,
-                              width: 30,
-                            ))
-                      ],),
+                          Text(
+                            "${currentIndex.toString()}.",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ), // todo : change
+                          SizedBox(
+                            width: 7,
+                          ),
+                          punchData[index].employee.profileImage == null
+                              ? Icon(
+                                  Icons.person_outline_rounded,
+                                  color: Colors.black54,
+                                )
+                              : ClipOval(
+                                  child: Image.file(
+                                  File(punchData[index].employee.profileImage),
+                                  fit: BoxFit.cover,
+                                  height: 30,
+                                  width: 30,
+                                ))
+                        ],
+                      ),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Icon(
-                            punchData[index].type ==
-                                    CreatePunchViewState.PUNCH_IN
-                                ? Icons.arrow_back
-                                : Icons.arrow_forward,
+                            punchData[index].type == CreatePunchViewState.PUNCH_IN ? Icons.arrow_back : Icons.arrow_forward,
                             size: 14,
-                            color: punchData[index].type ==
-                                    CreatePunchViewState.PUNCH_IN
-                                ? Colors.red
-                                : Colors.green,
+                            color: punchData[index].type == CreatePunchViewState.PUNCH_IN ? Colors.red : Colors.green,
                           ),
                           SizedBox(
                             height: 3,
                           ),
-                          Text("${punchData[index].count.toString()} qnt",
-                              style: TextStyle(
-                                  fontSize: 10, color: Colors.black54))
+                          Text("${punchData[index].count.toString()} qnt", style: TextStyle(fontSize: 10, color: Colors.black54))
                         ],
                       ),
                       dense: true,
@@ -209,27 +200,19 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
       /// For both in and out
       /// Checking if the paint exist -1 no, any other value >= 0 yes.
       int index = punchData.indexWhere((PunchAnalysisModel punchAnalysisModel) {
-        return punchAnalysisModel.employee.id == punch.employee.id &&
-            punchAnalysisModel.type == punch.type;
+        return punchAnalysisModel.employee.id == punch.employee.id && punchAnalysisModel.type == punch.type;
       });
 
       /// Punch in does not exist
       if (index == -1) {
-        PunchAnalysisModel punchAnalysisModel = PunchAnalysisModel(
-            employee: punch.employee,
-            count: 1,
-            weight: punch.weight,
-            type: punch.type);
+        PunchAnalysisModel punchAnalysisModel = PunchAnalysisModel(employee: punch.employee, count: 1, weight: punch.weight, type: punch.type);
         punchData.add(punchAnalysisModel);
       }
 
       /// Product already exists in the analysis data
       else {
         PunchAnalysisModel punchAnalysisModel = PunchAnalysisModel(
-            employee: punch.employee,
-            count: punchData[index].count + 1,
-            weight: punchData[index].weight + punch.weight,
-            type: punch.type);
+            employee: punch.employee, count: punchData[index].count + 1, weight: punchData[index].weight + punch.weight, type: punch.type);
 
         // Removing and re-inserting data
         punchData.removeAt(index);

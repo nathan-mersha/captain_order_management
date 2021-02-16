@@ -58,9 +58,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
           charts.PanAndZoomBehavior(),
         ],
         domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(),
-            viewport: charts.OrdinalViewport(
-                returnsData[0].employee.name, returnsData[0].count)),
+            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].employee.name, returnsData[0].count)),
       ),
     ));
   }
@@ -92,8 +90,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
         id: 'Returned Orders',
         colorFn: (_, __) {
           Color primary = Theme.of(context).primaryColorLight;
-          return charts.Color(
-              r: primary.red, g: primary.green, b: primary.blue);
+          return charts.Color(r: primary.red, g: primary.green, b: primary.blue);
         },
         domainFn: (EmployeeAnalysisModel val, _) => val.employee.name,
         measureFn: (EmployeeAnalysisModel val, _) => val.count,
@@ -105,8 +102,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
 
   Widget buildAnalysisList() {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Container(
         padding: EdgeInsets.only(bottom: 10),
         child: Column(
@@ -134,8 +130,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                         children: [
                           Text(
                             "${returnsData[index].count.toStringAsFixed(0)} returns",
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.black87),
+                            style: TextStyle(fontSize: 12, color: Colors.black87),
                           ),
                         ],
                       ),
@@ -145,21 +140,29 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        Text("${currentIndex.toString()}.", style: TextStyle(fontSize: 11,),), // todo : change
-                        SizedBox(width: 7,),
-                        returnsData[index].employee.profileImage == null
-                            ? Icon(
-                          Icons.person_outline_rounded,
-                          color: Colors.black54,
-                        )
-                            : ClipOval(
-                            child: Image.file(
-                              File(returnsData[index].employee.profileImage),
-                              fit: BoxFit.cover,
-                              height: 30,
-                              width: 30,
-                            ))
-                      ],),
+                          Text(
+                            "${currentIndex.toString()}.",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ), // todo : change
+                          SizedBox(
+                            width: 7,
+                          ),
+                          returnsData[index].employee.profileImage == null
+                              ? Icon(
+                                  Icons.person_outline_rounded,
+                                  color: Colors.black54,
+                                )
+                              : ClipOval(
+                                  child: Image.file(
+                                  File(returnsData[index].employee.profileImage),
+                                  fit: BoxFit.cover,
+                                  height: 30,
+                                  width: 30,
+                                ))
+                        ],
+                      ),
                     );
                   },
                 )),
@@ -177,23 +180,17 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
       // if product already exist increment count
       // else add product
 
-      int index = returnsData
-          .indexWhere((EmployeeAnalysisModel returnedOrderAnalysisModel) {
-        return returnedOrderAnalysisModel.employee.id ==
-            returnedOrder.employee.id;
+      int index = returnsData.indexWhere((EmployeeAnalysisModel returnedOrderAnalysisModel) {
+        return returnedOrderAnalysisModel.employee.id == returnedOrder.employee.id;
       });
 
       if (index == -1) {
         // Product does not exist
-        EmployeeAnalysisModel returnedOrderAnalysisModelNew =
-            EmployeeAnalysisModel(
-                employee: returnedOrder.employee, count: returnedOrder.count);
+        EmployeeAnalysisModel returnedOrderAnalysisModelNew = EmployeeAnalysisModel(employee: returnedOrder.employee, count: returnedOrder.count);
         returnsData.add(returnedOrderAnalysisModelNew);
       } else {
         EmployeeAnalysisModel returnedOrderAnalysisModelNew =
-            EmployeeAnalysisModel(
-                employee: returnedOrder.employee,
-                count: returnsData[index].count + returnedOrder.count);
+            EmployeeAnalysisModel(employee: returnedOrder.employee, count: returnsData[index].count + returnedOrder.count);
 
         returnsData.removeAt(index);
         returnsData.insert(index, returnedOrderAnalysisModelNew);

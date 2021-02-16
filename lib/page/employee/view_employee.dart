@@ -12,11 +12,7 @@ class EmployeeTable extends StatefulWidget {
   final GlobalKey<StatisticsEmployeeViewState> statisticsEmployeeKey;
   final GlobalKey<EmployeeTableState> employeeTableKey;
 
-  const EmployeeTable(
-      {this.employeeTableKey,
-      this.createEmployeeKey,
-      this.statisticsEmployeeKey})
-      : super(key: employeeTableKey);
+  const EmployeeTable({this.employeeTableKey, this.createEmployeeKey, this.statisticsEmployeeKey}) : super(key: employeeTableKey);
 
   @override
   EmployeeTableState createState() => EmployeeTableState();
@@ -41,8 +37,7 @@ class EmployeeTableState extends State<EmployeeTable> {
   Future<List<Personnel>> getListOfEmployees() async {
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.EMPLOYEE]; // Querying only employees
-    List<Personnel> employees =
-        await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+    List<Personnel> employees = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
     return employees;
   }
 
@@ -64,8 +59,7 @@ class EmployeeTableState extends State<EmployeeTable> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<Personnel> employees = snapshot.data as List<Personnel>;
-                  _EmployeeDataSource _employeeDataSourceVal =
-                      _EmployeeDataSource(context, employees, () {
+                  _EmployeeDataSource _employeeDataSourceVal = _EmployeeDataSource(context, employees, () {
                     setState(() {
                       // updating table here.
                     });
@@ -126,19 +120,12 @@ class EmployeeTableState extends State<EmployeeTable> {
                               ),
                               Text(
                                 "Loading employees",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Theme.of(context).accentColor),
+                                style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
                               )
                             ],
                           ),
                     rowsPerPage: _rowsPerPage,
-                    availableRowsPerPage: <int>[
-                      _rowsPerPage,
-                      _rowsPerPage * 2,
-                      _rowsPerPage * 5,
-                      _rowsPerPage * 10
-                    ],
+                    availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
                     onRowsPerPageChanged: (value) {
                       setState(() {
                         _rowsPerPage = value;
@@ -152,32 +139,28 @@ class EmployeeTableState extends State<EmployeeTable> {
                         label: Text("Name"),
                         onSort: (columnIndex, ascending) {
                           nameSortAscending = !nameSortAscending;
-                          return _sort<String>((d) => d.name.toLowerCase(),
-                              columnIndex, nameSortAscending);
+                          return _sort<String>((d) => d.name.toLowerCase(), columnIndex, nameSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Phone number"),
                         onSort: (columnIndex, ascending) {
                           phoneNumberSortAscending = !phoneNumberSortAscending;
-                          _sort<String>((d) => d.phoneNumber, columnIndex,
-                              phoneNumberSortAscending);
+                          _sort<String>((d) => d.phoneNumber, columnIndex, phoneNumberSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Address"),
                         onSort: (columnIndex, ascending) {
                           addressSortAscending = !addressSortAscending;
-                          _sort<String>((d) => d.address, columnIndex,
-                              addressSortAscending);
+                          _sort<String>((d) => d.address, columnIndex, addressSortAscending);
                         },
                       ),
                       DataColumn(
                         label: Text("Date"),
                         onSort: (columnIndex, ascending) {
                           dateSortAscending = !dateSortAscending;
-                          _sort<DateTime>((d) => d.firstModified, columnIndex,
-                              dateSortAscending);
+                          _sort<DateTime>((d) => d.firstModified, columnIndex, dateSortAscending);
                         },
                       ),
                       DataColumn(
@@ -202,8 +185,7 @@ class _EmployeeDataSource extends DataTableSource {
   final GlobalKey<CreateEmployeeViewState> createEmployeeKey;
   int _selectedCount = 0;
 
-  _EmployeeDataSource(
-      this.context, this.employees, this.updateTable, this.createEmployeeKey) {
+  _EmployeeDataSource(this.context, this.employees, this.updateTable, this.createEmployeeKey) {
     originalBatch = List.from(employees);
   }
 
@@ -211,18 +193,14 @@ class _EmployeeDataSource extends DataTableSource {
     employees.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
-      return ascending
-          ? Comparable.compare(aValue, bValue)
-          : Comparable.compare(bValue, aValue);
+      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
 
   void _search(String searchInput) {
-    employees =
-        List.from(originalBatch); // Restoring products from original batch
-    employees.retainWhere((Personnel p) =>
-        p.name.toLowerCase().contains(searchInput.toLowerCase()));
+    employees = List.from(originalBatch); // Restoring products from original batch
+    employees.retainWhere((Personnel p) => p.name.toLowerCase().contains(searchInput.toLowerCase()));
 
     notifyListeners();
   }
@@ -277,27 +255,20 @@ class _EmployeeDataSource extends DataTableSource {
               widgetNo: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Icon(Icons.clear,
-                      size: 50, color: Theme.of(context).accentColor),
+                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
                 ],
               ),
-              message:
-                  "Are you sure you want to delete employee\n${personnel.name}",
+              message: "Are you sure you want to delete employee\n${personnel.name}",
               onYes: () async {
                 // Delete employee here.
 
                 String where = "${Personnel.ID} = ?";
-                List<String> whereArgs = [
-                  personnel.id
-                ]; // Querying only employees
+                List<String> whereArgs = [personnel.id]; // Querying only employees
 
-                List<Personnel> deletePersonnelList =
-                    await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+                List<Personnel> deletePersonnelList = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
 
                 await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
-                await Contacts.deleteContact(Contact(
-                    identifier:
-                        personnel.contactIdentifier)); // Deleting contact
+                await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
 
                 Personnel deletePersonnel = deletePersonnelList.first;
                 if (deletePersonnel.idFS != null) {
