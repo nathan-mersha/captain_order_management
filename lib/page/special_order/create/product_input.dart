@@ -19,8 +19,9 @@ import 'package:provider/provider.dart';
 
 class ProductInputPage extends StatefulWidget {
   final Function navigateTo;
+  final GlobalKey key;
 
-  ProductInputPage({this.navigateTo});
+  ProductInputPage({this.navigateTo, this.key}): super(key: key);
 
   @override
   ProductInputPageState createState() => ProductInputPageState();
@@ -60,6 +61,11 @@ class ProductInputPageState extends State<ProductInputPage> {
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
+  static const String CART_ADD = "add";
+  static const String CART_UPDATE = "update";
+  String cartButtonText = CART_ADD;
+
+
   @override
   void dispose() {
     super.dispose();
@@ -81,6 +87,7 @@ class ProductInputPageState extends State<ProductInputPage> {
       CreateProductViewState.PACKAGE: "package"
     };
   }
+
 
   Future<bool> _assignPersonnelData() async {
     // Assigning employees data.
@@ -263,6 +270,17 @@ class ProductInputPageState extends State<ProductInputPage> {
               ],
             ),
     );
+  }
+
+  productInEditableMode(Product product){
+    setState(() {
+      _noPaintValue = false;
+      cartButtonText = CART_UPDATE;
+      _currentOnEditPaint = Product.clone(product);
+      _paintController.text = _currentOnEditPaint.name;
+      _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
+      _unitPriceController.text = _currentOnEditPaint.unitPrice.toString();
+    });
   }
 
   Future updateSpecialOrder(BuildContext context) async {
@@ -508,26 +526,18 @@ class ProductInputPageState extends State<ProductInputPage> {
                             });
                           } else {
                             // Every thing seems good.
-                            setState(() {
-                              _noPaintValue = false;
-                              _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
-                              specialOrder.addProduct(_currentOnEditPaint);
-                              CNotifications.showSnackBar(context, "Successfully added : ${_currentOnEditPaint.name}", "success", () {},
-                                  backgroundColor: Theme.of(context).accentColor);
-
-                              _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
-                              _currentOnEditPaint = Product(
-                                status: SpecialOrderMainPageState.PENDING,
-                                quantityInCart: 0,
-                                unitPrice: 0,
-                              );
-                              clearInputs();
-                            });
+                            if (cartButtonText == CART_ADD) {
+                              // item being added to cart
+                              addToCart();
+                            } else {
+                              // Updating cart items
+                              updateCart();
+                            }
                           }
                         }
                       },
                       child: Text(
-                        "add",
+                        cartButtonText,
                         style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
@@ -535,6 +545,67 @@ class ProductInputPageState extends State<ProductInputPage> {
             ),
           )),
     );
+  }
+
+  void paintProductEditMode(Product product) {
+    setState(() {
+      _noPaintValue = false;
+      cartButtonText = CART_UPDATE;
+      _currentOnEditPaint = Product.clone(product);
+      _paintController.text = _currentOnEditPaint.name;
+      _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
+      _unitPriceController.text = _currentOnEditPaint.unitPrice.toString();
+    });
+  }
+
+  void updateCart() {
+    _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
+    Product cloned = Product.clone(_currentOnEditPaint);
+    // check if current on edit product already exists in cart
+    int productIndex = specialOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
+
+    // normalOrder.products.insert(productIndex, cloned);
+    specialOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    specialOrder.calculatePaymentInfo();
+
+    CNotifications.showSnackBar(context, "Successfully updated ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);
+    _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
+    _currentOnEditPaint = Product(
+      status: SpecialOrderMainPageState.PENDING,
+      quantityInCart: 0,
+      unitPrice: 0,
+    );
+
+    cartButtonText = CART_ADD;
+    clearInputs();
+  }
+  void addToCart() {
+    setState(() {
+      _noPaintValue = false;
+      _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
+
+      Product cloned = Product.clone(_currentOnEditPaint);
+      // check if current on edit product already exists in cart
+      int productIndex = specialOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
+      if (productIndex == -1) {
+        // Product does not exist in cart, adding it for the first time
+        specialOrder.addProduct(cloned);
+      } else {
+        // Product already exists in cart, so incrementing quantity in cart
+        specialOrder.products[productIndex].quantityInCart = specialOrder.products[productIndex].quantityInCart + cloned.quantityInCart;
+        specialOrder.products[productIndex].unitPrice = cloned.unitPrice;
+        specialOrder.calculatePaymentInfo();
+      }
+
+      CNotifications.showSnackBar(context, "Successfully added ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);
+      _currentOnEditPaint.status = SpecialOrderMainPageState.PENDING;
+      _currentOnEditPaint = Product(
+        status: SpecialOrderMainPageState.PENDING,
+        quantityInCart: 0,
+        unitPrice: 0,
+      );
+      clearInputs();
+    });
   }
 
   void clearInputs() {

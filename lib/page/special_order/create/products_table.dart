@@ -1,7 +1,7 @@
-import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/page/special_order/create/product_input.dart';
 import 'package:captain/page/special_order/main.dart';
 import 'package:captain/widget/c_dialog.dart';
 import 'package:captain/widget/c_snackbar.dart';
@@ -12,7 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ProductViewPage extends StatefulWidget {
-  ProductViewPage();
+  final GlobalKey<ProductInputPageState> productInputKey;
+  ProductViewPage({this.productInputKey});
 
   @override
   ProductViewPageState createState() => ProductViewPageState();
@@ -219,6 +220,9 @@ class ProductViewPageState extends State<ProductViewPage> {
                           onLongPress: () {
                             removePaintProductFromCart(otherProduct);
                           },
+                          onDoubleTap: (){
+                            widget.productInputKey.currentState.productInEditableMode(otherProduct);
+                          },
                         ),
                         width: 150,
                       )),
@@ -229,6 +233,9 @@ class ProductViewPageState extends State<ProductViewPage> {
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
                         },
+                        onDoubleTap: (){
+                          widget.productInputKey.currentState.productInEditableMode(otherProduct);
+                        },
                       )),
                       DataCell(GestureDetector(
                         child: Container(
@@ -236,6 +243,9 @@ class ProductViewPageState extends State<ProductViewPage> {
                         ),
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
+                        },
+                        onDoubleTap: (){
+                          widget.productInputKey.currentState.productInEditableMode(otherProduct);
                         },
                       )),
                       DataCell(Text("${oCCy.format(otherProduct.unitPrice)} br", style: dataCellStyle())),

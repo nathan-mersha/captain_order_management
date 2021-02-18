@@ -61,6 +61,26 @@ class Product {
     return subTotal;
   }
 
+  static Product clone(Product p){
+    return Product(
+      id : p.id,
+      idFS : p.idFS,
+      name : p.name,
+      type : p.type,
+      unitOfMeasurement: p.unitOfMeasurement,
+      unitPrice: p.unitPrice,
+      colorValue: p.colorValue,
+      paintType: p.paintType,
+      manufacturer: p.manufacturer,
+      isGallonBased: p.isGallonBased,
+      note: p.note,
+      quantityInCart: p.quantityInCart,
+      subTotal: p.subTotal,
+      status: p.status,
+      firstModified: p.firstModified,
+      lastModified: p.lastModified
+    );
+  }
   /// Converts Model to Map
   static Map<String, dynamic> toMap(Product product) {
     return product == null

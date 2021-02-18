@@ -63,6 +63,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
+  // todo edited
+  static const String CART_ADD = "add";
+  static const String CART_UPDATE = "update";
+  String cartButtonText = CART_ADD;
+
   @override
   void dispose() {
     super.dispose();
@@ -100,7 +105,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     _paints = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
 
     String lastPaintId = cSharedPreference.lastOrderPaint;
-    if(lastPaintId != null){
+    if (lastPaintId != null) {
       Product lastPaint = _paints.firstWhere((Product element) => element.id == lastPaintId);
       _paints.insert(0, lastPaint);
     }
@@ -235,8 +240,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                 } else {
                   // saving the last paint and product
-                  cSharedPreference.lastOrderPaint = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
-                  cSharedPreference.lastOrderProduct = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS)?.id;
+                  cSharedPreference.lastOrderPaint =
+                      normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
+                  cSharedPreference.lastOrderProduct =
+                      normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS)?.id;
 
                   // Everything seems ok
                   NormalOrderDAL.create(normalOrder).then((value) {
@@ -385,7 +392,12 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                 ],
                               ),
                               onLongPress: () async {
+                                // On long press bring dialog to remove item
                                 return await removePaintProductFromCart(paintProduct);
+                              },
+                              onDoubleTap: () async { // todo : edited
+                                // On double tap, change the item to editable mode
+                                paintProductEditMode(paintProduct);
                               },
                             ),
                             scrollDirection: Axis.horizontal,
@@ -394,6 +406,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                             child: Text(paintProduct.paintType ?? "-", style: dataCellStyle()),
                             onLongPress: () async {
                               return await removePaintProductFromCart(paintProduct);
+                            },
+                            onDoubleTap: () async { // todo : edited
+                              // On double tap, change the item to editable mode
+                              paintProductEditMode(paintProduct);
                             },
                           )),
                           DataCell(Text(paintProduct.quantityInCart.toString(), style: dataCellStyle())),
@@ -614,7 +630,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: OutlineButton(
+                  child: OutlinedButton(
                       onPressed: () {
                         if (_paintOrderFormKey.currentState.validate()) {
                           if (_paintController.text.isEmpty) {
@@ -623,27 +639,19 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                             });
                           } else {
                             // Every thing seems good.
-                            setState(() {
-                              _noPaintValue = false;
-                              _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
-                              normalOrder.addProduct(_currentOnEditPaint);
-                              CNotifications.showSnackBar(context, "Successfully added ${_currentOnEditPaint.name}", "success", () {},
-                                  backgroundColor: Colors.green);
-                              _currentOnEditPaint.status = NormalOrderMainPageState.PENDING;
-                              _currentOnEditPaint = Product(
-                                type: CreateProductViewState.PAINT,
-                                unitOfMeasurement: CreateProductViewState.LITER,
-                                status: NormalOrderMainPageState.PENDING,
-                                quantityInCart: 0,
-                                unitPrice: 0,
-                              );
-                              clearInputs();
-                            });
+
+                            if (cartButtonText == CART_ADD) {
+                              // item being added to cart
+                              addToCart();
+                            } else {
+                              // Updating cart items
+                              updateCart();
+                            }
                           }
                         }
                       },
                       child: Text(
-                        "add",
+                        cartButtonText,
                         style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
@@ -655,6 +663,73 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
             ),
           )),
     );
+  }
+
+  // todo : edited
+  void paintProductEditMode(Product product) {
+    setState(() {
+      _noPaintValue = false;
+      cartButtonText = CART_UPDATE;
+      _currentOnEditPaint = Product.clone(product);
+      _paintController.text = _currentOnEditPaint.name;
+      _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
+    });
+  }
+
+  // todo : edited
+  void updateCart() {
+    _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
+    Product cloned = Product.clone(_currentOnEditPaint);
+    // check if current on edit product already exists in cart
+    int productIndex = normalOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
+
+    // normalOrder.products.insert(productIndex, cloned);
+    normalOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    normalOrder.calculatePaymentInfo();
+
+    CNotifications.showSnackBar(context, "Successfully updated ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);
+    _currentOnEditPaint.status = NormalOrderMainPageState.PENDING;
+    _currentOnEditPaint = Product(
+      type: CreateProductViewState.PAINT,
+      unitOfMeasurement: CreateProductViewState.LITER,
+      status: NormalOrderMainPageState.PENDING,
+      quantityInCart: 0,
+      unitPrice: 0,
+    );
+
+    cartButtonText = CART_ADD;
+    clearInputs();
+  }
+
+  void addToCart() {
+    setState(() {
+      _noPaintValue = false;
+      _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
+
+      // todo : this change needs to be
+      Product cloned = Product.clone(_currentOnEditPaint);
+      // check if current on edit product already exists in cart
+      int productIndex = normalOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
+      if (productIndex == -1) {
+        // Product does not exist in cart, adding it for the first time
+        normalOrder.addProduct(cloned);
+      } else {
+        // Product already exists in cart, so incrementing quantity in cart
+        normalOrder.products[productIndex].quantityInCart = normalOrder.products[productIndex].quantityInCart + cloned.quantityInCart;
+        normalOrder.calculatePaymentInfo();
+      }
+
+      CNotifications.showSnackBar(context, "Successfully added ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);
+      _currentOnEditPaint.status = NormalOrderMainPageState.PENDING;
+      _currentOnEditPaint = Product(
+        type: CreateProductViewState.PAINT,
+        unitOfMeasurement: CreateProductViewState.LITER,
+        status: NormalOrderMainPageState.PENDING,
+        quantityInCart: 0,
+        unitPrice: 0,
+      );
+      clearInputs();
+    });
   }
 
   void clearInputs() {

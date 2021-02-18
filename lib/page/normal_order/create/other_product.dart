@@ -42,6 +42,10 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     unitPrice: 0,
   );
 
+  static const String CART_ADD = "add";
+  static const String CART_UPDATE = "update";
+  String cartButtonText = CART_ADD;
+
   // Status type
   static const String PENDING = "a_Pending"; // values not translatables
   static const String COMPLETED = "b_Completed"; // value not translatable
@@ -85,11 +89,10 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
 
     String lastProductId = GetCSPInstance.cSharedPreference.lastOrderProduct;
-    if(lastProductId != null){
+    if (lastProductId != null) {
       Product lastProduct = _otherProducts.firstWhere((Product element) => element.id == lastProductId);
       _otherProducts.insert(0, lastProduct);
     }
-
 
     setState(() {});
     return true;
@@ -226,11 +229,24 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                             onLongPress: () {
                               removePaintProductFromCart(otherProduct);
                             },
+                            onDoubleTap: () async {
+                              // On double tap, change the item to editable mode
+                              paintProductEditMode(otherProduct);
+                            },
                           )),
-                          DataCell(Container(
-                            width: 20,
-                            child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
-                          )),
+                          DataCell(
+                            Container(
+                              width: 50,
+                              child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
+                            ),
+                            onLongPress: () {
+                              removePaintProductFromCart(otherProduct);
+                            },
+                            onDoubleTap: () async {
+                              // On double tap, change the item to editable mode
+                              paintProductEditMode(otherProduct);
+                            },
+                          ),
                           DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(Switch(
@@ -329,7 +345,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                     return Container(
                       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
                       child: Text(
-                        "No produts found",
+                        "No products found",
                       ),
                     );
                   },
@@ -378,26 +394,18 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                             });
                           } else {
                             // Every thing seems good.
-                            setState(() {
-                              _noOtherProductValue = false;
-                              currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
-
-                              normalOrder.addProduct(currentOnEditProduct);
-                              CNotifications.showSnackBar(context, "Successfuly added ${currentOnEditProduct.name}", "success", () {},
-                                  backgroundColor: Colors.green);
-
-                              currentOnEditProduct = Product(
-                                type: CreateProductViewState.OTHER_PRODUCTS,
-                                quantityInCart: 0,
-                                unitPrice: 0,
-                              );
-                              clearInputs();
-                            });
+                            if (cartButtonText == CART_ADD) {
+                              // item being added to cart
+                              addToCart();
+                            } else {
+                              // Updating cart items
+                              updateCart();
+                            }
                           }
                         }
                       },
                       child: Text(
-                        "add",
+                        cartButtonText,
                         style: TextStyle(color: Theme.of(context).accentColor, fontSize: 12),
                       )),
                 ),
@@ -407,6 +415,66 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
             ),
           )),
     );
+  }
+
+  void updateCart() {
+    currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
+    Product cloned = Product.clone(currentOnEditProduct);
+    // check if current on edit product already exists in cart
+    int productIndex = normalOrder.products.indexWhere((Product element) => element.id == currentOnEditProduct.id);
+
+    // normalOrder.products.insert(productIndex, cloned);
+    normalOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    normalOrder.calculatePaymentInfo();
+
+    CNotifications.showSnackBar(context, "Successfully updated ${currentOnEditProduct.name}", "success", () {}, backgroundColor: Colors.green);
+    currentOnEditProduct.status = NormalOrderMainPageState.PENDING;
+    currentOnEditProduct = Product(
+      type: CreateProductViewState.OTHER_PRODUCTS,
+      quantityInCart: 0,
+      unitPrice: 0,
+    );
+
+    cartButtonText = CART_ADD;
+    clearInputs();
+  }
+
+  void addToCart() {
+    setState(() {
+      _noOtherProductValue = false;
+      currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
+
+      Product cloned = Product.clone(currentOnEditProduct);
+      // check if current on edit product already exists in cart
+      int productIndex = normalOrder.products.indexWhere((Product element) => element.id == currentOnEditProduct.id);
+      if (productIndex == -1) {
+        // Product does not exist in cart, adding it for the first time
+        normalOrder.addProduct(cloned);
+      } else {
+        // Product already exists in cart, so incrementing quantity in cart
+        normalOrder.products[productIndex].quantityInCart = normalOrder.products[productIndex].quantityInCart + cloned.quantityInCart;
+        normalOrder.calculatePaymentInfo();
+      }
+
+      CNotifications.showSnackBar(context, "Successfully added ${currentOnEditProduct.name}", "success", () {}, backgroundColor: Colors.green);
+
+      currentOnEditProduct = Product(
+        type: CreateProductViewState.OTHER_PRODUCTS,
+        quantityInCart: 0,
+        unitPrice: 0,
+      );
+      clearInputs();
+    });
+  }
+
+  void paintProductEditMode(Product product) {
+    setState(() {
+      cartButtonText = CART_UPDATE;
+
+      currentOnEditProduct = Product.clone(product);
+      _otherProductsController.text = currentOnEditProduct.name;
+      _quantityController.text = currentOnEditProduct.quantityInCart.toString();
+    });
   }
 
   void clearInputs() {

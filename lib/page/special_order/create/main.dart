@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 class SpecialOrderCreateMainPage extends StatefulWidget {
   final SpecialOrder specialOrder;
   final Function navigateTo;
+
   SpecialOrderCreateMainPage({this.specialOrder, this.navigateTo});
 
   @override
@@ -17,6 +18,8 @@ class SpecialOrderCreateMainPage extends StatefulWidget {
 class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage> {
   FocusNode _focusPayment = FocusNode();
   bool focusOnLowerElements = false;
+
+  GlobalKey<ProductInputPageState> productInputKey = GlobalKey();
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                   children: [
                     ProductInputPage(
                       navigateTo: widget.navigateTo,
+                      key: productInputKey,
                     )
                   ],
                 )),
@@ -55,7 +59,7 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                     children: [
                       // Other product
                       /// Not visible when focus
-                      Visibility(child: Expanded(flex: 5, child: ProductViewPage()), visible: !focusOnLowerElements,),
+                      Visibility(child: Expanded(flex: 5, child: ProductViewPage(productInputKey : productInputKey)), visible: !focusOnLowerElements,),
 
                       // Customer and Payment information page
                       Expanded(flex: 2, child: SpecialOrderPaymentInformationPage(focus: _focusPayment,)),
