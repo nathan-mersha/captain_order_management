@@ -242,8 +242,12 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   // saving the last paint and product
                   cSharedPreference.lastOrderPaint =
                       normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
-                  cSharedPreference.lastOrderProduct =
-                      normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS)?.id;
+
+                  bool otherProductContained = normalOrder.products.any((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS);
+                  if (otherProductContained) {
+                    cSharedPreference.lastOrderProduct =
+                        normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS).id;
+                  }
 
                   // Everything seems ok
                   NormalOrderDAL.create(normalOrder).then((value) {
@@ -395,7 +399,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                 // On long press bring dialog to remove item
                                 return await removePaintProductFromCart(paintProduct);
                               },
-                              onDoubleTap: () async { // todo : edited
+                              onDoubleTap: () async {
+                                // todo : edited
                                 // On double tap, change the item to editable mode
                                 paintProductEditMode(paintProduct);
                               },
@@ -407,7 +412,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                             onLongPress: () async {
                               return await removePaintProductFromCart(paintProduct);
                             },
-                            onDoubleTap: () async { // todo : edited
+                            onDoubleTap: () async {
+                              // todo : edited
                               // On double tap, change the item to editable mode
                               paintProductEditMode(paintProduct);
                             },

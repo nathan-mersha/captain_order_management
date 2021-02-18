@@ -86,7 +86,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
     List<String> whereArgsPaint = [CreateProductViewState.OTHER_PRODUCTS]; // Querying only paint type
-    _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint);
+    _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint,);
 
     String lastProductId = GetCSPInstance.cSharedPreference.lastOrderProduct;
     if (lastProductId != null) {

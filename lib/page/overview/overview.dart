@@ -37,7 +37,15 @@ class _OverViewPageState extends State<OverViewPage> {
                       getStat: getTotalOrderCount(),
                     ),
                     StatisticsCard(
-                      Statistics(title: "Cusotmers", subTitle: "total customers", iconData: Icons.supervisor_account),
+                      Statistics(
+                        title: "Today",
+                        subTitle: "today's order",
+                        iconData: Icons.color_lens,
+                      ),
+                      getStat: getTotalOrderCount(),
+                    ),
+                    StatisticsCard(
+                      Statistics(title: "Customers", subTitle: "total customers", iconData: Icons.supervisor_account),
                       getStat: getCustomerCount(),
                     ),
                     StatisticsCard(
@@ -92,6 +100,14 @@ class _OverViewPageState extends State<OverViewPage> {
     List<NormalOrder> normalOrders = await NormalOrderDAL.find();
     return normalOrders.length;
   }
+
+  Future<num> getTodayOrderCount() async {
+    // todo : query today order count
+
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    return normalOrders.length;
+  }
+
 
   Future<num> getTotalReturnedOrdersCount() async {
     List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
