@@ -1,5 +1,5 @@
 import 'package:captain/page/analysis/stats/color.dart';
-import 'package:captain/page/analysis/stats/customer.dart';
+import 'package:captain/page/analysis/stats/customer/customer.dart';
 import 'package:captain/page/analysis/stats/employee.dart';
 import 'package:captain/page/analysis/stats/manufacturer.dart';
 import 'package:captain/page/analysis/stats/product.dart';

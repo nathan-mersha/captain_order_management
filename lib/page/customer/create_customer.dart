@@ -368,7 +368,6 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     double iconSize = 45;
     EdgeInsets padding = EdgeInsets.only(top: 20);
 
-    print("Customer profile image : ${customer.profileImage}");
     // /storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures/20201124_154051.jpg
     if (customer.profileImage == null) {
       return Container(

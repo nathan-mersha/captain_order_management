@@ -1,5 +1,6 @@
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/page/analysis/stats/customer/customer_detail.dart';
 import 'package:captain/widget/c_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -10,38 +11,58 @@ class CustomerAnalysis extends StatefulWidget {
 }
 
 class _CustomerAnalysisState extends State<CustomerAnalysis> {
+  static const String PAGE_CUSTOMER_MAIN = "PAGE_CUSTOMER_MAIN";
+  static const String PAGE_DETAIL_MAIN = "PAGE_DETAIL_MAIN";
+
+  String currentPage = PAGE_CUSTOMER_MAIN;
+  String selectedAddress;
   List<CustomerAnalysisModel> customerData = [];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder(
-        future: colorStat(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == true) {
-              return customerData.length == 0
-                  ? buildDataNotFound()
-                  : Row(
-                      children: [
-                        Expanded(flex: 1, child: buildAnalysisList()),
-                        Expanded(
-                          flex: 2,
-                          child: buildAnalysisGraph(),
-                        )
-                      ],
-                    );
-            } else {
-              return CLoading(
-                message: "Analyzing Customer",
-              );
-            }
+    return WillPopScope(
+        child: Container(
+          child: currentPage == PAGE_CUSTOMER_MAIN
+              ? FutureBuilder(
+                  future: customerStat(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data == true) {
+                        return customerData.length == 0
+                            ? buildDataNotFound()
+                            : Row(
+                                children: [
+                                  Expanded(flex: 1, child: buildAnalysisList()),
+                                  Expanded(
+                                    flex: 2,
+                                    child: buildAnalysisGraph(),
+                                  )
+                                ],
+                              );
+                      } else {
+                        return CLoading(
+                          message: "Analyzing Customer",
+                        );
+                      }
+                    } else {
+                      return CLoading(message: "Analyzing Customers");
+                    }
+                  },
+                )
+              : CustomerDetail(
+                  address: selectedAddress,
+                ),
+        ),
+        onWillPop: () {
+          if (currentPage == PAGE_DETAIL_MAIN) {
+            setState(() {
+              currentPage = PAGE_CUSTOMER_MAIN;
+            });
+            return Future.value(false);
           } else {
-            return CLoading(message: "Analyzing Customers");
+            return Future.value(true);
           }
-        },
-      ),
-    );
+        });
   }
 
   Widget buildAnalysisGraph() {
@@ -115,6 +136,12 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
                     int currentIndex = index + 1;
 
                     return ListTile(
+                      onTap: () {
+                        setState(() {
+                          selectedAddress = customerData[index].address;
+                          currentPage = PAGE_DETAIL_MAIN;
+                        });
+                      },
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -144,7 +171,7 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
     );
   }
 
-  Future colorStat() async {
+  Future customerStat() async {
     String where = "${Personnel.TYPE} = ?";
     List<String> whereArgs = [Personnel.CUSTOMER]; // Querying only customers
     List<Personnel> customers = await PersonnelDAL.find(
