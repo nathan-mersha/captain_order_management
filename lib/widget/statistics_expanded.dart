@@ -37,13 +37,17 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Text(
+                Container(
+                  color: Theme.of(context).primaryColor,
+                  padding: EdgeInsets.all(5),
+                  child: Text(
                   widget.statistics.title,
                   style: TextStyle(
-                      color: _randomColor.randomColor(colorHue: ColorHue.blue, colorBrightness: ColorBrightness.dark),
+                      // color: _randomColor.randomColor(colorHue: ColorHue.blue, colorBrightness: ColorBrightness.dark),
+                    color: Colors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.w800),
-                ),
+                ),),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

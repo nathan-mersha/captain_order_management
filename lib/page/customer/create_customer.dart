@@ -357,7 +357,6 @@ class CreateCustomerViewState extends State<CreateCustomerView> {
     PickedFile file = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
       customer.profileImage = file.path;
-      print("File path : ${file.path}");
       // /storage/emulated/0/Android/data/com.awramarket.captain_order_management/files/Pictures/scaled_image_picker5090651803202677501.jpg
       setState(() {}); // not assigning profile image in set state to reduce lag.
     }
