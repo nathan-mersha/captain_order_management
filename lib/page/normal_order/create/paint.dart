@@ -63,7 +63,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 
   final oCCy = NumberFormat("#,##0.00", "en_US");
 
-  // todo edited
   static const String CART_ADD = "add";
   static const String CART_UPDATE = "update";
   String cartButtonText = CART_ADD;
@@ -400,7 +399,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                 return await removePaintProductFromCart(paintProduct);
                               },
                               onDoubleTap: () async {
-                                // todo : edited
                                 // On double tap, change the item to editable mode
                                 paintProductEditMode(paintProduct);
                               },
@@ -413,7 +411,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               return await removePaintProductFromCart(paintProduct);
                             },
                             onDoubleTap: () async {
-                              // todo : edited
                               // On double tap, change the item to editable mode
                               paintProductEditMode(paintProduct);
                             },

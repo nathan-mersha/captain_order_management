@@ -147,7 +147,7 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
     clearCoatMonth = 0;
     clearCoatYear = 0;
 
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
 
     normalOrders.forEach((NormalOrder normalOrder) {
       normalOrder.products.forEach((Product product) {

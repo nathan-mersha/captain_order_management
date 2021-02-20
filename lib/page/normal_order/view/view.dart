@@ -390,7 +390,7 @@ class _NormalOrderDataSource extends DataTableSource {
         /// Customer
         DataCell(
             Text(
-              normalOrder.customer.name ?? '-',
+              normalOrder.customer?.name ?? '-',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ), onTap: () {
           navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);

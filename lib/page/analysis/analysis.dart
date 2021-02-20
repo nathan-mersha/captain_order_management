@@ -3,6 +3,7 @@ import 'package:captain/page/analysis/stats/customer/customer.dart';
 import 'package:captain/page/analysis/stats/employee.dart';
 import 'package:captain/page/analysis/stats/manufacturer.dart';
 import 'package:captain/page/analysis/stats/product.dart';
+import 'package:captain/page/analysis/stats/order/normal_order.dart';
 import 'package:captain/page/analysis/stats/punch.dart';
 import 'package:captain/page/analysis/stats/returned_order.dart';
 import 'package:captain/page/analysis/stats/sales.dart';
@@ -35,7 +36,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
     {NAME: "Color", DESCRIPTION: "Color codes by sale", ICON: Icons.color_lens, CHILD: ColorAnalysis()},
     {NAME: "Product", DESCRIPTION: "Which product is being sold", ICON: Icons.business_center, CHILD: ProductAnalysis()},
     {NAME: "Employee", DESCRIPTION: "Employees grade by returns", ICON: Icons.person, CHILD: EmployeeAnalysis()},
-    {NAME: "Maker", DESCRIPTION: "Sales by manufacturer", ICON: Icons.precision_manufacturing_outlined, CHILD: ManufacturerAnalysis()},
+    {NAME: "Order", DESCRIPTION: "Products sold data", ICON: Icons.request_page, CHILD: ProductSoldNormalOrderAnalysis()},
     {NAME: "Customer", DESCRIPTION: "Customers by address", ICON: Icons.supervisor_account, CHILD: CustomerAnalysis()},
     {NAME: "Punch", DESCRIPTION: "Punch in/out by employee", ICON: Icons.call_split, CHILD: PunchAnalysis()},
     {NAME: "Sales", DESCRIPTION: "Customers are buying products", ICON: Icons.supervisor_account, CHILD: SalesAnalysis()},

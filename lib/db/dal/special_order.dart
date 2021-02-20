@@ -53,6 +53,7 @@ class SpecialOrderDAL {
     final c = Completer<List<SpecialOrder>>();
 
     maps.forEach((Map<String, dynamic> element) async {
+
       SpecialOrder specialOrder = SpecialOrder(
         id: element[SpecialOrder.ID],
         idFS: element[SpecialOrder.ID_FS],
@@ -63,7 +64,7 @@ class SpecialOrderDAL {
         advancePayment: element[SpecialOrder.ADVANCE_PAYMENT],
         remainingPayment: element[SpecialOrder.REMAINING_PAYMENT],
         paidInFull: element[SpecialOrder.PAID_IN_FULL] == 1 ? true : false,
-        note: element[SpecialOrder.NOTE],
+        note: element[SpecialOrder.NOTE].toString(),
         firstModified: DateTime.parse(element[SpecialOrder.FIRST_MODIFIED]),
         lastModified: DateTime.parse(element[SpecialOrder.LAST_MODIFIED]),
       );
