@@ -115,7 +115,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   @override
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
-
     return WillPopScope(
         child: Container(
             height: 645,
@@ -367,6 +366,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                       ],
                       rows:
                           normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
+                            print("paint product status : ${paintProduct.status}");
+
                         return DataRow(cells: [
                           DataCell(SingleChildScrollView(
                             child: GestureDetector(
@@ -429,6 +430,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                     color: getStatusColor(paintProduct.status),
                                   ),
                                   items: statusTypes.map<DropdownMenuItem<String>>((String statusValue) {
+                                    print("status values : ${statusValue}");
                                     return DropdownMenuItem(
                                       child: Row(
                                         children: [

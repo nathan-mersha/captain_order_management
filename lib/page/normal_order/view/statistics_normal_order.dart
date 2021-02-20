@@ -95,7 +95,7 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
     );
   }
 
-  bool isToday(DateTime dateTime) {
+  static bool isToday(DateTime dateTime) {
     final now = DateTime.now();
     return dateTime.day == now.day && dateTime.month == now.month && dateTime.year == now.year;
   }

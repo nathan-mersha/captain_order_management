@@ -44,7 +44,7 @@ class SpecialOrderDAL {
 
   /// where : "id = ?"
   /// whereArgs : [2]
-  static Future<List<SpecialOrder>> find({String where, dynamic whereArgs}) async {
+  static Future<List<SpecialOrder>> find({String where, dynamic whereArgs, bool populatePersonnel = true}) async {
     final List<Map<String, dynamic>> maps = where == null
         ? await global.db.query(TABLE_NAME, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC")
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
@@ -57,8 +57,8 @@ class SpecialOrderDAL {
       SpecialOrder specialOrder = SpecialOrder(
         id: element[SpecialOrder.ID],
         idFS: element[SpecialOrder.ID_FS],
-        employee: await NormalOrderDAL.getPersonnel(element[SpecialOrder.EMPLOYEE]),
-        customer: await NormalOrderDAL.getPersonnel(element[SpecialOrder.CUSTOMER]),
+        employee: populatePersonnel ? await NormalOrderDAL.getPersonnel(element[SpecialOrder.EMPLOYEE]) : null,
+        customer: populatePersonnel ? await NormalOrderDAL.getPersonnel(element[SpecialOrder.CUSTOMER]) : null,
         products: Product.toModelList(jsonDecode(element[SpecialOrder.PRODUCTS])),
         totalAmount: element[SpecialOrder.TOTAL_AMOUNT],
         advancePayment: element[SpecialOrder.ADVANCE_PAYMENT],

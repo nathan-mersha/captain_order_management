@@ -1,7 +1,10 @@
 import 'package:captain/db/dal/normal_order.dart';
+import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/product/create_product.dart';
+import 'package:captain/rsr/export/pdf_exporter.dart';
 import 'package:flutter/material.dart';
 import 'package:captain/global.dart' as global;
 import 'package:intl/intl.dart';
@@ -28,8 +31,9 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
   DateTime startDate;
   DateTime endDate;
   DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
+  List<ProductSoldStat> productSoldStat;
 
-
+  bool isSpecialOrder = false;
 
   @override
   void initState() {
@@ -59,7 +63,8 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                     future: getListOfProductsStat(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        List<ProductSoldStat> productSoldStat = snapshot.data as List<ProductSoldStat>;
+                          productSoldStat = snapshot.data as List<ProductSoldStat>;
+
                         _ProductDataSource _productDataSourceVal = _ProductDataSource(
                           context,
                           productSoldStat,
@@ -111,6 +116,31 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                                 ),
                                 onPressed: () {
                                   setState(() {});
+                                }),
+                            IconButton(
+                                icon: Icon(
+                                  Icons.picture_as_pdf,
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                onPressed: () {
+
+                                  Exporter exporter = Exporter();
+                                  exporter.toPdfProductSold(productSoldStat: productSoldStat,context: context, from: startDate, to: endDate);
+
+                                }),
+                            IconButton(
+                                icon: Icon(
+                                  isSpecialOrder ? Icons.star : Icons.palette,
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                onPressed: () {
+
+                                  setState(() {
+                                    isSpecialOrder = !isSpecialOrder;
+                                  });
+
+
+
                                 })
                           ],
                           headingRowHeight: 70,
@@ -241,26 +271,50 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
   }
 
   Future<List<ProductSoldStat>> getListOfProductsStat() async {
+
     List<ProductSoldStat> productSoldStats = [];
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: true);
-    normalOrders.forEach((NormalOrder normalOrder) {
-      if (isWithInRange(normalOrder.firstModified)) {
-        // iterate if within range
-        normalOrder.products.forEach((Product product) {
-          int index = productSoldStats.indexWhere((ProductSoldStat stat) => stat.product.id == product.id);
-          if (index == -1) {
-            // new entry
-            ProductSoldStat productSoldStat =
-                ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
-            productSoldStats.add(productSoldStat);
-          } else {
-            productSoldStats[index].totalAmount = productSoldStats[index].totalAmount + product.subTotal;
-            productSoldStats[index].count = productSoldStats[index].count + 1;
-            productSoldStats[index].quantity = productSoldStats[index].quantity + product.quantityInCart;
-          }
-        });
-      }
-    });
+    if(isSpecialOrder){
+      List<SpecialOrder> specialOrders = await SpecialOrderDAL.find(populatePersonnel: false);
+      specialOrders.forEach((SpecialOrder specialOrder) {
+        if (isWithInRange(specialOrder.firstModified)) {
+          // iterate if within range
+          specialOrder.products.forEach((Product product) {
+            int index = productSoldStats.indexWhere((ProductSoldStat stat) => stat.product.id == product.id);
+            if (index == -1) {
+              // new entry
+              ProductSoldStat productSoldStat =
+              ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
+              productSoldStats.add(productSoldStat);
+            } else {
+              productSoldStats[index].totalAmount = productSoldStats[index].totalAmount + product.subTotal;
+              productSoldStats[index].count = productSoldStats[index].count + 1;
+              productSoldStats[index].quantity = productSoldStats[index].quantity + product.quantityInCart;
+            }
+          });
+        }
+      });
+    }else{
+      List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: true);
+      normalOrders.forEach((NormalOrder normalOrder) {
+        if (isWithInRange(normalOrder.firstModified)) {
+          // iterate if within range
+          normalOrder.products.forEach((Product product) {
+            int index = productSoldStats.indexWhere((ProductSoldStat stat) => stat.product.id == product.id);
+            if (index == -1) {
+              // new entry
+              ProductSoldStat productSoldStat =
+              ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
+              productSoldStats.add(productSoldStat);
+            } else {
+              productSoldStats[index].totalAmount = productSoldStats[index].totalAmount + product.subTotal;
+              productSoldStats[index].count = productSoldStats[index].count + 1;
+              productSoldStats[index].quantity = productSoldStats[index].quantity + product.quantityInCart;
+            }
+          });
+        }
+      });
+    }
+
     return productSoldStats;
   }
 }

@@ -8,6 +8,7 @@ import 'package:captain/db/model/punch.dart';
 import 'package:captain/db/model/returned_order.dart';
 import 'package:captain/db/model/statistics.dart';
 import 'package:captain/page/analysis/stats/color.dart';
+import 'package:captain/page/normal_order/view/statistics_normal_order.dart';
 import 'package:captain/page/punch/create_punch.dart';
 import 'package:captain/widget/statistics.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +41,9 @@ class _OverViewPageState extends State<OverViewPage> {
                       Statistics(
                         title: "Today",
                         subTitle: "today's order",
-                        iconData: Icons.color_lens,
+                        iconData: Icons.today,
                       ),
-                      getStat: getTotalOrderCount(),
+                      getStat: getTodayOrderCount(),
                     ),
                     StatisticsCard(
                       Statistics(title: "Customers", subTitle: "total customers", iconData: Icons.supervisor_account),
@@ -97,17 +98,20 @@ class _OverViewPageState extends State<OverViewPage> {
   }
 
   Future<num> getTotalOrderCount() async {
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
     return normalOrders.length;
   }
 
   Future<num> getTodayOrderCount() async {
-    // todo : query today order count
-
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
-    return normalOrders.length;
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
+    num count = 0;
+    normalOrders.forEach((NormalOrder element) {
+      if (StatisticsNormalOrderViewState.isToday(element.firstModified)) {
+        count++;
+      }
+    });
+    return count;
   }
-
 
   Future<num> getTotalReturnedOrdersCount() async {
     List<ReturnedOrder> returnOrders = await ReturnedOrderDAL.find();
