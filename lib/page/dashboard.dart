@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/special_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
@@ -77,6 +78,9 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    // NormalOrderDAL.find();
+    NormalOrderDAL.rawFindInnerJoin();
+
     return SafeArea(
         top: true,
         child: Scaffold(

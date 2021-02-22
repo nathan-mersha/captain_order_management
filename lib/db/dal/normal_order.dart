@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 import 'package:uuid/uuid.dart';
@@ -47,6 +49,8 @@ class NormalOrderDAL {
   /// where : "id = ?"
   /// whereArgs : [2]
   static Future<List<NormalOrder>> find({String where, dynamic whereArgs, bool populatePersonnel = true}) async {
+    DateTime start  = DateTime.now();
+    DateTime end;
     final List<Map<String, dynamic>> maps = where == null
         ? await global.db.query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
         : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
@@ -58,7 +62,7 @@ class NormalOrderDAL {
       NormalOrder normalOrder = NormalOrder(
         id: element[NormalOrder.ID],
         idFS: element[NormalOrder.ID_FS],
-        employee: populatePersonnel ? await getPersonnel(element[Personnel.EMPLOYEE]) : null,
+        // employee: populatePersonnel ? await getPersonnel(element[Personnel.EMPLOYEE]) : null,
         customer: populatePersonnel ? await getPersonnel(element[Personnel.CUSTOMER]) : null,
         products: Product.toModelList(jsonDecode(element[NormalOrder.PRODUCTS])),
         totalAmount: element[NormalOrder.TOTAL_AMOUNT],
@@ -74,12 +78,64 @@ class NormalOrderDAL {
       parsedList.add(normalOrder);
       if (maps.length == parsedList.length) {
         c.complete(parsedList);
+        end = DateTime.now();
+        int durationTaken = DateTimeRange(start: start, end: end).duration.inSeconds;
+        print("Duration to execute query of ${maps.length} normal orders took : $durationTaken seconds, populate is : ${populatePersonnel}");
       }
     });
 
     return c.future;
   }
 
+  static Future<List<NormalOrder>> rawFindInnerJoin() async{
+    DateTime start  = DateTime.now();
+    DateTime end;
+    String statement = "SELECT "
+        "$TABLE_NAME.${NormalOrder.ID} AS $TABLE_NAME${NormalOrder.ID},"
+        "$TABLE_NAME.${NormalOrder.ID_FS} AS $TABLE_NAME${NormalOrder.ID_FS},"
+        "$TABLE_NAME.${NormalOrder.EMPLOYEE} AS $TABLE_NAME${NormalOrder.EMPLOYEE},"
+        "$TABLE_NAME.${NormalOrder.CUSTOMER} AS $TABLE_NAME${NormalOrder.CUSTOMER},"
+        "$TABLE_NAME.${NormalOrder.PRODUCTS} AS $TABLE_NAME${NormalOrder.PRODUCTS},"
+        "$TABLE_NAME.${NormalOrder.TOTAL_AMOUNT} AS $TABLE_NAME${NormalOrder.TOTAL_AMOUNT},"
+        "$TABLE_NAME.${NormalOrder.ADVANCE_PAYMENT} AS $TABLE_NAME${NormalOrder.ADVANCE_PAYMENT},"
+        "$TABLE_NAME.${NormalOrder.REMAINING_PAYMENT} AS $TABLE_NAME${NormalOrder.REMAINING_PAYMENT},"
+        "$TABLE_NAME.${NormalOrder.PAID_IN_FULL} AS $TABLE_NAME${NormalOrder.PAID_IN_FULL},"
+        "$TABLE_NAME.${NormalOrder.STATUS} AS $TABLE_NAME${NormalOrder.STATUS},"
+        "$TABLE_NAME.${NormalOrder.USER_NOTIFIED} AS $TABLE_NAME${NormalOrder.USER_NOTIFIED},"
+        "$TABLE_NAME.${NormalOrder.FIRST_MODIFIED} AS $TABLE_NAME${NormalOrder.FIRST_MODIFIED},"
+        "$TABLE_NAME.${NormalOrder.LAST_MODIFIED} AS $TABLE_NAME${NormalOrder.LAST_MODIFIED},"
+
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.ID} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ID},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.ID_FS} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ID_FS},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.CONTACT_IDENTIFIER} AS ${PersonnelDAL.TABLE_NAME}${Personnel.CONTACT_IDENTIFIER},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.NAME} AS ${PersonnelDAL.TABLE_NAME}${Personnel.NAME},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.PHONE_NUMBER} AS ${PersonnelDAL.TABLE_NAME}${Personnel.PHONE_NUMBER},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.EMAIL} AS ${PersonnelDAL.TABLE_NAME}${Personnel.EMAIL},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.ADDRESS} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ADDRESS},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.ADDRESS_DETAIL} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ADDRESS_DETAIL},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.TYPE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.TYPE},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.PROFILE_IMAGE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.PROFILE_IMAGE},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.NOTE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.NOTE},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.FIRST_MODIFIED} AS ${PersonnelDAL.TABLE_NAME}${Personnel.FIRST_MODIFIED},"
+        "${PersonnelDAL.TABLE_NAME}.${Personnel.FIRST_MODIFIED} AS ${PersonnelDAL.TABLE_NAME}${Personnel.FIRST_MODIFIED} "
+
+        "FROM $TABLE_NAME "
+        "JOIN ${PersonnelDAL.TABLE_NAME} AS customer ON $TABLE_NAME.${NormalOrder.CUSTOMER}=${PersonnelDAL.TABLE_NAME}.${Personnel.ID} "
+        "JOIN ${PersonnelDAL.TABLE_NAME} AS employee ON $TABLE_NAME.${NormalOrder.EMPLOYEE}=${PersonnelDAL.TABLE_NAME}.${Personnel.ID} "
+
+    ;
+
+    String all = "SELECT * FROM $TABLE_NAME";
+    print("Sql statement is : --------- ");
+    log(statement);
+    print("Sql statement end");
+    var list = await global.db.rawQuery(statement);
+    log(list[0].toString());
+    end = DateTime.now();
+    int durationTaken = DateTimeRange(start: start, end: end).duration.inSeconds;
+    print("inner join ---- > Duration to execute query of ${list.length} normal orders took : $durationTaken seconds,}");
+  }
+  
   static Future<Personnel> getPersonnel(String id) async {
     if (id == null) {
       return null;
