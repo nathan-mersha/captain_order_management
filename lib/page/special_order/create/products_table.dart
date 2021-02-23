@@ -85,6 +85,10 @@ class ProductViewPageState extends State<ProductViewPage> {
                           "Other Products",
                           style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                         ),
+                        Text(
+                          DateFormat.yMMMd().format(specialOrder.firstModified ?? DateTime.now()),
+                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                        ),
                         AbsorbPointer(
                           absorbing: specialOrder.products.isEmpty,
                           child: Switch(

@@ -128,6 +128,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               "Paint Order - ${getInCartCount()}",
                               style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                             ),
+                            Text(DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now()), style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),),
                             SizedBox(
                               height: 25,
                               child: IconButton(

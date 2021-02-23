@@ -138,6 +138,7 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                                 })
                           ],
                           headingRowHeight: 70,
+
                           header: snapshot.connectionState == ConnectionState.done
                               ? RichText(
                                   text: TextSpan(
@@ -332,6 +333,7 @@ class _ProductDataSource extends DataTableSource {
   }
 
   void _search(String searchInput) {
+
     productSoldStat = List.from(originalBatch); // Restoring products from original batch
     productSoldStat.retainWhere((ProductSoldStat p) => p.product.name.toLowerCase().contains(searchInput.toLowerCase()));
     notifyListeners();
