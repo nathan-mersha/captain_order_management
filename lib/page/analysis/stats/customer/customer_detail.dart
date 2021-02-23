@@ -23,10 +23,10 @@ class CustomerDetailState extends State<CustomerDetail> {
   _CustomerDataSource _customerDataSource;
 
   void _sort<T>(
-      Comparable<T> Function(Personnel d) getField,
-      int columnIndex,
-      bool ascending,
-      ) {
+    Comparable<T> Function(Personnel d) getField,
+    int columnIndex,
+    bool ascending,
+  ) {
     _customerDataSource._sort<T>(getField, ascending);
     _sortColumnIndex = columnIndex;
     _sortAscending = ascending;
@@ -42,7 +42,7 @@ class CustomerDetailState extends State<CustomerDetail> {
 
     List<Personnel> filtered = [];
     customers.forEach((Personnel personnel) {
-      if(personnel.address == widget.address){
+      if (personnel.address == widget.address) {
         filtered.add(personnel);
       }
     });
@@ -77,17 +77,21 @@ class CustomerDetailState extends State<CustomerDetail> {
                   });
                   _customerDataSource = _customerDataSourceVal;
                 } else {
-                  _customerDataSource = _CustomerDataSource(context, [], () {
-                    setState(() {
-                      // updating table here.
-                    });
-                  },);
+                  _customerDataSource = _CustomerDataSource(
+                    context,
+                    [],
+                    () {
+                      setState(() {
+                        // updating table here.
+                      });
+                    },
+                  );
                 }
 
                 _rowsPerPage = 6;
 
                 return PaginatedDataTable(
-                  dataRowHeight: 53,
+                    dataRowHeight: 53,
                     actions: [
                       Container(
                         child: TextFormField(
@@ -112,41 +116,38 @@ class CustomerDetailState extends State<CustomerDetail> {
                     ],
                     headingRowHeight: 70,
                     header: snapshot.connectionState == ConnectionState.done
-                        ? Row(children: [
-                      Text(
-                        "List of customers in ",
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        widget.address,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).accentColor
-                        ),
-                      )
-                    ],)
+                        ? Row(
+                            children: [
+                              Text(
+                                "List of customers in ",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                ),
+                              ),
+                              Text(
+                                widget.address,
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+                              )
+                            ],
+                          )
                         : Row(
-                      children: [
-
-                        SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                "Loading customers",
+                                style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
+                              )
+                            ],
                           ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          "Loading customers",
-                          style: TextStyle(fontSize: 13, color: Theme.of(context).accentColor),
-                        )
-                      ],
-                    ),
                     rowsPerPage: _rowsPerPage,
                     availableRowsPerPage: <int>[_rowsPerPage, _rowsPerPage * 2, _rowsPerPage * 5, _rowsPerPage * 10],
                     onRowsPerPageChanged: (value) {
@@ -260,11 +261,11 @@ class _CustomerDataSource extends DataTableSource {
         width: imageSize,
         child: ClipOval(
             child: Image.file(
-              File(customer.profileImage),
-              fit: BoxFit.cover,
-              height: 30,
-              width: 30,
-            )),
+          File(customer.profileImage),
+          fit: BoxFit.cover,
+          height: 30,
+          width: 30,
+        )),
       );
     }
   }
@@ -278,15 +279,27 @@ class _CustomerDataSource extends DataTableSource {
       index: index,
       cells: [
         DataCell(getProfileImage(customer)),
-        DataCell(
-            Text(
-              customer.name ?? '-',
-              style: TextStyle(color: Theme.of(context).primaryColor),
-            )),
+        DataCell(Text(
+          customer.name ?? '-',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        )),
         DataCell(Text(customer.phoneNumber ?? '-')),
-        DataCell(SizedBox(child: Text(customer.email ?? '-', overflow: TextOverflow.fade,maxLines: 1,),width: 100,)),
-        DataCell(SizedBox(child: Text(customer.addressDetail ?? '-', overflow: TextOverflow.fade,maxLines: 1,),width: 100,)),
-
+        DataCell(SizedBox(
+          child: Text(
+            customer.email ?? '-',
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+          ),
+          width: 100,
+        )),
+        DataCell(SizedBox(
+          child: Text(
+            customer.addressDetail ?? '-',
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+          ),
+          width: 100,
+        )),
         DataCell(Text(DateFormat.yMMMd().format(customer.firstModified))),
         DataCell(IconButton(
           icon: Icon(
@@ -305,7 +318,6 @@ class _CustomerDataSource extends DataTableSource {
       ],
     );
   }
-
 
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunch(url)) {

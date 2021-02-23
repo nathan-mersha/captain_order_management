@@ -60,8 +60,7 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(punchData[0].employee.name, punchData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(punchData[0].employee.name, punchData[0].count)),
       ),
     ));
   }
@@ -211,8 +210,7 @@ class _PunchAnalysisState extends State<PunchAnalysis> {
 
       /// Product already exists in the analysis data
       else {
-        PunchAnalysisModel punchAnalysisModel = PunchAnalysisModel(
-            employee: punch.employee, count: punchData[index].count + 1, weight: punchData[index].weight + punch.weight, type: punch.type);
+        PunchAnalysisModel punchAnalysisModel = PunchAnalysisModel(employee: punch.employee, count: punchData[index].count + 1, weight: punchData[index].weight + punch.weight, type: punch.type);
 
         // Removing and re-inserting data
         punchData.removeAt(index);

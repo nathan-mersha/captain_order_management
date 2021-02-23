@@ -125,14 +125,12 @@ class _ImportSettingsState extends State<ImportSettings> {
 
                               /// Copy pictures
                               await Directory(picturesPathOriginal).create();
-                              copyDirectory(Directory("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/Pictures"),
-                                  Directory(picturesPathOriginal));
+                              copyDirectory(Directory("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/Pictures"), Directory(picturesPathOriginal));
 
                               /// Copy DB
                               String dbPath = await getDatabasesPath();
                               String newPath = File("$dbPath/${global.DB_NAME}").path;
-                              File sourceFile =
-                                  File("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
+                              File sourceFile = File("${extractDirectory.path}/${restoreFile.path.split("/").last.replaceAll(".zip", "")}/${global.DB_NAME}");
                               await copyFile(sourceFile, newPath);
 
                               CNotifications.showSnackBar(context, "Successfuly restored data", "success", () {}, backgroundColor: Colors.green);
@@ -143,8 +141,7 @@ class _ImportSettingsState extends State<ImportSettings> {
                               });
                             } else {
                               // Something is wrong
-                              CNotifications.showSnackBar(context, "Invalid format, restore file looks like ***_kapci_backup.zip", "failed", () {},
-                                  backgroundColor: Colors.red);
+                              CNotifications.showSnackBar(context, "Invalid format, restore file looks like ***_kapci_backup.zip", "failed", () {}, backgroundColor: Colors.red);
                             }
                           },
                           child: Text(

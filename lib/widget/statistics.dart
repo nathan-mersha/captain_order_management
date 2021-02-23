@@ -35,10 +35,7 @@ class _StatisticsCardState extends State<StatisticsCard> {
                 children: <Widget>[
                   Text(
                     widget.statistics.title,
-                    style: TextStyle(
-                        color: _randomColor.randomColor(colorHue: ColorHue.purple, colorBrightness: ColorBrightness.dark),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(color: _randomColor.randomColor(colorHue: ColorHue.purple, colorBrightness: ColorBrightness.dark), fontSize: 11, fontWeight: FontWeight.w800),
                   ),
                   SizedBox(
                     height: 20,

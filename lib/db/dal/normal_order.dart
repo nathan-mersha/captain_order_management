@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:captain/global.dart' as global;
 import 'package:uuid/uuid.dart';
@@ -46,50 +44,7 @@ class NormalOrderDAL {
     return normalOrder;
   }
 
-  /// where : "id = ?"
-  /// whereArgs : [2]
-  static Future<List<NormalOrder>> find({String where, dynamic whereArgs, bool populatePersonnel = true}) async {
-    DateTime start  = DateTime.now();
-    DateTime end;
-    final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${NormalOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${NormalOrder.LAST_MODIFIED} DESC");
-
-    List<NormalOrder> parsedList = [];
-    final c = Completer<List<NormalOrder>>();
-
-    maps.forEach((Map<String, dynamic> element) async {
-      NormalOrder normalOrder = NormalOrder(
-        id: element[NormalOrder.ID],
-        idFS: element[NormalOrder.ID_FS],
-        // employee: populatePersonnel ? await getPersonnel(element[Personnel.EMPLOYEE]) : null,
-        customer: populatePersonnel ? await getPersonnel(element[Personnel.CUSTOMER]) : null,
-        products: Product.toModelList(jsonDecode(element[NormalOrder.PRODUCTS])),
-        totalAmount: element[NormalOrder.TOTAL_AMOUNT],
-        advancePayment: element[NormalOrder.ADVANCE_PAYMENT],
-        remainingPayment: element[NormalOrder.REMAINING_PAYMENT],
-        paidInFull: element[NormalOrder.PAID_IN_FULL] == 1 ? true : false,
-        status: element[NormalOrder.STATUS],
-        userNotified: element[NormalOrder.USER_NOTIFIED] == 1 ? true : false,
-        firstModified: DateTime.parse(element[NormalOrder.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(element[NormalOrder.LAST_MODIFIED]),
-      );
-
-      parsedList.add(normalOrder);
-      if (maps.length == parsedList.length) {
-        c.complete(parsedList);
-        end = DateTime.now();
-        int durationTaken = DateTimeRange(start: start, end: end).duration.inSeconds;
-        print("Duration to execute query of ${maps.length} normal orders took : $durationTaken seconds, populate is : ${populatePersonnel}");
-      }
-    });
-
-    return c.future;
-  }
-
-  static Future<List<NormalOrder>> rawFindInnerJoin() async{
-    DateTime start  = DateTime.now();
-    DateTime end;
+  static Future<List<NormalOrder>> find({String where, List<dynamic> whereArgs}) async {
     String statement = "SELECT "
         "$TABLE_NAME.${NormalOrder.ID} AS $TABLE_NAME${NormalOrder.ID},"
         "$TABLE_NAME.${NormalOrder.ID_FS} AS $TABLE_NAME${NormalOrder.ID_FS},"
@@ -104,38 +59,91 @@ class NormalOrderDAL {
         "$TABLE_NAME.${NormalOrder.USER_NOTIFIED} AS $TABLE_NAME${NormalOrder.USER_NOTIFIED},"
         "$TABLE_NAME.${NormalOrder.FIRST_MODIFIED} AS $TABLE_NAME${NormalOrder.FIRST_MODIFIED},"
         "$TABLE_NAME.${NormalOrder.LAST_MODIFIED} AS $TABLE_NAME${NormalOrder.LAST_MODIFIED},"
-
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.ID} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ID},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.ID_FS} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ID_FS},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.CONTACT_IDENTIFIER} AS ${PersonnelDAL.TABLE_NAME}${Personnel.CONTACT_IDENTIFIER},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.NAME} AS ${PersonnelDAL.TABLE_NAME}${Personnel.NAME},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.PHONE_NUMBER} AS ${PersonnelDAL.TABLE_NAME}${Personnel.PHONE_NUMBER},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.EMAIL} AS ${PersonnelDAL.TABLE_NAME}${Personnel.EMAIL},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.ADDRESS} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ADDRESS},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.ADDRESS_DETAIL} AS ${PersonnelDAL.TABLE_NAME}${Personnel.ADDRESS_DETAIL},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.TYPE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.TYPE},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.PROFILE_IMAGE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.PROFILE_IMAGE},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.NOTE} AS ${PersonnelDAL.TABLE_NAME}${Personnel.NOTE},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.FIRST_MODIFIED} AS ${PersonnelDAL.TABLE_NAME}${Personnel.FIRST_MODIFIED},"
-        "${PersonnelDAL.TABLE_NAME}.${Personnel.FIRST_MODIFIED} AS ${PersonnelDAL.TABLE_NAME}${Personnel.FIRST_MODIFIED} "
-
+        "${Personnel.CUSTOMER}.${Personnel.ID} AS ${Personnel.CUSTOMER}${Personnel.ID},"
+        "${Personnel.CUSTOMER}.${Personnel.ID_FS} AS ${Personnel.CUSTOMER}${Personnel.ID_FS},"
+        "${Personnel.CUSTOMER}.${Personnel.CONTACT_IDENTIFIER} AS ${Personnel.CUSTOMER}${Personnel.CONTACT_IDENTIFIER},"
+        "${Personnel.CUSTOMER}.${Personnel.NAME} AS ${Personnel.CUSTOMER}${Personnel.NAME},"
+        "${Personnel.CUSTOMER}.${Personnel.PHONE_NUMBER} AS ${Personnel.CUSTOMER}${Personnel.PHONE_NUMBER},"
+        "${Personnel.CUSTOMER}.${Personnel.EMAIL} AS ${Personnel.CUSTOMER}${Personnel.EMAIL},"
+        "${Personnel.CUSTOMER}.${Personnel.ADDRESS} AS ${Personnel.CUSTOMER}${Personnel.ADDRESS},"
+        "${Personnel.CUSTOMER}.${Personnel.ADDRESS_DETAIL} AS ${Personnel.CUSTOMER}${Personnel.ADDRESS_DETAIL},"
+        "${Personnel.CUSTOMER}.${Personnel.TYPE} AS ${Personnel.CUSTOMER}${Personnel.TYPE},"
+        "${Personnel.CUSTOMER}.${Personnel.PROFILE_IMAGE} AS ${Personnel.CUSTOMER}${Personnel.PROFILE_IMAGE},"
+        "${Personnel.CUSTOMER}.${Personnel.NOTE} AS ${Personnel.CUSTOMER}${Personnel.NOTE},"
+        "${Personnel.CUSTOMER}.${Personnel.FIRST_MODIFIED} AS ${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED},"
+        "${Personnel.CUSTOMER}.${Personnel.LAST_MODIFIED} AS ${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED},"
+        "${Personnel.EMPLOYEE}.${Personnel.ID} AS ${Personnel.EMPLOYEE}${Personnel.ID},"
+        "${Personnel.EMPLOYEE}.${Personnel.ID_FS} AS ${Personnel.EMPLOYEE}${Personnel.ID_FS},"
+        "${Personnel.EMPLOYEE}.${Personnel.CONTACT_IDENTIFIER} AS ${Personnel.EMPLOYEE}${Personnel.CONTACT_IDENTIFIER},"
+        "${Personnel.EMPLOYEE}.${Personnel.NAME} AS ${Personnel.EMPLOYEE}${Personnel.NAME},"
+        "${Personnel.EMPLOYEE}.${Personnel.PHONE_NUMBER} AS ${Personnel.EMPLOYEE}${Personnel.PHONE_NUMBER},"
+        "${Personnel.EMPLOYEE}.${Personnel.EMAIL} AS ${Personnel.EMPLOYEE}${Personnel.EMAIL},"
+        "${Personnel.EMPLOYEE}.${Personnel.ADDRESS} AS ${Personnel.EMPLOYEE}${Personnel.ADDRESS},"
+        "${Personnel.EMPLOYEE}.${Personnel.ADDRESS_DETAIL} AS ${Personnel.EMPLOYEE}${Personnel.ADDRESS_DETAIL},"
+        "${Personnel.EMPLOYEE}.${Personnel.TYPE} AS ${Personnel.EMPLOYEE}${Personnel.TYPE},"
+        "${Personnel.EMPLOYEE}.${Personnel.PROFILE_IMAGE} AS ${Personnel.EMPLOYEE}${Personnel.PROFILE_IMAGE},"
+        "${Personnel.EMPLOYEE}.${Personnel.NOTE} AS ${Personnel.EMPLOYEE}${Personnel.NOTE},"
+        "${Personnel.EMPLOYEE}.${Personnel.FIRST_MODIFIED} AS ${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED},"
+        "${Personnel.EMPLOYEE}.${Personnel.LAST_MODIFIED} AS ${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED} "
         "FROM $TABLE_NAME "
-        "JOIN ${PersonnelDAL.TABLE_NAME} AS customer ON $TABLE_NAME.${NormalOrder.CUSTOMER}=${PersonnelDAL.TABLE_NAME}.${Personnel.ID} "
-        "JOIN ${PersonnelDAL.TABLE_NAME} AS employee ON $TABLE_NAME.${NormalOrder.EMPLOYEE}=${PersonnelDAL.TABLE_NAME}.${Personnel.ID} "
+        "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.CUSTOMER} ON $TABLE_NAME.${NormalOrder.CUSTOMER}=${Personnel.CUSTOMER}.${Personnel.ID} "
+        "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.EMPLOYEE} ON $TABLE_NAME.${NormalOrder.EMPLOYEE}=${Personnel.EMPLOYEE}.${Personnel.ID} "
+        "${where == null ? "" : "WHERE $where"}";
 
-    ;
+    var list = await global.db.rawQuery(statement, whereArgs);
+    return List.generate(list.length, (i) {
+      Personnel customer = Personnel(
+        id: list[i]["${Personnel.CUSTOMER}${Personnel.ID}"],
+        idFS: list[i]["${Personnel.CUSTOMER}${Personnel.ID_FS}"],
+        contactIdentifier: list[i]["${Personnel.CUSTOMER}${Personnel.CONTACT_IDENTIFIER}"],
+        name: list[i]["${Personnel.CUSTOMER}${Personnel.NAME}"],
+        phoneNumber: list[i]["${Personnel.CUSTOMER}${Personnel.PHONE_NUMBER}"],
+        email: list[i]["${Personnel.CUSTOMER}${Personnel.EMAIL}"],
+        address: list[i]["${Personnel.CUSTOMER}${Personnel.ADDRESS}"],
+        addressDetail: list[i]["${Personnel.CUSTOMER}${Personnel.ADDRESS_DETAIL}"],
+        type: list[i]["${Personnel.CUSTOMER}${Personnel.TYPE}"],
+        profileImage: list[i]["${Personnel.CUSTOMER}${Personnel.PROFILE_IMAGE}"],
+        note: list[i]["${Personnel.CUSTOMER}${Personnel.NOTE}"],
+        firstModified: list[i]["${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED}"]),
+        lastModified: list[i]["${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED}"]),
+      );
 
-    String all = "SELECT * FROM $TABLE_NAME";
-    print("Sql statement is : --------- ");
-    log(statement);
-    print("Sql statement end");
-    var list = await global.db.rawQuery(statement);
-    log(list[0].toString());
-    end = DateTime.now();
-    int durationTaken = DateTimeRange(start: start, end: end).duration.inSeconds;
-    print("inner join ---- > Duration to execute query of ${list.length} normal orders took : $durationTaken seconds,}");
+      Personnel employee = Personnel(
+        id: list[i]["${Personnel.EMPLOYEE}${Personnel.ID}"],
+        idFS: list[i]["${Personnel.EMPLOYEE}${Personnel.ID_FS}"],
+        contactIdentifier: list[i]["${Personnel.EMPLOYEE}${Personnel.CONTACT_IDENTIFIER}"],
+        name: list[i]["${Personnel.EMPLOYEE}${Personnel.NAME}"],
+        phoneNumber: list[i]["${Personnel.EMPLOYEE}${Personnel.PHONE_NUMBER}"],
+        email: list[i]["${Personnel.EMPLOYEE}${Personnel.EMAIL}"],
+        address: list[i]["${Personnel.EMPLOYEE}${Personnel.ADDRESS}"],
+        addressDetail: list[i]["${Personnel.EMPLOYEE}${Personnel.ADDRESS_DETAIL}"],
+        type: list[i]["${Personnel.EMPLOYEE}${Personnel.TYPE}"],
+        profileImage: list[i]["${Personnel.EMPLOYEE}${Personnel.PROFILE_IMAGE}"],
+        note: list[i]["${Personnel.EMPLOYEE}${Personnel.NOTE}"],
+        firstModified: list[i]["${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED}"]),
+        lastModified: list[i]["${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED}"]),
+      );
+
+      NormalOrder normalOrder = NormalOrder(
+        id: list[i]["$TABLE_NAME${NormalOrder.ID}"],
+        idFS: list[i]["$TABLE_NAME${NormalOrder.ID_FS}"],
+        employee: employee,
+        customer: customer,
+        products: Product.toModelList(jsonDecode(list[i]["$TABLE_NAME${NormalOrder.PRODUCTS}"])),
+        totalAmount: list[i]["$TABLE_NAME${NormalOrder.TOTAL_AMOUNT}"],
+        advancePayment: list[i]["$TABLE_NAME${NormalOrder.ADVANCE_PAYMENT}"],
+        remainingPayment: list[i]["$TABLE_NAME${NormalOrder.REMAINING_PAYMENT}"],
+        paidInFull: list[i]["$TABLE_NAME${NormalOrder.PAID_IN_FULL}"] == 1 ? true : false,
+        status: list[i]["$TABLE_NAME${NormalOrder.STATUS}"],
+        userNotified: list[i]["$TABLE_NAME${NormalOrder.USER_NOTIFIED}"] == 1 ? true : false,
+        firstModified: list[i]["$TABLE_NAME${NormalOrder.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${NormalOrder.FIRST_MODIFIED}"]),
+        lastModified: list[i]["$TABLE_NAME${NormalOrder.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${NormalOrder.LAST_MODIFIED}"]),
+      );
+
+      return normalOrder;
+    });
   }
-  
+
   static Future<Personnel> getPersonnel(String id) async {
     if (id == null) {
       return null;
@@ -162,6 +170,8 @@ class NormalOrderDAL {
   /// where : "id = ?"
   /// whereArgs : [2]
   static Future<void> delete({String where, dynamic whereArgs}) async {
+    print("Where : $where");
+    print("where args : ${whereArgs.toString()}");
     await global.db.delete(
       TABLE_NAME,
       where: where,

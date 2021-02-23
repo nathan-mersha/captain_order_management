@@ -62,8 +62,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].totalLitter.round())),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(paintsData[0].product.name, paintsData[0].totalLitter.round())),
       ),
     ));
   }
@@ -161,9 +160,7 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
                           Icon(
                             Icons.circle,
                             size: 30,
-                            color: paintsData[index].product.colorValue == null
-                                ? Colors.black12
-                                : Color(int.parse(paintsData[index].product.colorValue)),
+                            color: paintsData[index].product.colorValue == null ? Colors.black12 : Color(int.parse(paintsData[index].product.colorValue)),
                           )
                         ],
                       ),
@@ -192,18 +189,15 @@ class _ColorAnalysisState extends State<ColorAnalysis> {
 
           /// Product does not exist
           if (index == -1) {
-            ColorAnalysisModel colorAnalysisModelNew =
-                ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
+            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(product: product, count: 1, totalLitter: double.parse(product.quantityInCart.toString()));
 
             paintsData.add(colorAnalysisModelNew);
           }
 
           /// Product already exists in the analysis data
           else {
-            ColorAnalysisModel colorAnalysisModelNew = ColorAnalysisModel(
-                product: product,
-                count: paintsData[index].count + 1,
-                totalLitter: paintsData[index].totalLitter + double.parse(product.quantityInCart.toString()));
+            ColorAnalysisModel colorAnalysisModelNew =
+                ColorAnalysisModel(product: product, count: paintsData[index].count + 1, totalLitter: paintsData[index].totalLitter + double.parse(product.quantityInCart.toString()));
             paintsData.removeAt(index);
             paintsData.insert(index, colorAnalysisModelNew);
           }

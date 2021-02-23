@@ -19,8 +19,7 @@ class CreateReturnedOrderView extends StatefulWidget {
   final GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey;
   final GlobalKey<ReturnedOrderTableState> returnedOrderTableKey;
 
-  const CreateReturnedOrderView({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey})
-      : super(key: createReturnedOrderKey);
+  const CreateReturnedOrderView({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey}) : super(key: createReturnedOrderKey);
 
   @override
   CreateReturnedOrderViewState createState() => CreateReturnedOrderViewState();
@@ -398,25 +397,24 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
     ReturnedOrder createdReturnedOrder = await ReturnedOrderDAL.create(returnedOrder);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created returned order for employee ${returnedOrder.employee.name}", "success", () {},
-        backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfuly created returned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdReturnedOrder);
   }
 
   Future createInFSAndUpdateLocally(ReturnedOrder returnedOrder) async {
-    String where = "${ReturnedOrder.ID} = ?";
-    List<String> whereArgs = [returnedOrder.id]; // Querying only returnedOrders
-    ReturnedOrderDAL.find(where: where, whereArgs: whereArgs).then((List<ReturnedOrder> returnedOrder) async {
-      ReturnedOrder queriedReturnedOrder = returnedOrder.first;
-
-      /// todo Creating data to fire store nullify image
-//      dynamic returnedOrderMap = ReturnedOrder.toMap(queriedReturnedOrder);
-//      DocumentReference docRef = await Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).add(returnedOrderMap);
-//      queriedReturnedOrder.idFS = docRef.documentID;
-//      String where = "${ReturnedOrder.ID} = ?";
-//      List<String> whereArgs = [queriedReturnedOrder.id]; // Querying only returnedOrders
-//      ReturnedOrderDAL.update(where: where, whereArgs: whereArgs, returnedOrder: queriedReturnedOrder);
-    });
+    // String where = "${ReturnedOrder.ID} = ?";
+    // List<String> whereArgs = [returnedOrder.id]; // Querying only returnedOrders
+    // ReturnedOrderDAL.find(where: where, whereArgs: whereArgs).then((List<ReturnedOrder> returnedOrder) async {
+    //   ReturnedOrder queriedReturnedOrder = returnedOrder.first;
+    //
+    //   /// todo Creating data to fire store nullify image
+    //  dynamic returnedOrderMap = ReturnedOrder.toMap(queriedReturnedOrder);
+    //  DocumentReference docRef = await Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).add(returnedOrderMap);
+    //  queriedReturnedOrder.idFS = docRef.documentID;
+    //  String where = "${ReturnedOrder.ID} = ?";
+    //  List<String> whereArgs = [queriedReturnedOrder.id]; // Querying only returnedOrders
+    //  ReturnedOrderDAL.update(where: where, whereArgs: whereArgs, returnedOrder: queriedReturnedOrder);
+    // });
   }
 
   Future updateReturnedOrder(BuildContext context) async {
@@ -435,8 +433,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
 //      Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(returnedOrder.idFS).updateData(returnedOrderMap);
     }
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${returnedOrder.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   void clearInputs() {
@@ -448,7 +445,7 @@ class CreateReturnedOrderViewState extends State<CreateReturnedOrderView> {
   }
 
   void passForUpdate(ReturnedOrder returnedOrderUpdateData) async {
-    String where = "${ReturnedOrder.ID} = ?";
+    String where = "${ReturnedOrderDAL.TABLE_NAME}.${ReturnedOrder.ID} = ?";
     List<String> whereArgs = [returnedOrderUpdateData.id]; // Querying only returnedOrders
     List<ReturnedOrder> returnedOrders = await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
 

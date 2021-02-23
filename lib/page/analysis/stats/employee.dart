@@ -57,8 +57,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].employee.name, returnsData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].employee.name, returnsData[0].count)),
       ),
     ));
   }
@@ -189,8 +188,7 @@ class _EmployeeAnalysisState extends State<EmployeeAnalysis> {
         EmployeeAnalysisModel returnedOrderAnalysisModelNew = EmployeeAnalysisModel(employee: returnedOrder.employee, count: returnedOrder.count);
         returnsData.add(returnedOrderAnalysisModelNew);
       } else {
-        EmployeeAnalysisModel returnedOrderAnalysisModelNew =
-            EmployeeAnalysisModel(employee: returnedOrder.employee, count: returnsData[index].count + returnedOrder.count);
+        EmployeeAnalysisModel returnedOrderAnalysisModelNew = EmployeeAnalysisModel(employee: returnedOrder.employee, count: returnsData[index].count + returnedOrder.count);
 
         returnsData.removeAt(index);
         returnsData.insert(index, returnedOrderAnalysisModelNew);

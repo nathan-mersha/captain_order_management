@@ -63,7 +63,7 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                     future: getListOfProductsStat(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                          productSoldStat = snapshot.data as List<ProductSoldStat>;
+                        productSoldStat = snapshot.data as List<ProductSoldStat>;
 
                         _ProductDataSource _productDataSourceVal = _ProductDataSource(
                           context,
@@ -123,10 +123,8 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                                   color: Theme.of(context).accentColor,
                                 ),
                                 onPressed: () {
-
                                   Exporter exporter = Exporter();
-                                  exporter.toPdfProductSold(productSoldStat: productSoldStat,context: context, from: startDate, to: endDate);
-
+                                  exporter.toPdfProductSold(productSoldStat: productSoldStat, context: context, from: startDate, to: endDate);
                                 }),
                             IconButton(
                                 icon: Icon(
@@ -134,30 +132,24 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
                                   color: Theme.of(context).accentColor,
                                 ),
                                 onPressed: () {
-
                                   setState(() {
                                     isSpecialOrder = !isSpecialOrder;
                                   });
-
-
-
                                 })
                           ],
                           headingRowHeight: 70,
                           header: snapshot.connectionState == ConnectionState.done
-                              ? 
-                          RichText(
-                            text: TextSpan(
-                              text: 'Sold from ',
-                              style:  TextStyle(fontSize: 15, color: Colors.black87),
-                              children: <TextSpan>[
-                                TextSpan(text: dateFormat.format(startDate), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600)),
-                                TextSpan(text: ' to '),
-                                TextSpan(text: dateFormat.format(endDate), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600)),
-
-                              ],
-                            ),
-                          )
+                              ? RichText(
+                                  text: TextSpan(
+                                    text: 'Sold from ',
+                                    style: TextStyle(fontSize: 15, color: Colors.black87),
+                                    children: <TextSpan>[
+                                      TextSpan(text: dateFormat.format(startDate), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                                      TextSpan(text: ' to '),
+                                      TextSpan(text: dateFormat.format(endDate), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                                    ],
+                                  ),
+                                )
                               : Row(
                                   children: [
                                     SizedBox(
@@ -271,10 +263,9 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
   }
 
   Future<List<ProductSoldStat>> getListOfProductsStat() async {
-
     List<ProductSoldStat> productSoldStats = [];
-    if(isSpecialOrder){
-      List<SpecialOrder> specialOrders = await SpecialOrderDAL.find(populatePersonnel: false);
+    if (isSpecialOrder) {
+      List<SpecialOrder> specialOrders = await SpecialOrderDAL.find();
       specialOrders.forEach((SpecialOrder specialOrder) {
         if (isWithInRange(specialOrder.firstModified)) {
           // iterate if within range
@@ -282,8 +273,7 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
             int index = productSoldStats.indexWhere((ProductSoldStat stat) => stat.product.id == product.id);
             if (index == -1) {
               // new entry
-              ProductSoldStat productSoldStat =
-              ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
+              ProductSoldStat productSoldStat = ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
               productSoldStats.add(productSoldStat);
             } else {
               productSoldStats[index].totalAmount = productSoldStats[index].totalAmount + product.subTotal;
@@ -293,8 +283,8 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
           });
         }
       });
-    }else{
-      List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: true);
+    } else {
+      List<NormalOrder> normalOrders = await NormalOrderDAL.find();
       normalOrders.forEach((NormalOrder normalOrder) {
         if (isWithInRange(normalOrder.firstModified)) {
           // iterate if within range
@@ -302,8 +292,7 @@ class ProductSoldNormalOrderAnalysisState extends State<ProductSoldNormalOrderAn
             int index = productSoldStats.indexWhere((ProductSoldStat stat) => stat.product.id == product.id);
             if (index == -1) {
               // new entry
-              ProductSoldStat productSoldStat =
-              ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
+              ProductSoldStat productSoldStat = ProductSoldStat(product: product, totalAmount: product.subTotal, count: 1, quantity: product.quantityInCart);
               productSoldStats.add(productSoldStat);
             } else {
               productSoldStats[index].totalAmount = productSoldStats[index].totalAmount + product.subTotal;
@@ -362,10 +351,16 @@ class _ProductDataSource extends DataTableSource {
         DataCell(Row(
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          Text(productSoldStat[index].quantity.toString() ?? "-"),
-          SizedBox(width: 3,),
-          Text(productSoldStat[index].product.unitOfMeasurement.toLowerCase() ?? "-", style: TextStyle(fontSize: 11, color: Colors.black87),),
-        ],)),
+            Text(productSoldStat[index].quantity.toString() ?? "-"),
+            SizedBox(
+              width: 3,
+            ),
+            Text(
+              productSoldStat[index].product.unitOfMeasurement.toLowerCase() ?? "-",
+              style: TextStyle(fontSize: 11, color: Colors.black87),
+            ),
+          ],
+        )),
         DataCell(Text(oCCy.format(productSoldStat[index].totalAmount))),
         DataCell(Text(oCCy.format(productSoldStat[index].product.unitPrice))),
       ],

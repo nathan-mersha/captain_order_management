@@ -13,8 +13,7 @@ class ReturnedOrderTable extends StatefulWidget {
   final GlobalKey<StatisticsReturnedOrderViewState> statisticsReturnedOrderKey;
   final GlobalKey<ReturnedOrderTableState> returnedOrderTableKey;
 
-  const ReturnedOrderTable({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey})
-      : super(key: returnedOrderTableKey);
+  const ReturnedOrderTable({this.returnedOrderTableKey, this.createReturnedOrderKey, this.statisticsReturnedOrderKey}) : super(key: returnedOrderTableKey);
 
   @override
   ReturnedOrderTableState createState() => ReturnedOrderTableState();
@@ -253,7 +252,7 @@ class _ReturnedOrderDataSource extends DataTableSource {
         }),
         DataCell(buildProductView(returnedOrder.product)),
         DataCell(Text(returnedOrder.count.toString() ?? "-")),
-        DataCell(Text(returnedOrder.customer == null ? "-" : returnedOrder.customer.name)),
+        DataCell(Text(returnedOrder.customer?.name ?? "-")),
         DataCell(Text(DateFormat.yMMMd().format(returnedOrder.firstModified))),
         DataCell(IconButton(
           icon: Icon(
@@ -296,16 +295,7 @@ class _ReturnedOrderDataSource extends DataTableSource {
 
                 String where = "${ReturnedOrder.ID} = ?";
                 List<String> whereArgs = [returnedOrder.id]; // Querying only returnedOrders
-
-                List<ReturnedOrder> deleteReturnedOrderList = await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
-
                 await ReturnedOrderDAL.delete(where: where, whereArgs: whereArgs);
-
-                ReturnedOrder deleteReturnedOrder = deleteReturnedOrderList.first;
-                if (deleteReturnedOrder.idFS != null) {
-//                  Firestore.instance.collection(ReturnedOrder.COLLECTION_NAME).document(deleteReturnedOrder.idFS).delete();
-                }
-
                 Navigator.pop(context);
                 return null;
               },

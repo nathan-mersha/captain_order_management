@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:captain/db/dal/normal_order.dart';
+import 'package:captain/db/dal/punch.dart';
 import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
+import 'package:captain/db/model/punch.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:captain/db/shared_preference/c_shared_preference.dart';
 import 'package:captain/page/analysis/analysis.dart';
@@ -78,9 +81,6 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    // NormalOrderDAL.find();
-    NormalOrderDAL.rawFindInnerJoin();
-
     return SafeArea(
         top: true,
         child: Scaffold(
@@ -132,10 +132,7 @@ class DashboardPageState extends State<DashboardPage> {
                               ),
                               title: Text(
                                 menus[index][NAME],
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: selectedMenuIndex == index ? 13 : 12,
-                                    fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                                style: TextStyle(color: Colors.white, fontSize: selectedMenuIndex == index ? 13 : 12, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                               ),
                               trailing: Container(
                                 padding: EdgeInsets.only(right: 10),

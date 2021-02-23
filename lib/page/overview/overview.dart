@@ -98,12 +98,12 @@ class _OverViewPageState extends State<OverViewPage> {
   }
 
   Future<num> getTotalOrderCount() async {
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
     return normalOrders.length;
   }
 
   Future<num> getTodayOrderCount() async {
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
     num count = 0;
     normalOrders.forEach((NormalOrder element) {
       if (StatisticsNormalOrderViewState.isToday(element.firstModified)) {
@@ -119,14 +119,14 @@ class _OverViewPageState extends State<OverViewPage> {
   }
 
   Future<num> getPunchInCount() async {
-    String where = "${Punch.TYPE} = ?";
+    String where = "${PunchDAL.TABLE_NAME}.${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_IN]; //
     List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;
   }
 
   Future<num> getPunchOutCount() async {
-    String where = "${Punch.TYPE} = ?";
+    String where = "${PunchDAL.TABLE_NAME}.${Punch.TYPE} = ?";
     List<String> whereArgs = [CreatePunchViewState.PUNCH_OUT]; //
     List<Punch> punches = await PunchDAL.find(where: where, whereArgs: whereArgs);
     return punches.length;

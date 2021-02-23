@@ -26,7 +26,7 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
   int productWeek = 0;
   int productMonth = 0;
   int productYear = 0;
-  
+
   // Auto cryl
   int autoCrylTotal = 0;
   int autoCrylToday = 0;
@@ -47,7 +47,7 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
   int clearCoatWeek = 0;
   int clearCoatMonth = 0;
   int clearCoatYear = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +66,6 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
           getMonthStat: productMonth,
           getYearStat: productYear,
         ),
-
         StatisticsExpandedCard(
           Statistics(title: "Auto-Cryl"),
           getTotalStat: autoCrylTotal,
@@ -132,7 +131,7 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
     productWeek = 0;
     productMonth = 0;
     productYear = 0;
-    
+
     // Metalic
     metalicTotal = 0;
     metalicToday = 0;
@@ -147,11 +146,10 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
     clearCoatMonth = 0;
     clearCoatYear = 0;
 
-    List<NormalOrder> normalOrders = await NormalOrderDAL.find(populatePersonnel: false);
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find();
 
     normalOrders.forEach((NormalOrder normalOrder) {
       normalOrder.products.forEach((Product product) {
-
         if (product.type == CreateProductViewState.OTHER_PRODUCTS) {
           if (isToday(normalOrder.firstModified)) productToday++;
           if (isThisWeek(normalOrder.firstModified)) productWeek++;

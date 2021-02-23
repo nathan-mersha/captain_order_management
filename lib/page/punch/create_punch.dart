@@ -167,9 +167,7 @@ class CreatePunchViewState extends State<CreatePunchView> {
                                   icon: Icon(
                                     Icons.circle,
                                     size: 30,
-                                    color: punch == null || punch.product == null || punch.product.colorValue == null
-                                        ? Colors.black12
-                                        : Color(int.parse(punch.product.colorValue)),
+                                    color: punch == null || punch.product == null || punch.product.colorValue == null ? Colors.black12 : Color(int.parse(punch.product.colorValue)),
                                   ))),
                           suggestionsCallback: (pattern) async {
                             return _paints.where((Product paint) {
@@ -386,8 +384,7 @@ class CreatePunchViewState extends State<CreatePunchView> {
     Punch createdPunch = await PunchDAL.create(punch);
 
     /// Showing notification
-    CNotifications.showSnackBar(context, "Successfuly created punch for employee ${punch.employee.name}", "success", () {},
-        backgroundColor: Colors.green);
+    CNotifications.showSnackBar(context, "Successfuly created punch for employee ${punch.employee.name}", "success", () {}, backgroundColor: Colors.green);
     createInFSAndUpdateLocally(createdPunch);
   }
 
@@ -421,8 +418,7 @@ class CreatePunchViewState extends State<CreatePunchView> {
 //      Firestore.instance.collection(Punch.COLLECTION_NAME).document(punch.idFS).updateData(punchMap);
     }
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${punch.employee.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfuly updated retruned order for employee ${punch.employee.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   @override

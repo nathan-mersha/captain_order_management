@@ -51,8 +51,7 @@ class CSharedPreference {
 
   // Lock system if deal is broken
   set systemLocked(bool systemLocked) => pref.setBool(SYSTEM_LOCKED, systemLocked);
-  set sendNotificationAutomatically(bool sendNotificationAutomatically) =>
-      pref.setBool(SEND_NOTIFICATION_AUTOMATICALLY, sendNotificationAutomatically);
+  set sendNotificationAutomatically(bool sendNotificationAutomatically) => pref.setBool(SEND_NOTIFICATION_AUTOMATICALLY, sendNotificationAutomatically);
 
   // Export path
   set exportPath(String path) => pref.setString(EXPORT_PATH, path);
@@ -74,8 +73,7 @@ class CSharedPreference {
   set featureAdminOnlyProduct(bool featureAdminOnlyProduct) => pref.setBool(FEATURE_ADMIN_ONLY_PRODUCT, featureAdminOnlyProduct);
   set featureAdminOnlyEmployees(bool featureAdminOnlyEmployees) => pref.setBool(FEATURE_ADMIN_ONLY_EMPLOYEES, featureAdminOnlyEmployees);
   set featureAdminOnlyCustomers(bool featureAdminOnlyCustomers) => pref.setBool(FEATURE_ADMIN_ONLY_CUSTOMERS, featureAdminOnlyCustomers);
-  set featureAdminOnlyReturnedOrders(bool featureAdminOnlyReturnedOrders) =>
-      pref.setBool(FEATURE_ADMIN_ONLY_RETURNED_ORDERS, featureAdminOnlyReturnedOrders);
+  set featureAdminOnlyReturnedOrders(bool featureAdminOnlyReturnedOrders) => pref.setBool(FEATURE_ADMIN_ONLY_RETURNED_ORDERS, featureAdminOnlyReturnedOrders);
   set featureAdminOnlyPunch(bool featureAdminOnlyPunch) => pref.setBool(FEATURE_ADMIN_ONLY_PUNCH, featureAdminOnlyPunch);
   set featureAdminOnlyAnalysis(bool featureAdminOnlyAnalysis) => pref.setBool(FEATURE_ADMIN_ONLY_ANALYSIS, featureAdminOnlyAnalysis);
   set featureAdminOnlyMessages(bool featureAdminOnlyMessages) => pref.setBool(FEATURE_ADMIN_ONLY_MESSAGES, featureAdminOnlyMessages);

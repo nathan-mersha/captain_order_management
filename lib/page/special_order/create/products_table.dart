@@ -55,12 +55,7 @@ class ProductViewPageState extends State<ProductViewPage> {
   @override
   void initState() {
     super.initState();
-    measurementTypesValues = {
-      CreateProductViewState.LITER: "liter",
-      CreateProductViewState.GRAM: "gram",
-      CreateProductViewState.PIECE: "piece",
-      CreateProductViewState.PACKAGE: "package"
-    };
+    measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
     statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
   }
 
@@ -198,9 +193,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                                     Icon(
                                       Icons.circle,
                                       size: 10,
-                                      color: otherProduct == null || otherProduct.colorValue == null
-                                          ? Colors.black12
-                                          : Color(int.parse(otherProduct.colorValue)),
+                                      color: otherProduct == null || otherProduct.colorValue == null ? Colors.black12 : Color(int.parse(otherProduct.colorValue)),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -220,7 +213,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                           onLongPress: () {
                             removePaintProductFromCart(otherProduct);
                           },
-                          onDoubleTap: (){
+                          onDoubleTap: () {
                             widget.productInputKey.currentState.productInEditableMode(otherProduct);
                           },
                         ),
@@ -233,7 +226,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
                         },
-                        onDoubleTap: (){
+                        onDoubleTap: () {
                           widget.productInputKey.currentState.productInEditableMode(otherProduct);
                         },
                       )),
@@ -244,7 +237,7 @@ class ProductViewPageState extends State<ProductViewPage> {
                         onLongPress: () {
                           removePaintProductFromCart(otherProduct);
                         },
-                        onDoubleTap: (){
+                        onDoubleTap: () {
                           widget.productInputKey.currentState.productInEditableMode(otherProduct);
                         },
                       )),

@@ -57,8 +57,7 @@ class _ManufacturerAnalysisState extends State<ManufacturerAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(manufacturerData[0].manufacturer, manufacturerData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(manufacturerData[0].manufacturer, manufacturerData[0].count)),
       ),
     ));
   }

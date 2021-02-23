@@ -24,7 +24,7 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
   Widget build(BuildContext context) {
     specialOrder = Provider.of<SpecialOrder>(context);
 
-    if(!advanceInitialized){
+    if (!advanceInitialized) {
       advanceController.text = oCCy.format(specialOrder.advancePayment);
       advanceInitialized = true;
     }
@@ -66,7 +66,6 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
                 // advance value
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: [
                     Text(
                       "advance",
@@ -91,7 +90,9 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
                     ),
                   ],
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
 
                 // remaining value
                 Row(
@@ -108,35 +109,38 @@ class _SpecialOrderPaymentInformationPageState extends State<SpecialOrderPayment
                   ],
                 ),
 
-                SizedBox(height: 3,),
+                SizedBox(
+                  height: 3,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: [
                     Text(
                       "paid in full",
                       style: getTitleStyle(),
                     ),
-                    SizedBox(child: Switch(
-                      value: specialOrder.paidInFull,
-                      onChanged: (bool changed) {
-                        setState(() {
-                          if (changed) {
-                            specialOrder.paidInFull = true;
-                            specialOrder.advancePayment = specialOrder.totalAmount;
-                            specialOrder.calculatePaymentInfo();
-                          } else {
-                            specialOrder.paidInFull = false;
-                            specialOrder.advancePayment = 0; // Reset advance payment to 0
-                            specialOrder.calculatePaymentInfo();
-                          }
-                          advanceController.text = oCCy.format(specialOrder.advancePayment);
-                        });
-                      },
-                    ),height: 30,)
+                    SizedBox(
+                      child: Switch(
+                        value: specialOrder.paidInFull,
+                        onChanged: (bool changed) {
+                          setState(() {
+                            if (changed) {
+                              specialOrder.paidInFull = true;
+                              specialOrder.advancePayment = specialOrder.totalAmount;
+                              specialOrder.calculatePaymentInfo();
+                            } else {
+                              specialOrder.paidInFull = false;
+                              specialOrder.advancePayment = 0; // Reset advance payment to 0
+                              specialOrder.calculatePaymentInfo();
+                            }
+                            advanceController.text = oCCy.format(specialOrder.advancePayment);
+                          });
+                        },
+                      ),
+                      height: 30,
+                    )
                   ],
                 ),
-
               ],
             )
           ],

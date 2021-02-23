@@ -185,10 +185,7 @@ class CreateProductViewState extends State<CreateProductView> {
                             product.unitPrice = num.parse(unitPriceValue);
                             _manuallyAdjustPaintPrice = true;
                           },
-                          decoration: InputDecoration(
-                              labelText: "Unit price",
-                              contentPadding: EdgeInsets.symmetric(vertical: 5),
-                              suffix: Text("br per ${product.unitOfMeasurement ?? LITER}")),
+                          decoration: InputDecoration(labelText: "Unit price", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text("br per ${product.unitOfMeasurement ?? LITER}")),
                         ),
 
                         product.type == PAINT

@@ -39,22 +39,19 @@ class SpecialOrder with ChangeNotifier {
   DateTime firstModified;
   DateTime lastModified;
 
-  SpecialOrder({
-    this.id,
-    this.idFS,
-    this.employee,
-    this.customer,
-    this.products,
-    this.totalAmount,
-
-    this.advancePayment = 0,
-    this.remainingPayment,
-    this.paidInFull,
-
-    this.note,
-    this.firstModified,
-    this.lastModified
-  });
+  SpecialOrder(
+      {this.id,
+      this.idFS,
+      this.employee,
+      this.customer,
+      this.products,
+      this.totalAmount,
+      this.advancePayment = 0,
+      this.remainingPayment,
+      this.paidInFull,
+      this.note,
+      this.firstModified,
+      this.lastModified});
 
   addProduct(Product product) {
     products.add(product);
@@ -77,7 +74,7 @@ class SpecialOrder with ChangeNotifier {
     if (remainingPayment == 0) {
       this.paidInFull = true;
       this.advancePayment = this.totalAmount;
-    }else{
+    } else {
       this.paidInFull = false;
     }
     notifyListeners();
@@ -94,9 +91,9 @@ class SpecialOrder with ChangeNotifier {
             CUSTOMER: jsonEncode(Personnel.toMap(specialOrder.customer)),
             PRODUCTS: jsonEncode(Product.toMapList(specialOrder.products)),
             TOTAL_AMOUNT: specialOrder.totalAmount,
-            ADVANCE_PAYMENT : specialOrder.advancePayment,
-            REMAINING_PAYMENT : specialOrder.remainingPayment,
-            PAID_IN_FULL : specialOrder.paidInFull,
+            ADVANCE_PAYMENT: specialOrder.advancePayment,
+            REMAINING_PAYMENT: specialOrder.remainingPayment,
+            PAID_IN_FULL: specialOrder.paidInFull,
             NOTE: specialOrder.note,
             FIRST_MODIFIED: specialOrder.firstModified.toIso8601String(),
             LAST_MODIFIED: specialOrder.lastModified.toIso8601String()

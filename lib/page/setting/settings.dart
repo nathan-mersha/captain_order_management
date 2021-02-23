@@ -37,18 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
     {NAME: "Admin Features", ICON: Icons.security, DESCRIPTION: "lock the features available only for admin", CHILD: LockFeaturesSettings()},
     {NAME: "Theme", ICON: Icons.style, DESCRIPTION: "change styling of your application", CHILD: ThemeSettings()},
     {NAME: "Main Password", ICON: Icons.lock_rounded, DESCRIPTION: "set main password to lock the application", CHILD: MainPasswordSettings()},
-    {
-      NAME: "Admin Password",
-      ICON: Icons.admin_panel_settings,
-      DESCRIPTION: "lock the features available only for admin",
-      CHILD: AdminPasswordSettings()
-    },
-    {
-      NAME: "Customer Notification",
-      ICON: Icons.notification_important,
-      DESCRIPTION: "Notify customer customers when order is completed",
-      CHILD: CustomerNotificationSettings()
-    },
+    {NAME: "Admin Password", ICON: Icons.admin_panel_settings, DESCRIPTION: "lock the features available only for admin", CHILD: AdminPasswordSettings()},
+    {NAME: "Customer Notification", ICON: Icons.notification_important, DESCRIPTION: "Notify customer customers when order is completed", CHILD: CustomerNotificationSettings()},
     {NAME: "Paint Price", ICON: Icons.format_paint, DESCRIPTION: "Setup default price for paint", CHILD: DefaultPaintPriceSettings()},
     {NAME: "Export", ICON: Icons.arrow_forward, DESCRIPTION: "Export your database for future restore", CHILD: ExportSettings()},
     {NAME: "Import", ICON: Icons.arrow_back, DESCRIPTION: "Import your database and restore your content", CHILD: ImportSettings()},
@@ -80,10 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             title: Text(
                               menus[index][NAME],
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: selectedMenuIndex == index ? 14 : 15,
-                                  fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
+                              style: TextStyle(color: Colors.black87, fontSize: selectedMenuIndex == index ? 14 : 15, fontWeight: selectedMenuIndex == index ? FontWeight.w800 : FontWeight.w100),
                             ),
                             subtitle: Text(
                               menus[index][DESCRIPTION],

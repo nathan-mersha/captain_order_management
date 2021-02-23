@@ -61,8 +61,7 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(salesData[0].personnel.name, salesData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(salesData[0].personnel.name, salesData[0].count)),
       ),
     ));
   }
@@ -194,15 +193,14 @@ class _SalesAnalysisState extends State<SalesAnalysis> {
 
       /// Customer does not exist
       if (index == -1) {
-        SalesAnalysisModel colorAnalysisModelNew =
-            SalesAnalysisModel(personnel: normalOrder.customer, count: 1, totalAmount: normalOrder.totalAmount);
+        SalesAnalysisModel colorAnalysisModelNew = SalesAnalysisModel(personnel: normalOrder.customer, count: 1, totalAmount: normalOrder.totalAmount);
         salesData.add(colorAnalysisModelNew);
       }
 
       /// Product already exists in the analysis data
       else {
-        SalesAnalysisModel colorAnalysisModelNew = SalesAnalysisModel(
-            personnel: normalOrder.customer, count: salesData[index].count + 1, totalAmount: salesData[index].totalAmount + normalOrder.totalAmount);
+        SalesAnalysisModel colorAnalysisModelNew =
+            SalesAnalysisModel(personnel: normalOrder.customer, count: salesData[index].count + 1, totalAmount: salesData[index].totalAmount + normalOrder.totalAmount);
 
         // Removing and re-inserting data
         salesData.removeAt(index);

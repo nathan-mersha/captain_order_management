@@ -67,12 +67,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   void initState() {
     super.initState();
     _assignOtherProductData();
-    measurementTypesValues = {
-      CreateProductViewState.LITER: "liter",
-      CreateProductViewState.GRAM: "gram",
-      CreateProductViewState.PIECE: "piece",
-      CreateProductViewState.PACKAGE: "package"
-    };
+    measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
     statusTypeValues = {PENDING: "pending", COMPLETED: "completed", DELIVERED: "delivered"};
 
     KeyboardVisibilityNotification().addNewListener(
@@ -86,7 +81,10 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     // Assigning paints data
     String wherePaint = "${Product.TYPE} = ?";
     List<String> whereArgsPaint = [CreateProductViewState.OTHER_PRODUCTS]; // Querying only paint type
-    _otherProducts = await ProductDAL.find(where: wherePaint, whereArgs: whereArgsPaint,);
+    _otherProducts = await ProductDAL.find(
+      where: wherePaint,
+      whereArgs: whereArgsPaint,
+    );
 
     String lastProductId = GetCSPInstance.cSharedPreference.lastOrderProduct;
     if (lastProductId != null) {
@@ -158,8 +156,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   }
 
   bool otherProductsInNormalOrderAvailable() {
-    bool otherProductsAvailable =
-        normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase());
+    bool otherProductsAvailable = normalOrder.products.any((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase());
     return otherProductsAvailable;
   }
 
@@ -213,10 +210,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Delivered", style: dataColumnStyle())),
                       ],
-                      rows: normalOrder.products
-                          .where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase())
-                          .toList()
-                          .map((Product otherProduct) {
+                      rows: normalOrder.products.where((element) => element.type.toLowerCase() == CreateProductViewState.OTHER_PRODUCTS.toLowerCase()).toList().map((Product otherProduct) {
                         return DataRow(cells: [
                           DataCell(GestureDetector(
                             child: SizedBox(
@@ -239,13 +233,13 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                               width: 50,
                               child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
                             ),
-                            onLongPress: () {
-                              removePaintProductFromCart(otherProduct);
-                            },
-                            onDoubleTap: () async {
-                              // On double tap, change the item to editable mode
-                              paintProductEditMode(otherProduct);
-                            },
+                            // onLongPress: () {
+                            //   removePaintProductFromCart(otherProduct);
+                            // },
+                            // onDoubleTap: () async {
+                            //   // On double tap, change the item to editable mode
+                            //   paintProductEditMode(otherProduct);
+                            // },
                           ),
                           DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
@@ -374,10 +368,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                   onFieldSubmitted: (volumeValue) {
                     currentOnEditProduct.quantityInCart = num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(
-                      labelText: "Quantity",
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
-                      suffix: Text(currentOnEditProduct.unitOfMeasurement ?? "liter")),
+                  decoration: InputDecoration(labelText: "Quantity", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text(currentOnEditProduct.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(

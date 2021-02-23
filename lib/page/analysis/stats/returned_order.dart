@@ -56,8 +56,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].product.name, returnsData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(returnsData[0].product.name, returnsData[0].count)),
       ),
     ));
   }
@@ -149,9 +148,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
                           Icon(
                             Icons.circle,
                             size: 30,
-                            color: returnsData[index].product.colorValue == null
-                                ? Colors.black12
-                                : Color(int.parse(returnsData[index].product.colorValue)),
+                            color: returnsData[index].product.colorValue == null ? Colors.black12 : Color(int.parse(returnsData[index].product.colorValue)),
                           )
                         ],
                       ),
@@ -181,8 +178,7 @@ class _ReturnedOrderAnalysisState extends State<ReturnedOrderAnalysis> {
         ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew = ReturnedOrderAnalysisModel(product: returnedOrder.product, count: 1);
         returnsData.add(returnedOrderAnalysisModelNew);
       } else {
-        ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew =
-            ReturnedOrderAnalysisModel(product: returnedOrder.product, count: returnsData[index].count + 1);
+        ReturnedOrderAnalysisModel returnedOrderAnalysisModelNew = ReturnedOrderAnalysisModel(product: returnedOrder.product, count: returnsData[index].count + 1);
 
         returnsData.removeAt(index);
         returnsData.insert(index, returnedOrderAnalysisModelNew);

@@ -308,7 +308,7 @@ class _PunchDataSource extends DataTableSource {
               onYes: () async {
                 // Delete punch here.
 
-                String where = "${Punch.ID} = ?";
+                String where = "${PunchDAL.TABLE_NAME}.${Punch.ID} = ?";
                 List<String> whereArgs = [punch.id]; // Querying only punchs
 
                 List<Punch> deletePunchList = await PunchDAL.find(where: where, whereArgs: whereArgs);

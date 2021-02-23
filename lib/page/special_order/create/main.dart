@@ -59,10 +59,17 @@ class _SpecialOrderCreateMainPageState extends State<SpecialOrderCreateMainPage>
                     children: [
                       // Other product
                       /// Not visible when focus
-                      Visibility(child: Expanded(flex: 5, child: ProductViewPage(productInputKey : productInputKey)), visible: !focusOnLowerElements,),
+                      Visibility(
+                        child: Expanded(flex: 5, child: ProductViewPage(productInputKey: productInputKey)),
+                        visible: !focusOnLowerElements,
+                      ),
 
                       // Customer and Payment information page
-                      Expanded(flex: 2, child: SpecialOrderPaymentInformationPage(focus: _focusPayment,)),
+                      Expanded(
+                          flex: 2,
+                          child: SpecialOrderPaymentInformationPage(
+                            focus: _focusPayment,
+                          )),
                     ],
                   ),
                 )),

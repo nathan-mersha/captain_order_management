@@ -4,7 +4,7 @@ import 'package:random_color/random_color.dart';
 
 class StatisticsExpandedCard extends StatefulWidget {
   final Statistics statistics;
-  
+
   final num getTotalStat;
   final num getTodayStat;
   final num getWeekStat;
@@ -37,51 +37,53 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Container(
-                  color: Theme.of(context).primaryColor,
-                  padding: EdgeInsets.all(5),
-                  child: Text(
-                  widget.statistics.title,
-                  style: TextStyle(
-                      // color: _randomColor.randomColor(colorHue: ColorHue.blue, colorBrightness: ColorBrightness.dark),
-                    color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800),
-                ),),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    widget.getTotalStat == null
-                        ? Text(
-                      widget.statistics.stat,
-                      style: getStatStyle(),
-                    )
-                        : Text(widget.getTotalStat.toString(), style: getStatStyle()),
-                    Text(
-                      "total",
-                      style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.blue)),
-                    )
-                  ],
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    widget.getTodayStat == null
-                        ? Text(
-                      widget.statistics.stat,
-                      style: getStatStyle(),
-                    )
-                        : Text(widget.getTodayStat.toString(), style: getStatStyle()),
-                    Text(
-                      "today",
-                      style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.blue)),
-                    )
-                  ],
-                ),
-              ],),
-
-              SizedBox(height: 18,),
+                  Container(
+                    color: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      widget.statistics.title,
+                      style: TextStyle(
+                          // color: _randomColor.randomColor(colorHue: ColorHue.blue, colorBrightness: ColorBrightness.dark),
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      widget.getTotalStat == null
+                          ? Text(
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
+                          : Text(widget.getTotalStat.toString(), style: getStatStyle()),
+                      Text(
+                        "total",
+                        style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.blue)),
+                      )
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      widget.getTodayStat == null
+                          ? Text(
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
+                          : Text(widget.getTodayStat.toString(), style: getStatStyle()),
+                      Text(
+                        "today",
+                        style: TextStyle(fontSize: 9, color: _randomColor.randomColor(colorHue: ColorHue.blue)),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 18,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -90,9 +92,9 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
                     children: [
                       widget.getWeekStat == null
                           ? Text(
-                        widget.statistics.stat,
-                        style: getStatStyle(),
-                      )
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
                           : Text(widget.getWeekStat.toString(), style: getStatStyle()),
                       Text(
                         "week",
@@ -105,9 +107,9 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
                     children: [
                       widget.getMonthStat == null
                           ? Text(
-                        widget.statistics.stat,
-                        style: getStatStyle(),
-                      )
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
                           : Text(widget.getMonthStat.toString(), style: getStatStyle()),
                       Text(
                         "month",
@@ -120,9 +122,9 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
                     children: [
                       widget.getYearStat == null
                           ? Text(
-                        widget.statistics.stat,
-                        style: getStatStyle(),
-                      )
+                              widget.statistics.stat,
+                              style: getStatStyle(),
+                            )
                           : Text(widget.getYearStat.toString(), style: getStatStyle()),
                       Text(
                         "year",
@@ -130,7 +132,8 @@ class _StatisticsExpandedCardState extends State<StatisticsExpandedCard> {
                       )
                     ],
                   ),
-                ],)
+                ],
+              )
             ],
           ),
         ),

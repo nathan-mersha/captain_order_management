@@ -39,6 +39,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
   Future<List<SpecialOrder>> getListOfSpecialOrders() async {
     List<SpecialOrder> specialOrders = await SpecialOrderDAL.find();
     log("Special orders : ${SpecialOrder.toMapList(specialOrders)}");
+    log("Special order length : ${specialOrders.length}");
     return specialOrders;
   }
 
@@ -85,9 +86,7 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
                           }, widget.navigateTo);
                         }
 
-                        if (global.specialOrderSearchHistory != null &&
-                            global.specialOrderSearchHistory.isNotEmpty &&
-                            _specialOrderDataSource != null) {
+                        if (global.specialOrderSearchHistory != null && global.specialOrderSearchHistory.isNotEmpty && _specialOrderDataSource != null) {
                           _searchController.text = global.specialOrderSearchHistory;
                           _specialOrderDataSource._search(global.specialOrderSearchHistory);
                         }

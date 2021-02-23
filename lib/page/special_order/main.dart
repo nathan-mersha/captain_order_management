@@ -21,7 +21,6 @@ class SpecialOrderMainPageState extends State<SpecialOrderMainPage> {
 
   @override
   Widget build(BuildContext context) {
-
     print("from special order / main : ${specialOrder.remainingPayment}");
     return Container(
         child: currentPage == PAGE_CREATE_SPECIAL_ORDER

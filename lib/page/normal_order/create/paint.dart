@@ -78,17 +78,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
   void initState() {
     super.initState();
     _assignPaintData();
-    measurementTypesValues = {
-      CreateProductViewState.LITER: "liter",
-      CreateProductViewState.GRAM: "gram",
-      CreateProductViewState.PIECE: "piece",
-      CreateProductViewState.PACKAGE: "package"
-    };
-    statusTypeValues = {
-      NormalOrderMainPageState.PENDING: "pending",
-      NormalOrderMainPageState.COMPLETED: "completed",
-      NormalOrderMainPageState.DELIVERED: "delivered"
-    };
+    measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
+    statusTypeValues = {NormalOrderMainPageState.PENDING: "pending", NormalOrderMainPageState.COMPLETED: "completed", NormalOrderMainPageState.DELIVERED: "delivered"};
 
     KeyboardVisibilityNotification().addNewListener(
       onChange: (bool visible) {
@@ -238,13 +229,11 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                   CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                 } else {
                   // saving the last paint and product
-                  cSharedPreference.lastOrderPaint =
-                      normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
+                  cSharedPreference.lastOrderPaint = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.PAINT).id;
 
                   bool otherProductContained = normalOrder.products.any((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS);
                   if (otherProductContained) {
-                    cSharedPreference.lastOrderProduct =
-                        normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS).id;
+                    cSharedPreference.lastOrderProduct = normalOrder.products.reversed.firstWhere((Product element) => element.type == CreateProductViewState.OTHER_PRODUCTS).id;
                   }
 
                   // Everything seems ok
@@ -313,8 +302,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
 //    }
 
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfully updated : ${normalOrder.customer.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfully updated : ${normalOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   Widget noPaintAddedInNormalOrder() {
@@ -364,9 +352,8 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                         DataColumn(label: Text("SubTotal", style: dataColumnStyle())),
                         DataColumn(label: Text("Status", style: dataColumnStyle())),
                       ],
-                      rows:
-                          normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
-                            print("paint product status : ${paintProduct.status}");
+                      rows: normalOrder.products.where((element) => element.type == CreateProductViewState.PAINT).toList().map((Product paintProduct) {
+                        print("paint product status : ${paintProduct.status}");
 
                         return DataRow(cells: [
                           DataCell(SingleChildScrollView(
@@ -376,9 +363,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                   Icon(
                                     Icons.circle,
                                     size: 10,
-                                    color: paintProduct == null || paintProduct.colorValue == null
-                                        ? Colors.black12
-                                        : Color(int.parse(paintProduct.colorValue)),
+                                    color: paintProduct == null || paintProduct.colorValue == null ? Colors.black12 : Color(int.parse(paintProduct.colorValue)),
                                   ),
                                   SizedBox(
                                     width: 5,
@@ -523,8 +508,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
         MessageDAL.create(sentMessage);
 
         normalOrder.userNotified = true;
-        CNotifications.showSnackBar(context, "Successfully sent completed message to ${normalOrder.customer.name}", "success", () {},
-            backgroundColor: Colors.green);
+        CNotifications.showSnackBar(context, "Successfully sent completed message to ${normalOrder.customer.name}", "success", () {}, backgroundColor: Colors.green);
       }
 
       String where = "${Product.ID} = ?";
@@ -569,9 +553,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                           icon: Icon(
                             Icons.circle,
                             size: 30,
-                            color: normalOrder == null || _currentOnEditPaint == null || _currentOnEditPaint.colorValue == null
-                                ? Colors.black12
-                                : Color(int.parse(_currentOnEditPaint.colorValue)),
+                            color: normalOrder == null || _currentOnEditPaint == null || _currentOnEditPaint.colorValue == null ? Colors.black12 : Color(int.parse(_currentOnEditPaint.colorValue)),
                           ))),
                   suggestionsCallback: (pattern) async {
                     return _paints.where((Product paint) {

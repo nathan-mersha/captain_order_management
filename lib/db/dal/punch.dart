@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:captain/db/dal/normal_order.dart';
+import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/punch.dart';
@@ -38,36 +37,67 @@ class PunchDAL {
     return punch;
   }
 
-  /// where : "id = ?"
-  /// whereArgs : [2]
-  static Future<List<Punch>> find({String where, dynamic whereArgs}) async {
-    final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${Punch.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${Punch.LAST_MODIFIED} DESC");
+  static Future<List<Punch>> find({String where, List<dynamic> whereArgs}) async {
+    String statement = "SELECT "
+        "$TABLE_NAME.${Punch.ID} AS $TABLE_NAME${Punch.ID},"
+        "$TABLE_NAME.${Punch.ID_FS} AS $TABLE_NAME${Punch.ID_FS},"
+        "$TABLE_NAME.${Punch.EMPLOYEE} AS $TABLE_NAME${Punch.EMPLOYEE},"
+        "$TABLE_NAME.${Punch.PRODUCT} AS $TABLE_NAME${Punch.PRODUCT},"
+        "$TABLE_NAME.${Punch.TYPE} AS $TABLE_NAME${Punch.TYPE},"
+        "$TABLE_NAME.${Punch.WEIGHT} AS $TABLE_NAME${Punch.WEIGHT},"
+        "$TABLE_NAME.${Punch.NOTE} AS $TABLE_NAME${Punch.NOTE},"
+        "$TABLE_NAME.${Punch.FIRST_MODIFIED} AS $TABLE_NAME${Punch.FIRST_MODIFIED},"
+        "$TABLE_NAME.${Punch.LAST_MODIFIED} AS $TABLE_NAME${Punch.LAST_MODIFIED},"
+        "${Personnel.EMPLOYEE}.${Personnel.ID} AS ${Personnel.EMPLOYEE}${Personnel.ID},"
+        "${Personnel.EMPLOYEE}.${Personnel.ID_FS} AS ${Personnel.EMPLOYEE}${Personnel.ID_FS},"
+        "${Personnel.EMPLOYEE}.${Personnel.CONTACT_IDENTIFIER} AS ${Personnel.EMPLOYEE}${Personnel.CONTACT_IDENTIFIER},"
+        "${Personnel.EMPLOYEE}.${Personnel.NAME} AS ${Personnel.EMPLOYEE}${Personnel.NAME},"
+        "${Personnel.EMPLOYEE}.${Personnel.PHONE_NUMBER} AS ${Personnel.EMPLOYEE}${Personnel.PHONE_NUMBER},"
+        "${Personnel.EMPLOYEE}.${Personnel.EMAIL} AS ${Personnel.EMPLOYEE}${Personnel.EMAIL},"
+        "${Personnel.EMPLOYEE}.${Personnel.ADDRESS} AS ${Personnel.EMPLOYEE}${Personnel.ADDRESS},"
+        "${Personnel.EMPLOYEE}.${Personnel.ADDRESS_DETAIL} AS ${Personnel.EMPLOYEE}${Personnel.ADDRESS_DETAIL},"
+        "${Personnel.EMPLOYEE}.${Personnel.TYPE} AS ${Personnel.EMPLOYEE}${Personnel.TYPE},"
+        "${Personnel.EMPLOYEE}.${Personnel.PROFILE_IMAGE} AS ${Personnel.EMPLOYEE}${Personnel.PROFILE_IMAGE},"
+        "${Personnel.EMPLOYEE}.${Personnel.NOTE} AS ${Personnel.EMPLOYEE}${Personnel.NOTE},"
+        "${Personnel.EMPLOYEE}.${Personnel.FIRST_MODIFIED} AS ${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED},"
+        "${Personnel.EMPLOYEE}.${Personnel.LAST_MODIFIED} AS ${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED} "
+        "FROM $TABLE_NAME "
+        "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.EMPLOYEE} ON $TABLE_NAME.${Punch.EMPLOYEE}=${Personnel.EMPLOYEE}.${Personnel.ID} "
+        "${where == null ? "" : "WHERE $where"}";
 
-    List<Punch> parsedList = [];
-    final c = new Completer<List<Punch>>();
+    List list = await global.db.rawQuery(statement, whereArgs);
 
-    maps.forEach((Map<String, dynamic> element) async {
-      Punch punch = Punch(
-        id: element[Punch.ID],
-        idFS: element[Punch.ID_FS],
-        employee: await NormalOrderDAL.getPersonnel(element[Personnel.EMPLOYEE]),
-        product: Product.toModel(jsonDecode(element[Punch.PRODUCT])),
-        type: element[Punch.TYPE],
-        weight: element[Punch.WEIGHT],
-        note: element[Punch.NOTE],
-        firstModified: DateTime.parse(element[Punch.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(element[Punch.LAST_MODIFIED]),
+    return List.generate(list.length, (i) {
+      Personnel employee = Personnel(
+        id: list[i]["${Personnel.EMPLOYEE}${Personnel.ID}"],
+        idFS: list[i]["${Personnel.EMPLOYEE}${Personnel.ID_FS}"],
+        contactIdentifier: list[i]["${Personnel.EMPLOYEE}${Personnel.CONTACT_IDENTIFIER}"],
+        name: list[i]["${Personnel.EMPLOYEE}${Personnel.NAME}"],
+        phoneNumber: list[i]["${Personnel.EMPLOYEE}${Personnel.PHONE_NUMBER}"],
+        email: list[i]["${Personnel.EMPLOYEE}${Personnel.EMAIL}"],
+        address: list[i]["${Personnel.EMPLOYEE}${Personnel.ADDRESS}"],
+        addressDetail: list[i]["${Personnel.EMPLOYEE}${Personnel.ADDRESS_DETAIL}"],
+        type: list[i]["${Personnel.EMPLOYEE}${Personnel.TYPE}"],
+        profileImage: list[i]["${Personnel.EMPLOYEE}${Personnel.PROFILE_IMAGE}"],
+        note: list[i]["${Personnel.EMPLOYEE}${Personnel.NOTE}"],
+        firstModified: list[i]["${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.EMPLOYEE}${Personnel.FIRST_MODIFIED}"]),
+        lastModified: list[i]["${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED}"]),
       );
 
-      parsedList.add(punch);
-      if (maps.length == parsedList.length) {
-        c.complete(parsedList);
-      }
-    });
+      Punch punch = Punch(
+        id: list[i]["$TABLE_NAME${Punch.ID}"],
+        idFS: list[i]["$TABLE_NAME${Punch.ID_FS}"],
+        employee: employee,
+        product: Product.toModel(jsonDecode(list[i]["$TABLE_NAME${Punch.PRODUCT}"])),
+        type: list[i]["$TABLE_NAME${Punch.TYPE}"],
+        weight: list[i]["$TABLE_NAME${Punch.WEIGHT}"],
+        note: list[i]["$TABLE_NAME${Punch.NOTE}"],
+        firstModified: list[i]["$TABLE_NAME${Punch.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${Punch.FIRST_MODIFIED}"]),
+        lastModified: list[i]["$TABLE_NAME${Punch.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${Punch.LAST_MODIFIED}"]),
+      );
 
-    return c.future;
+      return punch;
+    });
   }
 
   /// where : "id = ?"

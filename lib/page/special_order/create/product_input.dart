@@ -21,7 +21,7 @@ class ProductInputPage extends StatefulWidget {
   final Function navigateTo;
   final GlobalKey key;
 
-  ProductInputPage({this.navigateTo, this.key}): super(key: key);
+  ProductInputPage({this.navigateTo, this.key}) : super(key: key);
 
   @override
   ProductInputPageState createState() => ProductInputPageState();
@@ -65,7 +65,6 @@ class ProductInputPageState extends State<ProductInputPage> {
   static const String CART_UPDATE = "update";
   String cartButtonText = CART_ADD;
 
-
   @override
   void dispose() {
     super.dispose();
@@ -80,14 +79,8 @@ class ProductInputPageState extends State<ProductInputPage> {
     super.initState();
     _assignPaintData();
     _assignPersonnelData();
-    measurementTypesValues = {
-      CreateProductViewState.LITER: "liter",
-      CreateProductViewState.GRAM: "gram",
-      CreateProductViewState.PIECE: "piece",
-      CreateProductViewState.PACKAGE: "package"
-    };
+    measurementTypesValues = {CreateProductViewState.LITER: "liter", CreateProductViewState.GRAM: "gram", CreateProductViewState.PIECE: "piece", CreateProductViewState.PACKAGE: "package"};
   }
-
 
   Future<bool> _assignPersonnelData() async {
     // Assigning employees data.
@@ -102,11 +95,11 @@ class ProductInputPageState extends State<ProductInputPage> {
     _paints = await ProductDAL.find();
 
     String lastPaintId = cSharedPreference.lastOrderPaint;
-    if(lastPaintId != null){
+    if (lastPaintId != null) {
       Product lastPaint = _paints.firstWhere((Product element) => element.id == lastPaintId);
       _paints.insert(0, lastPaint);
     }
-    
+
     setState(() {});
     return true;
   }
@@ -272,7 +265,7 @@ class ProductInputPageState extends State<ProductInputPage> {
     );
   }
 
-  productInEditableMode(Product product){
+  productInEditableMode(Product product) {
     setState(() {
       _noPaintValue = false;
       cartButtonText = CART_UPDATE;
@@ -303,8 +296,7 @@ class ProductInputPageState extends State<ProductInputPage> {
     }
 
     // Showing notification
-    CNotifications.showSnackBar(context, "Successfully updated : ${specialOrder.customer.name}", "success", () {},
-        backgroundColor: Theme.of(context).accentColor);
+    CNotifications.showSnackBar(context, "Successfully updated : ${specialOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
 
   Widget noPaintAddedInSpecialOrder() {
@@ -414,10 +406,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                           icon: Icon(
                             Icons.circle,
                             size: 30,
-                            color: specialOrder == null ||
-                                    _currentOnEditPaint == null ||
-                                    _currentOnEditPaint.colorValue == null ||
-                                    _currentOnEditPaint.colorValue == "-"
+                            color: specialOrder == null || _currentOnEditPaint == null || _currentOnEditPaint.colorValue == null || _currentOnEditPaint.colorValue == "-"
                                 ? Colors.black12
                                 : Color(int.parse(_currentOnEditPaint.colorValue)),
                           ))),
@@ -429,11 +418,8 @@ class ProductInputPageState extends State<ProductInputPage> {
                   itemBuilder: (context, Product suggestedPaint) {
                     return ListTile(
                       dense: true,
-                      leading: Icon(Icons.circle,
-                          size: 30,
-                          color: suggestedPaint.colorValue != null && suggestedPaint.colorValue != "-"
-                              ? Color(int.parse(suggestedPaint.colorValue))
-                              : Colors.black12),
+                      leading:
+                          Icon(Icons.circle, size: 30, color: suggestedPaint.colorValue != null && suggestedPaint.colorValue != "-" ? Color(int.parse(suggestedPaint.colorValue)) : Colors.black12),
                       title: Text(
                         suggestedPaint.name,
                         style: TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w800),
@@ -479,10 +465,7 @@ class ProductInputPageState extends State<ProductInputPage> {
                   onFieldSubmitted: (volumeValue) {
                     _currentOnEditPaint.quantityInCart = num.parse(volumeValue);
                   },
-                  decoration: InputDecoration(
-                      labelText: "Volume",
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
-                      suffix: Text(_currentOnEditPaint.unitOfMeasurement ?? "liter")),
+                  decoration: InputDecoration(labelText: "Volume", contentPadding: EdgeInsets.symmetric(vertical: 5), suffix: Text(_currentOnEditPaint.unitOfMeasurement ?? "liter")),
                 ),
 
                 SizedBox(
@@ -579,6 +562,7 @@ class ProductInputPageState extends State<ProductInputPage> {
     cartButtonText = CART_ADD;
     clearInputs();
   }
+
   void addToCart() {
     setState(() {
       _noPaintValue = false;

@@ -76,8 +76,7 @@ class _CustomerAnalysisState extends State<CustomerAnalysis> {
           charts.SlidingViewport(),
           charts.PanAndZoomBehavior(),
         ],
-        domainAxis: charts.OrdinalAxisSpec(
-            renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(customerData[0].address, customerData[0].count)),
+        domainAxis: charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec(), viewport: charts.OrdinalViewport(customerData[0].address, customerData[0].count)),
       ),
     ));
   }

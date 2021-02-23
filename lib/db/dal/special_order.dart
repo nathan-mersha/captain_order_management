@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:captain/db/dal/normal_order.dart';
+import 'package:captain/db/dal/personnel.dart';
+import 'package:captain/db/model/personnel.dart';
 import 'package:captain/db/model/product.dart';
 import 'package:captain/db/model/special_order.dart';
 import 'package:sqflite/sqflite.dart';
@@ -42,40 +44,72 @@ class SpecialOrderDAL {
     return specialOrder;
   }
 
-  /// where : "id = ?"
-  /// whereArgs : [2]
-  static Future<List<SpecialOrder>> find({String where, dynamic whereArgs, bool populatePersonnel = true}) async {
-    final List<Map<String, dynamic>> maps = where == null
-        ? await global.db.query(TABLE_NAME, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC")
-        : await global.db.query(TABLE_NAME, where: where, whereArgs: whereArgs, orderBy: "${SpecialOrder.LAST_MODIFIED} DESC");
+  static Future<List<SpecialOrder>> find({String where, List<dynamic> whereArgs}) async {
+    String statement = "SELECT "
+        "$TABLE_NAME.${SpecialOrder.ID} AS $TABLE_NAME${SpecialOrder.ID},"
+        "$TABLE_NAME.${SpecialOrder.ID_FS} AS $TABLE_NAME${SpecialOrder.ID_FS},"
+        "$TABLE_NAME.${SpecialOrder.EMPLOYEE} AS $TABLE_NAME${SpecialOrder.EMPLOYEE},"
+        "$TABLE_NAME.${SpecialOrder.CUSTOMER} AS $TABLE_NAME${SpecialOrder.CUSTOMER},"
+        "$TABLE_NAME.${SpecialOrder.PRODUCTS} AS $TABLE_NAME${SpecialOrder.PRODUCTS},"
+        "$TABLE_NAME.${SpecialOrder.TOTAL_AMOUNT} AS $TABLE_NAME${SpecialOrder.TOTAL_AMOUNT},"
+        "$TABLE_NAME.${SpecialOrder.ADVANCE_PAYMENT} AS $TABLE_NAME${SpecialOrder.ADVANCE_PAYMENT},"
+        "$TABLE_NAME.${SpecialOrder.REMAINING_PAYMENT} AS $TABLE_NAME${SpecialOrder.REMAINING_PAYMENT},"
+        "$TABLE_NAME.${SpecialOrder.PAID_IN_FULL} AS $TABLE_NAME${SpecialOrder.PAID_IN_FULL},"
+        "$TABLE_NAME.${SpecialOrder.NOTE} AS $TABLE_NAME${SpecialOrder.NOTE},"
+        "$TABLE_NAME.${SpecialOrder.FIRST_MODIFIED} AS $TABLE_NAME${SpecialOrder.FIRST_MODIFIED},"
+        "$TABLE_NAME.${SpecialOrder.LAST_MODIFIED} AS $TABLE_NAME${SpecialOrder.LAST_MODIFIED},"
+        "${Personnel.CUSTOMER}.${Personnel.ID} AS ${Personnel.CUSTOMER}${Personnel.ID},"
+        "${Personnel.CUSTOMER}.${Personnel.ID_FS} AS ${Personnel.CUSTOMER}${Personnel.ID_FS},"
+        "${Personnel.CUSTOMER}.${Personnel.CONTACT_IDENTIFIER} AS ${Personnel.CUSTOMER}${Personnel.CONTACT_IDENTIFIER},"
+        "${Personnel.CUSTOMER}.${Personnel.NAME} AS ${Personnel.CUSTOMER}${Personnel.NAME},"
+        "${Personnel.CUSTOMER}.${Personnel.PHONE_NUMBER} AS ${Personnel.CUSTOMER}${Personnel.PHONE_NUMBER},"
+        "${Personnel.CUSTOMER}.${Personnel.EMAIL} AS ${Personnel.CUSTOMER}${Personnel.EMAIL},"
+        "${Personnel.CUSTOMER}.${Personnel.ADDRESS} AS ${Personnel.CUSTOMER}${Personnel.ADDRESS},"
+        "${Personnel.CUSTOMER}.${Personnel.ADDRESS_DETAIL} AS ${Personnel.CUSTOMER}${Personnel.ADDRESS_DETAIL},"
+        "${Personnel.CUSTOMER}.${Personnel.TYPE} AS ${Personnel.CUSTOMER}${Personnel.TYPE},"
+        "${Personnel.CUSTOMER}.${Personnel.PROFILE_IMAGE} AS ${Personnel.CUSTOMER}${Personnel.PROFILE_IMAGE},"
+        "${Personnel.CUSTOMER}.${Personnel.NOTE} AS ${Personnel.CUSTOMER}${Personnel.NOTE},"
+        "${Personnel.CUSTOMER}.${Personnel.FIRST_MODIFIED} AS ${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED},"
+        "${Personnel.CUSTOMER}.${Personnel.LAST_MODIFIED} AS ${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED} "
+        "FROM $TABLE_NAME "
+        "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.CUSTOMER} ON $TABLE_NAME.${SpecialOrder.CUSTOMER}=${Personnel.CUSTOMER}.${Personnel.ID} "
+        "${where == null ? "" : "WHERE $where"}";
 
-    List<SpecialOrder> parsedList = [];
-    final c = Completer<List<SpecialOrder>>();
+    var list = await global.db.rawQuery(statement, whereArgs);
 
-    maps.forEach((Map<String, dynamic> element) async {
-
-      SpecialOrder specialOrder = SpecialOrder(
-        id: element[SpecialOrder.ID],
-        idFS: element[SpecialOrder.ID_FS],
-        employee: populatePersonnel ? await NormalOrderDAL.getPersonnel(element[SpecialOrder.EMPLOYEE]) : null,
-        customer: populatePersonnel ? await NormalOrderDAL.getPersonnel(element[SpecialOrder.CUSTOMER]) : null,
-        products: Product.toModelList(jsonDecode(element[SpecialOrder.PRODUCTS])),
-        totalAmount: element[SpecialOrder.TOTAL_AMOUNT],
-        advancePayment: element[SpecialOrder.ADVANCE_PAYMENT],
-        remainingPayment: element[SpecialOrder.REMAINING_PAYMENT],
-        paidInFull: element[SpecialOrder.PAID_IN_FULL] == 1 ? true : false,
-        note: element[SpecialOrder.NOTE].toString(),
-        firstModified: DateTime.parse(element[SpecialOrder.FIRST_MODIFIED]),
-        lastModified: DateTime.parse(element[SpecialOrder.LAST_MODIFIED]),
+    return List.generate(list.length, (i) {
+      Personnel customer = Personnel(
+        id: list[i]["${Personnel.CUSTOMER}${Personnel.ID}"],
+        idFS: list[i]["${Personnel.CUSTOMER}${Personnel.ID_FS}"],
+        contactIdentifier: list[i]["${Personnel.CUSTOMER}${Personnel.CONTACT_IDENTIFIER}"],
+        name: list[i]["${Personnel.CUSTOMER}${Personnel.NAME}"],
+        phoneNumber: list[i]["${Personnel.CUSTOMER}${Personnel.PHONE_NUMBER}"],
+        email: list[i]["${Personnel.CUSTOMER}${Personnel.EMAIL}"],
+        address: list[i]["${Personnel.CUSTOMER}${Personnel.ADDRESS}"],
+        addressDetail: list[i]["${Personnel.CUSTOMER}${Personnel.ADDRESS_DETAIL}"],
+        type: list[i]["${Personnel.CUSTOMER}${Personnel.TYPE}"],
+        profileImage: list[i]["${Personnel.CUSTOMER}${Personnel.PROFILE_IMAGE}"],
+        note: list[i]["${Personnel.CUSTOMER}${Personnel.NOTE}"],
+        firstModified: list[i]["${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.CUSTOMER}${Personnel.FIRST_MODIFIED}"]),
+        lastModified: list[i]["${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED}"]),
       );
 
-      parsedList.add(specialOrder);
-      if (maps.length == parsedList.length) {
-        c.complete(parsedList);
-      }
-    });
+      SpecialOrder specialOrder = SpecialOrder(
+        id: list[i]["$TABLE_NAME${SpecialOrder.ID}"],
+        idFS: list[i]["$TABLE_NAME${SpecialOrder.ID_FS}"],
+        customer: customer,
+        products: Product.toModelList(jsonDecode(list[i]["$TABLE_NAME${SpecialOrder.PRODUCTS}"])),
+        totalAmount: list[i]["$TABLE_NAME${SpecialOrder.TOTAL_AMOUNT}"],
+        advancePayment: list[i]["$TABLE_NAME${SpecialOrder.ADVANCE_PAYMENT}"],
+        remainingPayment: list[i]["$TABLE_NAME${SpecialOrder.REMAINING_PAYMENT}"],
+        paidInFull: list[i]["$TABLE_NAME${SpecialOrder.PAID_IN_FULL}"] == 1 ? true : false,
+        note: list[i]["$TABLE_NAME${SpecialOrder.NOTE}"].toString(),
+        firstModified: list[i]["$TABLE_NAME${SpecialOrder.FIRST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${SpecialOrder.FIRST_MODIFIED}"]),
+        lastModified: list[i]["$TABLE_NAME${SpecialOrder.LAST_MODIFIED}"] == null ? null : DateTime.parse(list[i]["$TABLE_NAME${SpecialOrder.LAST_MODIFIED}"]),
+      );
 
-    return c.future;
+      return specialOrder;
+    });
   }
 
   /// where : "id = ?"

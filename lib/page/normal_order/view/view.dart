@@ -222,14 +222,8 @@ class NormalOrderTablePageState extends State<NormalOrderTablePage> {
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                NormalOrder normalOrder = NormalOrder(
-                    advancePayment: 0,
-                    paidInFull: false,
-                    totalAmount: 0,
-                    remainingPayment: 0,
-                    userNotified: false,
-                    status: NormalOrderMainPageState.PENDING,
-                    products: []);
+                NormalOrder normalOrder =
+                    NormalOrder(advancePayment: 0, paidInFull: false, totalAmount: 0, remainingPayment: 0, userNotified: false, status: NormalOrderMainPageState.PENDING, products: []);
                 widget.navigateTo(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
               },
             ),
@@ -390,8 +384,8 @@ class _NormalOrderDataSource extends DataTableSource {
         /// Customer
         DataCell(
             Text(
-              normalOrder.customer?.name ?? '-',
-              style: TextStyle(color: Theme.of(context).primaryColor),
+              normalOrder.customer?.name ?? 'deleted customer',
+              style: TextStyle(color: normalOrder.customer.name == null ? Colors.red : Theme.of(context).primaryColor),
             ), onTap: () {
           navigate(NormalOrderMainPageState.PAGE_CREATE_NORMAL_ORDER, passedNormalOrder: normalOrder);
         }),
@@ -471,17 +465,10 @@ class _NormalOrderDataSource extends DataTableSource {
               onYes: () async {
                 // Delete normalOrder here.
 
+                /// Note : where args proper usage
                 String where = "${NormalOrder.ID} = ?";
                 List<String> whereArgs = [normalOrder.id]; // Querying only normalOrders
-
-                List<NormalOrder> deleteNormalOrderList = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
-
                 await NormalOrderDAL.delete(where: where, whereArgs: whereArgs);
-
-                NormalOrder deleteNormalOrder = deleteNormalOrderList.first;
-                if (deleteNormalOrder.idFS != null) {
-//                  Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(deleteNormalOrder.idFS).delete();
-                }
 
                 Navigator.pop(context);
                 return null;
