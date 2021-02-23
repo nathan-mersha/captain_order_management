@@ -38,8 +38,6 @@ class SpecialOrderTablePageState extends State<SpecialOrderTablePage> {
 
   Future<List<SpecialOrder>> getListOfSpecialOrders() async {
     List<SpecialOrder> specialOrders = await SpecialOrderDAL.find();
-    log("Special orders : ${SpecialOrder.toMapList(specialOrders)}");
-    log("Special order length : ${specialOrders.length}");
     return specialOrders;
   }
 

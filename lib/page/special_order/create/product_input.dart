@@ -65,6 +65,8 @@ class ProductInputPageState extends State<ProductInputPage> {
   static const String CART_UPDATE = "update";
   String cartButtonText = CART_ADD;
 
+  int productOnEditIndex;
+
   @override
   void dispose() {
     super.dispose();
@@ -94,7 +96,7 @@ class ProductInputPageState extends State<ProductInputPage> {
   Future<bool> _assignPaintData() async {
     _paints = await ProductDAL.find();
 
-    String lastPaintId = cSharedPreference.lastOrderPaint;
+    String lastPaintId = cSharedPreference.lastOrderProductSpecial;
     if (lastPaintId != null) {
       Product lastPaint = _paints.firstWhere((Product element) => element.id == lastPaintId);
       _paints.insert(0, lastPaint);
@@ -220,6 +222,9 @@ class ProductInputPageState extends State<ProductInputPage> {
                   // No customer added
                   CNotifications.showSnackBar(context, "No customer has been selected", "ok", () {}, backgroundColor: Colors.red);
                 } else {
+                  // saving the last paint and product
+                  cSharedPreference.lastOrderProductSpecial = specialOrder.products.reversed.first.id;
+
                   // Everything seems ok
                   SpecialOrderDAL.create(specialOrder).then((value) {
                     widget.navigateTo(SpecialOrderMainPageState.PAGE_VIEW_SPECIAL_ORDER);
@@ -273,6 +278,7 @@ class ProductInputPageState extends State<ProductInputPage> {
       _paintController.text = _currentOnEditPaint.name;
       _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
       _unitPriceController.text = _currentOnEditPaint.unitPrice.toString();
+      productOnEditIndex = specialOrder.products.indexWhere((Product element) => element.id == product.id);
     });
   }
 
@@ -530,25 +536,11 @@ class ProductInputPageState extends State<ProductInputPage> {
     );
   }
 
-  void paintProductEditMode(Product product) {
-    setState(() {
-      _noPaintValue = false;
-      cartButtonText = CART_UPDATE;
-      _currentOnEditPaint = Product.clone(product);
-      _paintController.text = _currentOnEditPaint.name;
-      _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
-      _unitPriceController.text = _currentOnEditPaint.unitPrice.toString();
-    });
-  }
-
   void updateCart() {
     _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
     Product cloned = Product.clone(_currentOnEditPaint);
-    // check if current on edit product already exists in cart
-    int productIndex = specialOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
 
-    // normalOrder.products.insert(productIndex, cloned);
-    specialOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    specialOrder.products.replaceRange(productOnEditIndex, productOnEditIndex + 1, [cloned]);
     specialOrder.calculatePaymentInfo();
 
     CNotifications.showSnackBar(context, "Successfully updated ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);

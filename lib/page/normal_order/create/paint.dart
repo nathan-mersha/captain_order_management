@@ -51,6 +51,7 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     quantityInCart: 0,
     unitPrice: 0,
   );
+  int productOnEditIndex;
 
   // Status type
 
@@ -128,7 +129,10 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                               "Paint Order - ${getInCartCount()}",
                               style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
                             ),
-                            Text(DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now()), style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),),
+                            Text(
+                              DateFormat.yMMMd().format(normalOrder.firstModified ?? DateTime.now()),
+                              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                            ),
                             SizedBox(
                               height: 25,
                               child: IconButton(
@@ -292,16 +296,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       normalOrder: normalOrder,
     );
 
-    /// Updating from fire store
-//    normalOrder.customer.profileImage = null;
-//    normalOrder.employee.profileImage = null;
-//     dynamic normalOrderMap = NormalOrder.toMap(normalOrder);
-
-    // todo Updating to fire store if fire store generated id is present in doc.
-//    if (normalOrder.idFS != null) {
-//      Firestore.instance.collection(NormalOrder.COLLECTION_NAME).document(normalOrder.idFS).updateData(normalOrderMap);
-//    }
-
     // Showing notification
     CNotifications.showSnackBar(context, "Successfully updated : ${normalOrder.customer.name}", "success", () {}, backgroundColor: Theme.of(context).accentColor);
   }
@@ -416,7 +410,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
                                     color: getStatusColor(paintProduct.status),
                                   ),
                                   items: statusTypes.map<DropdownMenuItem<String>>((String statusValue) {
-                                    print("status values : ${statusValue}");
                                     return DropdownMenuItem(
                                       child: Row(
                                         children: [
@@ -653,7 +646,6 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
     );
   }
 
-  // todo : edited
   void paintProductEditMode(Product product) {
     setState(() {
       _noPaintValue = false;
@@ -661,18 +653,15 @@ class CreateNormalOrderPaintPageState extends State<CreateNormalOrderPaintPage> 
       _currentOnEditPaint = Product.clone(product);
       _paintController.text = _currentOnEditPaint.name;
       _volumeController.text = _currentOnEditPaint.quantityInCart.toString();
+      productOnEditIndex = normalOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
     });
   }
 
-  // todo : edited
   void updateCart() {
     _currentOnEditPaint.quantityInCart = num.parse(_volumeController.text);
     Product cloned = Product.clone(_currentOnEditPaint);
-    // check if current on edit product already exists in cart
-    int productIndex = normalOrder.products.indexWhere((Product element) => element.id == _currentOnEditPaint.id);
 
-    // normalOrder.products.insert(productIndex, cloned);
-    normalOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    normalOrder.products.replaceRange(productOnEditIndex, productOnEditIndex + 1, [cloned]);
     normalOrder.calculatePaymentInfo();
 
     CNotifications.showSnackBar(context, "Successfully updated ${_currentOnEditPaint.name}", "success", () {}, backgroundColor: Colors.green);

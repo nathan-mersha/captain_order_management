@@ -29,7 +29,6 @@ class _NormalOrderPaymentInformationPageState extends State<NormalOrderPaymentIn
   Widget build(BuildContext context) {
     normalOrder = Provider.of<NormalOrder>(context);
 
-    print("Normal order status : ${normalOrder.paidInFull}");
     return Card(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

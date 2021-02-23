@@ -42,6 +42,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
     unitPrice: 0,
   );
 
+  int productOnEditIndex;
+
   static const String CART_ADD = "add";
   static const String CART_UPDATE = "update";
   String cartButtonText = CART_ADD;
@@ -228,19 +230,19 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
                               paintProductEditMode(otherProduct);
                             },
                           )),
-                          DataCell(
-                            Container(
+                          DataCell(GestureDetector(
+                            child: Container(
                               width: 50,
                               child: Text(otherProduct.quantityInCart.toString(), style: dataCellStyle()),
                             ),
-                            // onLongPress: () {
-                            //   removePaintProductFromCart(otherProduct);
-                            // },
-                            // onDoubleTap: () async {
-                            //   // On double tap, change the item to editable mode
-                            //   paintProductEditMode(otherProduct);
-                            // },
-                          ),
+                            onLongPress: () {
+                              removePaintProductFromCart(otherProduct);
+                            },
+                            onDoubleTap: () async {
+                              // On double tap, change the item to editable mode
+                              paintProductEditMode(otherProduct);
+                            },
+                          )),
                           DataCell(Text(otherProduct.unitPrice.toString(), style: dataCellStyle())),
                           DataCell(Text(otherProduct.calculateSubTotal().toString(), style: dataCellStyle())),
                           DataCell(Switch(
@@ -411,11 +413,8 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
   void updateCart() {
     currentOnEditProduct.quantityInCart = num.parse(_quantityController.text);
     Product cloned = Product.clone(currentOnEditProduct);
-    // check if current on edit product already exists in cart
-    int productIndex = normalOrder.products.indexWhere((Product element) => element.id == currentOnEditProduct.id);
 
-    // normalOrder.products.insert(productIndex, cloned);
-    normalOrder.products.replaceRange(productIndex, productIndex + 1, [cloned]);
+    normalOrder.products.replaceRange(productOnEditIndex, productOnEditIndex + 1, [cloned]);
     normalOrder.calculatePaymentInfo();
 
     CNotifications.showSnackBar(context, "Successfully updated ${currentOnEditProduct.name}", "success", () {}, backgroundColor: Colors.green);
@@ -465,6 +464,7 @@ class CreateNormalOrderOtherProductPageState extends State<CreateNormalOrderOthe
       currentOnEditProduct = Product.clone(product);
       _otherProductsController.text = currentOnEditProduct.name;
       _quantityController.text = currentOnEditProduct.quantityInCart.toString();
+      productOnEditIndex = normalOrder.products.indexWhere((Product element) => element.id == currentOnEditProduct.id);
     });
   }
 

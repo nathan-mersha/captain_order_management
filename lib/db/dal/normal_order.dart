@@ -170,8 +170,6 @@ class NormalOrderDAL {
   /// where : "id = ?"
   /// whereArgs : [2]
   static Future<void> delete({String where, dynamic whereArgs}) async {
-    print("Where : $where");
-    print("where args : ${whereArgs.toString()}");
     await global.db.delete(
       TABLE_NAME,
       where: where,

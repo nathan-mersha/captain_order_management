@@ -1,8 +1,10 @@
 import 'package:captain/db/dal/personnel.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/page/customer/view_customer.dart';
 import 'package:captain/page/employee/create_employee.dart';
 import 'package:captain/page/employee/statistics_employee.dart';
 import 'package:captain/widget/c_dialog.dart';
+import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/contacts.dart';
 import 'package:intl/intl.dart';
@@ -239,52 +241,51 @@ class _EmployeeDataSource extends DataTableSource {
   }
 
   Future<void> deleteEmployee(Personnel personnel) async {
-    return await showDialog<String>(
-        context: context,
-        builder: (context) => CDialog(
-              widgetYes: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(
-                    Icons.done,
-                    size: 50,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
-              ),
-              widgetNo: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
-                ],
-              ),
-              message: "Are you sure you want to delete employee\n${personnel.name}",
-              onYes: () async {
-                // Delete employee here.
+    bool employeeHasData = await CustomerDataSource.personnelHasData(personnel.id);
 
-                String where = "${Personnel.ID} = ?";
-                List<String> whereArgs = [personnel.id]; // Querying only employees
+    if (employeeHasData) {
+      CNotifications.showSnackBar(context, "Can't delete user, has existing data in normal order, special order, punch or returned order", "success", () {}, backgroundColor: Colors.red);
+    } else {
+      return await showDialog<String>(
+          context: context,
+          builder: (context) => CDialog(
+                widgetYes: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Icon(
+                      Icons.done,
+                      size: 50,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ],
+                ),
+                widgetNo: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  ],
+                ),
+                message: "Are you sure you want to delete employee\n${personnel.name}",
+                onYes: () async {
+                  // Delete employee here.
 
-                List<Personnel> deletePersonnelList = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+                  String where = "${Personnel.ID} = ?";
+                  List<String> whereArgs = [personnel.id]; // Querying only employees
 
-                await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
-                await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
+                  await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
+                  await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
 
-                Personnel deletePersonnel = deletePersonnelList.first;
-                if (deletePersonnel.idFS != null) {
-//                  Firestore.instance.collection(Personnel.EMPLOYEE).document(deletePersonnel.idFS).delete();
-                }
-
-                Navigator.pop(context);
-                return null;
-              },
-              onNo: () {
-                Navigator.pop(
-                  context,
-                );
-                return null;
-              },
-            ));
+                  Navigator.pop(context);
+                  return null;
+                },
+                onNo: () {
+                  Navigator.pop(
+                    context,
+                  );
+                  return null;
+                },
+              ));
+    }
   }
 
   @override

@@ -100,9 +100,15 @@ class StatisticsNormalOrderViewState extends State<StatisticsNormalOrderView> {
   }
 
   bool isThisWeek(DateTime dateTime) {
-    final now = DateTime.now();
-    int durationDays = DateTime(dateTime.year, dateTime.month, dateTime.day).difference(DateTime(now.year, now.month, now.day)).inDays;
-    return durationDays >= -6;
+    var monday = 1;
+    var mondayDate = new DateTime.now();
+
+    while (mondayDate.weekday != monday) {
+      mondayDate = mondayDate.subtract(new Duration(days: 1));
+    }
+
+    int durationDays = DateTime(mondayDate.year, mondayDate.month, mondayDate.day).difference(DateTime(dateTime.year, dateTime.month, dateTime.day)).inDays;
+    return durationDays > -7 && durationDays < 1;
   }
 
   bool isThisMonth(DateTime dateTime) {

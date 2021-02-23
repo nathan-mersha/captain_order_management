@@ -1,8 +1,17 @@
+import 'package:captain/db/dal/normal_order.dart';
 import 'package:captain/db/dal/personnel.dart';
+import 'package:captain/db/dal/punch.dart';
+import 'package:captain/db/dal/returned_order.dart';
+import 'package:captain/db/dal/special_order.dart';
+import 'package:captain/db/model/normal_order.dart';
 import 'package:captain/db/model/personnel.dart';
+import 'package:captain/db/model/punch.dart';
+import 'package:captain/db/model/returned_order.dart';
+import 'package:captain/db/model/special_order.dart';
 import 'package:captain/page/customer/create_customer.dart';
 import 'package:captain/page/customer/statistics_customer.dart';
 import 'package:captain/widget/c_dialog.dart';
+import 'package:captain/widget/c_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/contacts.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +31,7 @@ class CustomerTableState extends State<CustomerTable> {
   int _rowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
-  _CustomerDataSource _customerDataSource;
+  CustomerDataSource _customerDataSource;
 
   void _sort<T>(
     Comparable<T> Function(Personnel d) getField,
@@ -63,14 +72,14 @@ class CustomerTableState extends State<CustomerTable> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<Personnel> customers = snapshot.data as List<Personnel>;
-                  _CustomerDataSource _customerDataSourceVal = _CustomerDataSource(context, customers, () {
+                  CustomerDataSource _customerDataSourceVal = CustomerDataSource(context, customers, () {
                     setState(() {
                       // updating table here.
                     });
                   }, widget.createCustomerKey);
                   _customerDataSource = _customerDataSourceVal;
                 } else {
-                  _customerDataSource = _CustomerDataSource(context, [], () {
+                  _customerDataSource = CustomerDataSource(context, [], () {
                     setState(() {
                       // updating table here.
                     });
@@ -184,7 +193,7 @@ class CustomerTableState extends State<CustomerTable> {
   }
 }
 
-class _CustomerDataSource extends DataTableSource {
+class CustomerDataSource extends DataTableSource {
   final BuildContext context;
   List<Personnel> customers;
   List<Personnel> originalBatch = [];
@@ -192,7 +201,7 @@ class _CustomerDataSource extends DataTableSource {
   final GlobalKey<CreateCustomerViewState> createCustomerKey;
   int _selectedCount = 0;
 
-  _CustomerDataSource(this.context, this.customers, this.updateTable, this.createCustomerKey) {
+  CustomerDataSource(this.context, this.customers, this.updateTable, this.createCustomerKey) {
     originalBatch = List.from(customers);
   }
 
@@ -244,53 +253,65 @@ class _CustomerDataSource extends DataTableSource {
     );
   }
 
+  static Future<bool> personnelHasData(String personnelId) async {
+    String where = "${NormalOrder.CUSTOMER} = ? OR ${NormalOrder.EMPLOYEE} = ?";
+    String wherePunch = "${NormalOrder.EMPLOYEE} = ?";
+    List<String> whereArgs = [personnelId, personnelId];
+    List<String> whereArgsPunch = [personnelId];
+
+    List<NormalOrder> normalOrders = await NormalOrderDAL.find(where: where, whereArgs: whereArgs);
+    List<SpecialOrder> specialOrders = await SpecialOrderDAL.find(where: where, whereArgs: whereArgs);
+    List<Punch> punchs = await PunchDAL.find(where: wherePunch, whereArgs: whereArgsPunch);
+    List<ReturnedOrder> returnedOrders = await ReturnedOrderDAL.find(where: where, whereArgs: whereArgs);
+
+    return normalOrders.length != 0 || specialOrders.length != 0 || punchs.length != 0 || returnedOrders.length != 0;
+  }
+
   Future<void> deleteCustomer(Personnel personnel) async {
-    return await showDialog<String>(
-        context: context,
-        builder: (context) => CDialog(
-              widgetYes: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(
-                    Icons.done,
-                    size: 50,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
-              ),
-              widgetNo: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
-                ],
-              ),
-              message: "Are you sure you want to delete customer\n${personnel.name}",
-              onYes: () async {
-                // Delete customer here.
+    bool personHasData = await personnelHasData(personnel.id);
+    if (personHasData) {
+      CNotifications.showSnackBar(context, "Can't delete user, has existing data in normal order, special order, punch or returned order", "success", () {}, backgroundColor: Colors.red);
+    } else {
+      return await showDialog<String>(
+          context: context,
+          builder: (context) => CDialog(
+                widgetYes: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Icon(
+                      Icons.done,
+                      size: 50,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ],
+                ),
+                widgetNo: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Icon(Icons.clear, size: 50, color: Theme.of(context).accentColor),
+                  ],
+                ),
+                message: "Are you sure you want to delete customer\n${personnel.name}",
+                onYes: () async {
+                  // Delete customer here.
 
-                String where = "${Personnel.ID} = ?";
-                List<String> whereArgs = [personnel.id]; // Querying only customers
+                  String where = "${Personnel.ID} = ?";
+                  List<String> whereArgs = [personnel.id]; // Querying only customers
 
-                List<Personnel> deletePersonnelList = await PersonnelDAL.find(where: where, whereArgs: whereArgs);
+                  await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
+                  await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
 
-                await PersonnelDAL.delete(where: where, whereArgs: whereArgs);
-                await Contacts.deleteContact(Contact(identifier: personnel.contactIdentifier)); // Deleting contact
-
-                Personnel deletePersonnel = deletePersonnelList.first;
-                if (deletePersonnel.idFS != null) {
-//                  Firestore.instance.collection(Personnel.CUSTOMER).document(deletePersonnel.idFS).delete();
-                }
-
-                Navigator.pop(context);
-                return null;
-              },
-              onNo: () {
-                Navigator.pop(
-                  context,
-                );
-                return null;
-              },
-            ));
+                  Navigator.pop(context);
+                  return null;
+                },
+                onNo: () {
+                  Navigator.pop(
+                    context,
+                  );
+                  return null;
+                },
+              ));
+    }
   }
 
   @override

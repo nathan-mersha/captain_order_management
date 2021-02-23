@@ -18,6 +18,7 @@ class CSharedPreference {
 
   static const LAST_ORDER_PRODUCT = "LAST_ORDER_PRODUCT";
   static const LAST_ORDER_PAINT = "LAST_ORDER_PAINT";
+  static const LAST_ORDER_PRODUCT_SPECIAL = "LAST_ORDER_PRODUCT_SPECIAL";
 
   // User locale
   static const CURRENT_THEME = "CURRENT_THEME";
@@ -59,6 +60,7 @@ class CSharedPreference {
   // Last normal order product
   set lastOrderProduct(String productId) => pref.setString(LAST_ORDER_PRODUCT, productId);
   set lastOrderPaint(String productId) => pref.setString(LAST_ORDER_PAINT, productId);
+  set lastOrderProductSpecial(String productId) => pref.setString(LAST_ORDER_PRODUCT_SPECIAL, productId);
 
   // User locale
   set currentTheme(String currentTheme) => pref.setString(CURRENT_THEME, currentTheme);
@@ -93,6 +95,7 @@ class CSharedPreference {
 
   String get lastOrderProduct => pref.getString(LAST_ORDER_PRODUCT);
   String get lastOrderPaint => pref.getString(LAST_ORDER_PAINT);
+  String get lastOrderProductSpecial => pref.getString(LAST_ORDER_PRODUCT_SPECIAL);
 
   String get currentTheme => pref.getString(CURRENT_THEME) ?? CTheme.WEYNE;
 
