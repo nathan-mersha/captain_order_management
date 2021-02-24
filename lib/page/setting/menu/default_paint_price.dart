@@ -86,10 +86,9 @@ class _DefaultPaintPriceSettingsState extends State<DefaultPaintPriceSettings> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        cSharedPreference.metalicPricePerLitter = num.parse(_metalicPriceController.text);
-                        cSharedPreference.autoCrylPricePerLitter = num.parse(_autoCrylPasswordController.text);
-
-                        CNotifications.showSnackBar(context, "Successfuly changed paint prices", "success", () {}, backgroundColor: Colors.green);
+                        cSharedPreference.metalicPricePerLitter = num.parse(_metalicPriceController.text).toDouble();
+                        cSharedPreference.autoCrylPricePerLitter = num.parse(_autoCrylPasswordController.text).toDouble();
+                        CNotifications.showSnackBar(context, "Successfully changed paint prices", "success", () {}, backgroundColor: Colors.green);
                       }
                     },
                   ),

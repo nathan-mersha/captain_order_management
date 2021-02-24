@@ -73,7 +73,7 @@ class SpecialOrderDAL {
         "${Personnel.CUSTOMER}.${Personnel.LAST_MODIFIED} AS ${Personnel.CUSTOMER}${Personnel.LAST_MODIFIED} "
         "FROM $TABLE_NAME "
         "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.CUSTOMER} ON $TABLE_NAME.${SpecialOrder.CUSTOMER}=${Personnel.CUSTOMER}.${Personnel.ID} "
-        "${where == null ? "" : "WHERE $where"}";
+        "${where == null ? "" : "WHERE $where"} ORDER BY $TABLE_NAME.${SpecialOrder.LAST_MODIFIED} DESC";
 
     var list = await global.db.rawQuery(statement, whereArgs);
 

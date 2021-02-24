@@ -63,7 +63,7 @@ class PunchDAL {
         "${Personnel.EMPLOYEE}.${Personnel.LAST_MODIFIED} AS ${Personnel.EMPLOYEE}${Personnel.LAST_MODIFIED} "
         "FROM $TABLE_NAME "
         "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.EMPLOYEE} ON $TABLE_NAME.${Punch.EMPLOYEE}=${Personnel.EMPLOYEE}.${Personnel.ID} "
-        "${where == null ? "" : "WHERE $where"}";
+        "${where == null ? "" : "WHERE $where"} ORDER BY $TABLE_NAME.${Punch.LAST_MODIFIED} DESC";
 
     List list = await global.db.rawQuery(statement, whereArgs);
 

@@ -88,7 +88,7 @@ class NormalOrderDAL {
         "FROM $TABLE_NAME "
         "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.CUSTOMER} ON $TABLE_NAME.${NormalOrder.CUSTOMER}=${Personnel.CUSTOMER}.${Personnel.ID} "
         "LEFT JOIN ${PersonnelDAL.TABLE_NAME} AS ${Personnel.EMPLOYEE} ON $TABLE_NAME.${NormalOrder.EMPLOYEE}=${Personnel.EMPLOYEE}.${Personnel.ID} "
-        "${where == null ? "" : "WHERE $where"}";
+        "${where == null ? "" : "WHERE $where"}  ORDER BY $TABLE_NAME.${NormalOrder.LAST_MODIFIED} DESC";
 
     var list = await global.db.rawQuery(statement, whereArgs);
     return List.generate(list.length, (i) {
